@@ -27,8 +27,5 @@
     "docker:uat:down": "docker compose -f docker-compose.uat.yml down",
     "docker:prd": "docker compose -f docker-compose.prd.yml up --build",
     "docker:prd:down": "docker compose -f docker-compose.prd.yml down"
-  },
-  "devDependencies": {
-    "@rollup/rollup-darwin-arm64": "^4.63.1"
   }
 }
