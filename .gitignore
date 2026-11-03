@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Runtime data & local database store
+.data/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files
+.env.local
+.env.*.local

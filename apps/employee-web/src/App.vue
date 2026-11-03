@@ -291,6 +291,7 @@ export default {
           this.isTakingAssessment = false;
         } else {
           this.draftAnswers = {};
+          this.userFeedback = '';
           this.currentStepIndex = 0;
           this.isTakingAssessment = false;
           this.session.noticeAcknowledged = false;
@@ -316,7 +317,15 @@ export default {
       this.session.noticeAcknowledgedAt = data.noticeAcknowledgedAt;
       this.currentStepIndex = 0;
       this.draftAnswers = {};
+      this.userFeedback = '';
       this.isTakingAssessment = true;
+      this.currentScreen = 'assessment';
+    },
+    startAssessment() {
+      this.isTakingAssessment = true;
+      this.currentStepIndex = 0;
+      this.draftAnswers = {};
+      this.userFeedback = '';
       this.currentScreen = 'assessment';
     },
     async exitAssessment() {
@@ -398,7 +407,8 @@ export default {
       this.session.status = submitData.status;
       this.session.submittedAt = submitData.submittedAt;
       this.session.result = submitData.result;
-      this.session.feedback = submitData.feedback || this.userFeedback;
+      this.session.feedback = submitData.feedback || null;
+      this.userFeedback = '';
       this.currentScreen = 'submitted';
     },
     async clearDraft() {

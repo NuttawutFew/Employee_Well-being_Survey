@@ -219,9 +219,7 @@ export default {
         const data = await res.json();
         this.result = data.result;
         this.submittedAt = data.submittedAt;
-        if (data.feedback) {
-          this.feedback = data.feedback;
-        }
+        this.feedback = data.feedback || null;
       } catch (err) {
         this.error = err.message;
       } finally {

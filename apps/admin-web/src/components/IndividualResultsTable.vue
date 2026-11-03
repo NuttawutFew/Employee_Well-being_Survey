@@ -73,6 +73,7 @@
               แผนก / ฝ่าย
               <span class="sort-icon">{{ getSortIcon('department') }}</span>
             </th>
+            <th>รอบประเมิน</th>
             <th>สถานะภาพรวม</th>
             <th>Burnout</th>
             <th>ความเครียด</th>
@@ -83,14 +84,14 @@
         <tbody>
           <!-- Loading skeleton -->
           <tr v-if="loading && items.length === 0">
-            <td colspan="9" class="loading-cell">
+            <td colspan="10" class="loading-cell">
               กำลังโหลดข้อมูลการประเมิน...
             </td>
           </tr>
 
           <!-- Empty State -->
           <tr v-else-if="items.length === 0">
-            <td colspan="9" class="empty-cell">
+            <td colspan="10" class="empty-cell">
               <span class="empty-icon">📭</span>
               <p>ไม่พบรายการผลการประเมินที่ตรงกับเงื่อนไข</p>
               <button class="btn-seed-mock-empty" :disabled="seedingMock" @click="triggerSeedMock">
@@ -102,7 +103,7 @@
 
           <!-- Data Rows -->
           <tr v-for="item in items" :key="item.attemptId" class="data-row">
-            <td class="cell-date">{{ formatDateTime(item.submittedAt) }}</td>
+            <td class="cell-date">{{ formatDateTime(item.submittedAt || item.createdAt) }}</td>
             <td class="cell-empid">
               <code>{{ item.employeeId }}</code>
             </td>
@@ -110,9 +111,23 @@
               <strong>{{ getEmployeeFullName(item.snapshot) }}</strong>
             </td>
             <td class="cell-dept">{{ item.snapshot ? item.snapshot.department : '-' }}</td>
+            <td class="cell-round">
+              <span class="round-badge" :class="item.round > 1 ? 'round-badge-multi' : ''">
+                รอบ {{ item.round || 1 }}
+              </span>
+              <span v-if="item.totalRounds > 1" class="history-pill" :title="'มีประวัติประเมินสะสม ' + item.totalRounds + ' รอบ'">
+                📜 {{ item.totalRounds }} รอบ
+              </span>
+            </td>
             <td>
               <span 
-                v-if="item.result && item.result.overall" 
+                v-if="item.status === 'CANCELLED'"
+                class="badge-status status-cancelled"
+              >
+                🔄 รีเซ็ตแล้ว
+              </span>
+              <span 
+                v-else-if="item.result && item.result.overall" 
                 class="badge-status"
                 :class="item.result.overall.status === 'NEEDS_ADDITIONAL_CARE' ? 'status-care' : 'status-normal'"
               >
@@ -284,89 +299,284 @@
             <span>บันทึกการเข้าถึงข้อมูลสุขภาพนี้ลงใน <strong>Audit Trail</strong> เรียบร้อยแล้ว (วัตถุประสงค์: <em>{{ lastLoggedPurpose }}</em>)</span>
           </div>
 
+          <!-- Multi-Round Journey Timeline Stepper -->
+          <div v-if="selectedItem.attempts && selectedItem.attempts.length > 1" class="journey-timeline-card">
+            <div class="journey-timeline-header">
+              <span class="journey-timeline-title">
+                📈 เส้นทางพัฒนาการสุขภาวะรายบุคคล (Well-being Journey — ประวัติสะสม <strong>{{ selectedItem.attempts.length }}</strong> รอบ)
+              </span>
+              <span class="journey-timeline-sub">💡 คลิกที่รอบใดก็ได้บนเส้นทางเพื่อสลับดูผลประเมินของรอบนั้น</span>
+            </div>
+            <div class="journey-timeline-steps">
+              <div v-for="(att, idx) in selectedItem.attempts" :key="att.attemptId || att.round" class="journey-step-wrapper">
+                <button 
+                  type="button" 
+                  class="journey-step-btn" 
+                  :class="{ 'is-active': att.round === currentModalRound }"
+                  :title="'คลิกเพื่อสลับดูผลรอบที่ ' + att.round"
+                  @click="selectRound(att.round)"
+                >
+                  <span class="journey-step-title">
+                    รอบ {{ att.round }} {{ isLatestRound(att) ? '★ (ล่าสุด)' : att.round === 1 ? '(Baseline)' : '' }}
+                  </span>
+                  <span class="journey-step-date">{{ formatShortDate(att.submittedAt || att.createdAt) }}</span>
+                  <span v-if="att.status === 'CANCELLED'" class="journey-step-badge badge-cancelled">🔄 รีเซ็ตแล้ว</span>
+                  <span v-else-if="att.result && att.result.overall && att.result.overall.status === 'NEEDS_ADDITIONAL_CARE'" class="journey-step-badge badge-danger">ควรดูแล 🟡</span>
+                  <span v-else class="journey-step-badge badge-normal">ปกติ 🟢</span>
+                </button>
+                <span v-if="idx < selectedItem.attempts.length - 1" class="journey-step-connector">➔</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Round / Attempt Selector Bar -->
+          <div v-if="selectedItem.attempts && selectedItem.attempts.length > 1" class="attempt-tabs-bar">
+            <div class="attempt-tabs-left">
+              <span class="attempt-tab-label">📋 เลือกรอบประเมิน:</span>
+              <select v-model="currentModalRound" class="round-quick-select" @change="onRoundSelectChange">
+                <option v-for="att in selectedItem.attempts" :key="att.attemptId || att.round" :value="att.round">
+                  รอบที่ {{ att.round }}{{ isLatestRound(att) ? ' (ล่าสุด)' : att.round === 1 ? ' (Baseline)' : '' }} — {{ getRoundStatusText(att) }} ({{ formatDateTime(att.submittedAt || att.createdAt) }})
+                </option>
+              </select>
+              <div class="attempt-tab-group">
+                <button 
+                  v-for="att in selectedItem.attempts" 
+                  :key="att.attemptId || att.round" 
+                  type="button" 
+                  class="attempt-tab-btn" 
+                  :class="{ 'is-active': att.round === currentModalRound }"
+                  @click="selectRound(att.round)"
+                >
+                  {{ att.round === currentModalRound ? '✓ ' : '' }}รอบ {{ att.round }}{{ isLatestRound(att) ? ' (ล่าสุด)' : att.round === 1 ? ' (Baseline)' : '' }}
+                </button>
+              </div>
+            </div>
+            <button 
+              type="button" 
+              class="btn-compare-rounds" 
+              :class="{ 'is-active': isComparisonOpen }"
+              @click="isComparisonOpen = !isComparisonOpen"
+            >
+              {{ isComparisonOpen ? '✕ ซ่อนตารางเปรียบเทียบ' : '📊 เปรียบเทียบพัฒนาการ (' + selectedItem.attempts.length + ' รอบสะสม)' }}
+            </button>
+          </div>
+
+          <!-- Historical Round Banner Indicator -->
+          <div v-if="displayedAttempt" class="round-history-banner" :class="getBannerClass(displayedAttempt)">
+            <span class="banner-icon">{{ getBannerIcon(displayedAttempt) }}</span>
+            <span class="banner-text">
+              <template v-if="displayedAttempt.status === 'CANCELLED'">
+                คุณกำลังดูผลการประเมิน <strong>รอบที่ {{ displayedAttempt.round }}</strong> — รอบนี้ถูกรีเซ็ตโดย Admin (เหตุผล: "<em>{{ displayedAttempt.cancelledReason || 'ไม่ระบุ' }}</em>") <span class="archived-pill">🔒 จัดเก็บถาวรในระบบ</span>
+              </template>
+              <template v-else-if="displayedAttempt.round === 1 && selectedItem.attempts && selectedItem.attempts.length > 1">
+                คุณกำลังดูผลการประเมิน <strong>รอบที่ 1 (ประวัติเริ่มต้น / Baseline)</strong> — บันทึกเมื่อ {{ formatDateTime(displayedAttempt.submittedAt || displayedAttempt.createdAt) }} <span class="archived-pill">🔒 จัดเก็บถาวรในระบบ</span>
+              </template>
+              <template v-else-if="isLatestRound(displayedAttempt) && selectedItem.attempts && selectedItem.attempts.length > 1">
+                คุณกำลังดูผลการประเมิน <strong>รอบที่ {{ displayedAttempt.round }} (รอบล่าสุด / Follow-up ล่าสุด)</strong> — บันทึกเมื่อ {{ formatDateTime(displayedAttempt.submittedAt || displayedAttempt.createdAt) }}
+              </template>
+              <template v-else>
+                คุณกำลังดูผลการประเมิน <strong>รอบที่ {{ displayedAttempt.round || 1 }}</strong> — บันทึกเมื่อ {{ formatDateTime(displayedAttempt.submittedAt || displayedAttempt.createdAt) }}
+              </template>
+            </span>
+          </div>
+
+          <!-- Cancelled Round Notice Alert -->
+          <div v-if="displayedAttempt && displayedAttempt.status === 'CANCELLED'" class="cancelled-round-notice">
+            <div class="cancelled-notice-icon">⚠️</div>
+            <div class="cancelled-notice-content">
+              <strong>รอบนี้ถูกยกเลิก/รีเซ็ตโดยผู้ดูแลระบบ</strong>
+              <p>
+                รีเซ็ตเมื่อ: {{ formatDateTime(displayedAttempt.cancelledAt) }} โดย <code>{{ displayedAttempt.cancelledBy || 'admin' }}</code><br />
+                เหตุผล: "<em>{{ displayedAttempt.cancelledReason }}</em>"
+              </p>
+              <span class="cancelled-data-archived">🔒 ข้อมูลถูกคงไว้เพื่อเป็นหลักฐานเชิงสถิติและการตรวจสอบ (Audit Trail) แต่จะไม่ถูกนำไปรวมในสถิติแบบประเมินปัจจุบัน</span>
+            </div>
+          </div>
+
+          <!-- Comparison Box (Toggled by btn-compare-rounds) -->
+          <div v-if="isComparisonOpen && selectedItem.attempts && selectedItem.attempts.length > 1" class="compare-box">
+            <div class="compare-mode-tab-group">
+              <button 
+                type="button" 
+                class="compare-mode-tab-btn" 
+                :class="{ 'is-active': compareMode === 'two' }" 
+                @click="compareMode = 'two'"
+              >
+                ⚡ เปรียบเทียบ 2 รอบ (Two-Round Compare)
+              </button>
+              <button 
+                type="button" 
+                class="compare-mode-tab-btn" 
+                :class="{ 'is-active': compareMode === 'matrix' }" 
+                @click="compareMode = 'matrix'"
+              >
+                📋 ตารางแนวโน้มทุกรอบ (All-Rounds Timeline Matrix)
+              </button>
+            </div>
+
+            <!-- View 1: Two-Round Compare -->
+            <div v-if="compareMode === 'two'" class="compare-view-two">
+              <div class="compare-filter-toolbar">
+                <div class="compare-selectors">
+                  <strong>เลือกรอบที่จะเปรียบเทียบ:</strong>
+                  <select v-model="compareRoundA" class="compare-select">
+                    <option v-for="att in selectedItem.attempts" :key="'a-' + att.round" :value="att.round">
+                      รอบที่ {{ att.round }}{{ att.round === 1 ? ' (Baseline)' : '' }}
+                    </option>
+                  </select>
+                  <span class="vs-text">vs</span>
+                  <select v-model="compareRoundB" class="compare-select">
+                    <option v-for="att in selectedItem.attempts" :key="'b-' + att.round" :value="att.round">
+                      รอบที่ {{ att.round }}{{ isLatestRound(att) ? ' (ล่าสุด)' : '' }}
+                    </option>
+                  </select>
+                </div>
+                <div class="compare-presets">
+                  <button type="button" class="compare-preset-btn" @click="setPresetPrevLatest">
+                    ⚡ ล่าสุด vs ก่อนหน้า
+                  </button>
+                  <button type="button" class="compare-preset-btn" @click="setPresetBaseLatest">
+                    ⚡ ล่าสุด vs รอบแรกสุด (Baseline)
+                  </button>
+                </div>
+              </div>
+
+              <div class="compare-table-wrapper">
+                <table class="compare-table">
+                  <thead>
+                    <tr>
+                      <th>มิติการประเมิน</th>
+                      <th>รอบที่ {{ roundAttemptA ? roundAttemptA.round : 'A' }} ({{ formatShortDate(roundAttemptA ? roundAttemptA.submittedAt : '') }})</th>
+                      <th>รอบที่ {{ roundAttemptB ? roundAttemptB.round : 'B' }} ({{ formatShortDate(roundAttemptB ? roundAttemptB.submittedAt : '') }})</th>
+                      <th>แนวโน้ม / การเปลี่ยนแปลง</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="row in twoRoundComparisonRows" :key="row.dimension">
+                      <td><strong>{{ row.dimension }}</strong></td>
+                      <td>{{ row.valA }}</td>
+                      <td>{{ row.valB }}</td>
+                      <td><span class="trend-tag" :class="row.trendClass">{{ row.trendText }}</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- View 2: All-Rounds Matrix -->
+            <div v-if="compareMode === 'matrix'" class="compare-view-matrix">
+              <div class="matrix-hint">
+                💡 ตารางนี้แสดงผลการประเมินและพัฒนาการของพนักงานในทุกรอบที่เคยทำไว้ทั้งหมดตั้งแต่เริ่มต้นจนถึงปัจจุบัน
+              </div>
+              <div class="compare-table-wrapper">
+                <table class="all-rounds-matrix-table">
+                  <thead>
+                    <tr>
+                      <th>มิติการประเมิน</th>
+                      <th v-for="att in selectedItem.attempts" :key="'th-' + att.round" :class="{ 'matrix-latest-col': isLatestRound(att) }">
+                        รอบที่ {{ att.round }} {{ isLatestRound(att) ? '★ (ล่าสุด)' : att.round === 1 ? '(Baseline)' : '' }}
+                        <br /><span class="matrix-th-date">{{ formatShortDate(att.submittedAt || att.createdAt) }}</span>
+                      </th>
+                      <th class="matrix-th-summary">พัฒนาการรวม (ต้น ➔ ล่าสุด)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="row in allRoundsMatrixRows" :key="row.dimension">
+                      <td>{{ row.dimension }}</td>
+                      <td v-for="(cell, cIdx) in row.cells" :key="cIdx" :class="{ 'matrix-latest-col': isLatestRound(selectedItem.attempts[cIdx]) }">
+                        {{ cell }}
+                      </td>
+                      <td><span class="trend-tag" :class="row.summaryTrendClass">{{ row.summaryTrendText }}</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
           <!-- Demographic Snapshot -->
           <div class="detail-section">
             <div class="snapshot-header-bar">
               <h4>ข้อมูลพนักงาน ณ เวลาส่ง (Employee Snapshot)</h4>
             </div>
 
-            <div v-if="selectedItem.snapshot" class="snapshot-grid">
+            <div v-if="displayedAttempt && displayedAttempt.snapshot" class="snapshot-grid">
               <div class="grid-item">
                 <span class="label">ชื่อ-นามสกุล:</span>
                 <strong>
-                  {{ getEmployeeFullName(selectedItem.snapshot) }}
+                  {{ getEmployeeFullName(displayedAttempt.snapshot) }}
                 </strong>
               </div>
               <div class="grid-item">
                 <span class="label">รหัสพนักงาน:</span>
                 <code>
-                  {{ selectedItem.employeeId }}
+                  {{ displayedAttempt.employeeId }}
                 </code>
               </div>
               <div class="grid-item">
                 <span class="label">บริษัท:</span>
-                <span>{{ selectedItem.snapshot.company || '-' }}</span>
+                <span>{{ displayedAttempt.snapshot.company || '-' }}</span>
               </div>
               <div class="grid-item">
                 <span class="label">แผนก / ฝ่าย:</span>
-                <span>{{ selectedItem.snapshot.department || '-' }}</span>
+                <span>{{ displayedAttempt.snapshot.department || '-' }}</span>
               </div>
               <div class="grid-item">
                 <span class="label">ตำแหน่ง:</span>
-                <span>{{ selectedItem.snapshot.position || '-' }}</span>
+                <span>{{ displayedAttempt.snapshot.position || '-' }}</span>
               </div>
               <div class="grid-item">
                 <span class="label">พื้นที่ปฏิบัติงาน:</span>
-                <span>{{ selectedItem.snapshot.workArea || '-' }}</span>
+                <span>{{ displayedAttempt.snapshot.workArea || '-' }}</span>
               </div>
               <div class="grid-item">
                 <span class="label">เพศ / อายุ:</span>
-                <span>{{ selectedItem.snapshot.gender || '-' }} / {{ selectedItem.snapshot.age ? selectedItem.snapshot.age + ' ปี' : '-' }}</span>
+                <span>{{ displayedAttempt.snapshot.gender || '-' }} / {{ displayedAttempt.snapshot.age ? displayedAttempt.snapshot.age + ' ปี' : '-' }}</span>
               </div>
               <div class="grid-item">
                 <span class="label">วันที่ส่งประเมิน:</span>
-                <span>{{ formatDateTime(selectedItem.submittedAt) }}</span>
+                <span>{{ formatDateTime(displayedAttempt.submittedAt || displayedAttempt.createdAt) }}</span>
               </div>
             </div>
           </div>
 
           <!-- Assessment Dimension Results -->
-          <div v-if="selectedItem.result" class="detail-section">
-            <h4>ผลลัพธ์จำแนกตาม 3 เครื่องมือมาตรฐาน</h4>
+          <div v-if="displayedAttempt && displayedAttempt.result" class="detail-section">
+            <h4>ผลลัพธ์จำแนกตาม 3 เครื่องมือมาตรฐาน (รอบที่ {{ displayedAttempt.round }})</h4>
             
             <div class="result-breakdown-cards">
               <!-- Burnout -->
               <div class="breakdown-card">
-                <strong>1. ภาวะหมดไฟ (Burnout): ระดับ {{ formatLevelThai(selectedItem.result.burnout.level) }}</strong>
-                <ul>
-                  <li>ความอ่อนล้าทางอารมณ์ (EE): {{ selectedItem.result.burnout.dimensions.EE.score }} คะแนน (ระดับ {{ formatLevelThai(selectedItem.result.burnout.dimensions.EE.level) }})</li>
-                  <li>การลดความเป็นบุคคล (DP): {{ selectedItem.result.burnout.dimensions.DP.score }} คะแนน (ระดับ {{ formatLevelThai(selectedItem.result.burnout.dimensions.DP.level) }})</li>
-                  <li>ความสำเร็จส่วนบุคคล (PA): {{ selectedItem.result.burnout.dimensions.PA.score }} คะแนน (ระดับ {{ formatLevelThai(selectedItem.result.burnout.dimensions.PA.level) }})</li>
+                <strong>1. ภาวะหมดไฟ (Burnout): ระดับ {{ formatLevelThai(displayedAttempt.result.burnout ? displayedAttempt.result.burnout.level : '') }}</strong>
+                <ul v-if="displayedAttempt.result.burnout && displayedAttempt.result.burnout.dimensions">
+                  <li>ความอ่อนล้าทางอารมณ์ (EE): {{ displayedAttempt.result.burnout.dimensions.EE.score }} คะแนน (ระดับ {{ formatLevelThai(displayedAttempt.result.burnout.dimensions.EE.level) }})</li>
+                  <li>การลดความเป็นบุคคล (DP): {{ displayedAttempt.result.burnout.dimensions.DP.score }} คะแนน (ระดับ {{ formatLevelThai(displayedAttempt.result.burnout.dimensions.DP.level) }})</li>
+                  <li>ความสำเร็จส่วนบุคคล (PA): {{ displayedAttempt.result.burnout.dimensions.PA.score }} คะแนน (ระดับ {{ formatLevelThai(displayedAttempt.result.burnout.dimensions.PA.level) }})</li>
                 </ul>
               </div>
 
               <!-- Stress -->
               <div class="breakdown-card">
-                <strong>2. ความเครียด (ST-20): {{ selectedItem.result.stress.totalScore }}/60 คะแนน</strong>
-                <p>ระดับ: {{ selectedItem.result.stress.label }}</p>
+                <strong>2. ความเครียด (ST-20): {{ displayedAttempt.result.stress ? displayedAttempt.result.stress.totalScore : 0 }}/60 คะแนน</strong>
+                <p>ระดับ: {{ displayedAttempt.result.stress ? displayedAttempt.result.stress.label : '-' }}</p>
               </div>
 
               <!-- 9Q -->
               <div class="breakdown-card">
-                <strong>3. ภาวะเสี่ยงซึมเศร้า (9Q): {{ selectedItem.result.q9.totalScore }}/27 คะแนน</strong>
-                <p>ระดับ: {{ selectedItem.result.q9.label }}</p>
+                <strong>3. ภาวะเสี่ยงซึมเศร้า (9Q): {{ displayedAttempt.result.q9 ? displayedAttempt.result.q9.totalScore : 0 }}/27 คะแนน</strong>
+                <p>ระดับ: {{ displayedAttempt.result.q9 ? displayedAttempt.result.q9.label : '-' }}</p>
               </div>
             </div>
           </div>
 
           <!-- Employee Feedback (Optional) -->
-          <div v-if="selectedItem.feedback" class="detail-section">
+          <div v-if="displayedAttempt && displayedAttempt.feedback" class="detail-section">
             <div class="snapshot-header-bar">
               <h4>ข้อเสนอแนะเพิ่มเติมจากพนักงาน (Employee Feedback)</h4>
             </div>
             <div class="feedback-quote-box">
               <span class="feedback-quote-icon">💬</span>
-              <p class="feedback-quote-text">“{{ selectedItem.feedback }}”</p>
+              <p class="feedback-quote-text">“{{ displayedAttempt.feedback }}”</p>
             </div>
           </div>
 
@@ -379,12 +589,15 @@
 
         <div class="modal-footer">
           <button 
-            v-if="selectedItem.status === 'SUBMITTED'" 
+            v-if="displayedAttempt && displayedAttempt.status === 'SUBMITTED'" 
             class="btn-reset-attempt" 
-            @click="openResetModal(selectedItem)"
+            @click="openResetModal(displayedAttempt)"
           >
-            🔄 รีเซ็ตผลการประเมิน
+            🔄 รีเซ็ตผลการประเมิน (รอบที่ {{ displayedAttempt.round }})
           </button>
+          <span v-else-if="displayedAttempt && displayedAttempt.status === 'CANCELLED'" class="badge-reset-done">
+            🔒 รอบที่ {{ displayedAttempt.round }} ถูกรีเซ็ตแล้ว (จัดเก็บในประวัติ)
+          </span>
           <button class="btn-modal-close" @click="closeDetail">ปิดหน้าต่าง</button>
         </div>
       </div>
@@ -518,6 +731,180 @@ export default {
       if (role === 'super_admin') return true;
       const perms = this.admin.permissions || [];
       return perms.includes('can_export');
+    },
+    displayedAttempt() {
+      if (!this.selectedItem) return null;
+      if (!this.selectedItem.attempts || this.selectedItem.attempts.length <= 1) {
+        return this.selectedItem;
+      }
+      const match = this.selectedItem.attempts.find((a) => a.round === this.currentModalRound);
+      return match || this.selectedItem;
+    },
+    latestRoundNumber() {
+      if (!this.selectedItem || !this.selectedItem.attempts || this.selectedItem.attempts.length === 0) {
+        return this.selectedItem?.round || 1;
+      }
+      return Math.max(...this.selectedItem.attempts.map((a) => a.round || 1));
+    },
+    roundAttemptA() {
+      if (!this.selectedItem || !this.selectedItem.attempts) return null;
+      return this.selectedItem.attempts.find((a) => a.round === this.compareRoundA) || this.selectedItem.attempts[0];
+    },
+    roundAttemptB() {
+      if (!this.selectedItem || !this.selectedItem.attempts) return null;
+      const latest = this.selectedItem.attempts[this.selectedItem.attempts.length - 1];
+      return this.selectedItem.attempts.find((a) => a.round === this.compareRoundB) || latest;
+    },
+    twoRoundComparisonRows() {
+      const rA = this.roundAttemptA;
+      const rB = this.roundAttemptB;
+      if (!rA || !rB) return [];
+
+      const rows = [];
+
+      // 1. Overall Status
+      const sA = (rA.result && rA.result.overall && rA.result.overall.status === 'NEEDS_ADDITIONAL_CARE') ? 2 : 1;
+      const sB = (rB.result && rB.result.overall && rB.result.overall.status === 'NEEDS_ADDITIONAL_CARE') ? 2 : 1;
+      let statusTrendClass = 'trend-same';
+      let statusTrendText = 'คงเดิม ⚪';
+      if (sB < sA) {
+        statusTrendClass = 'trend-better';
+        statusTrendText = 'ดีขึ้นอย่างชัดเจน 🟢';
+      } else if (sB > sA) {
+        statusTrendClass = 'trend-worse';
+        statusTrendText = 'ต้องเฝ้าระวังเพิ่ม 🔴';
+      }
+      const labelA = rA.result?.overall?.status === 'NEEDS_ADDITIONAL_CARE' ? '⚠️ ควรดูแลเพิ่ม' : (rA.result ? '✅ ปกติ' : (rA.status === 'CANCELLED' ? '🔄 รีเซ็ตแล้ว' : '-'));
+      const labelB = rB.result?.overall?.status === 'NEEDS_ADDITIONAL_CARE' ? '⚠️ ควรดูแลเพิ่ม' : (rB.result ? '✅ ปกติ' : (rB.status === 'CANCELLED' ? '🔄 รีเซ็ตแล้ว' : '-'));
+      rows.push({
+        dimension: 'สถานะภาพรวม',
+        valA: labelA,
+        valB: labelB,
+        trendClass: statusTrendClass,
+        trendText: statusTrendText
+      });
+
+      // 2. Burnout
+      const boOrder = { 'LOW': 1, 'MODERATE': 2, 'HIGH': 3 };
+      const bLevelA = rA.result?.burnout?.level || 'LOW';
+      const bLevelB = rB.result?.burnout?.level || 'LOW';
+      const bValA = boOrder[bLevelA] || 1;
+      const bValB = boOrder[bLevelB] || 1;
+      let boTrendClass = 'trend-same';
+      let boTrendText = `คงที่ (${this.formatLevelThai(bLevelB)}) ⚪`;
+      if (bValB < bValA) {
+        boTrendClass = 'trend-better';
+        boTrendText = `ลดความเสี่ยง (${this.formatLevelThai(bLevelA)} ➔ ${this.formatLevelThai(bLevelB)}) 🟢`;
+      } else if (bValB > bValA) {
+        boTrendClass = 'trend-worse';
+        boTrendText = `ความเสี่ยงเพิ่ม (${this.formatLevelThai(bLevelA)} ➔ ${this.formatLevelThai(bLevelB)}) 🔴`;
+      }
+      const boTextA = rA.result?.burnout ? `ระดับ ${this.formatLevelThai(bLevelA)}` + (rA.result.burnout.dimensions ? ` (EE:${rA.result.burnout.dimensions.EE?.score}, DP:${rA.result.burnout.dimensions.DP?.score}, PA:${rA.result.burnout.dimensions.PA?.score})` : '') : '-';
+      const boTextB = rB.result?.burnout ? `ระดับ ${this.formatLevelThai(bLevelB)}` + (rB.result.burnout.dimensions ? ` (EE:${rB.result.burnout.dimensions.EE?.score}, DP:${rB.result.burnout.dimensions.DP?.score}, PA:${rB.result.burnout.dimensions.PA?.score})` : '') : '-';
+      rows.push({
+        dimension: '1. ภาวะหมดไฟ (Burnout)',
+        valA: boTextA,
+        valB: boTextB,
+        trendClass: boTrendClass,
+        trendText: boTrendText
+      });
+
+      // 3. Stress ST-20
+      const stScoreA = rA.result?.stress?.totalScore ?? 0;
+      const stScoreB = rB.result?.stress?.totalScore ?? 0;
+      const stDiff = stScoreB - stScoreA;
+      let stTrendClass = 'trend-same';
+      let stTrendText = `คะแนนเท่าเดิม (${stScoreB}) ⚪`;
+      if (stDiff < 0) {
+        stTrendClass = 'trend-better';
+        stTrendText = `ลดลง ${Math.abs(stDiff)} คะแนน (ดีขึ้น 🟢)`;
+      } else if (stDiff > 0) {
+        stTrendClass = 'trend-worse';
+        stTrendText = `เพิ่มขึ้น ${stDiff} คะแนน (เสี่ยงขึ้น 🔴)`;
+      }
+      rows.push({
+        dimension: '2. ความเครียด (ST-20)',
+        valA: rA.result?.stress ? `${stScoreA} / 60 คะแนน (${rA.result.stress.label || '-'})` : '-',
+        valB: rB.result?.stress ? `${stScoreB} / 60 คะแนน (${rB.result.stress.label || '-'})` : '-',
+        trendClass: stTrendClass,
+        trendText: stTrendText
+      });
+
+      // 4. 9Q
+      const qScoreA = rA.result?.q9?.totalScore ?? 0;
+      const qScoreB = rB.result?.q9?.totalScore ?? 0;
+      const qDiff = qScoreB - qScoreA;
+      let qTrendClass = 'trend-same';
+      let qTrendText = `คะแนนเท่าเดิม (${qScoreB}) ⚪`;
+      if (qDiff < 0) {
+        qTrendClass = 'trend-better';
+        qTrendText = `ลดลง ${Math.abs(qDiff)} คะแนน (ดีขึ้น 🟢)`;
+      } else if (qDiff > 0) {
+        qTrendClass = 'trend-worse';
+        qTrendText = `เพิ่มขึ้น ${qDiff} คะแนน (เสี่ยงขึ้น 🔴)`;
+      }
+      rows.push({
+        dimension: '3. ภาวะเสี่ยงซึมเศร้า (9Q)',
+        valA: rA.result?.q9 ? `${qScoreA} / 27 คะแนน (${rA.result.q9.label || '-'})` : '-',
+        valB: rB.result?.q9 ? `${qScoreB} / 27 คะแนน (${rB.result.q9.label || '-'})` : '-',
+        trendClass: qTrendClass,
+        trendText: qTrendText
+      });
+
+      // 5. Context
+      rows.push({
+        dimension: 'วัน-เวลา & สถานะรอบ',
+        valA: `${this.formatDateTime(rA.submittedAt || rA.createdAt)} (${rA.status === 'CANCELLED' ? 'รีเซ็ตแล้ว' : 'ส่งสำเร็จ'})`,
+        valB: `${this.formatDateTime(rB.submittedAt || rB.createdAt)} (${rB.status === 'CANCELLED' ? 'รีเซ็ตแล้ว' : 'ส่งสำเร็จ'})`,
+        trendClass: 'trend-same',
+        trendText: '🔒 บันทึกประวัติถาวร'
+      });
+
+      return rows;
+    },
+    allRoundsMatrixRows() {
+      if (!this.selectedItem || !this.selectedItem.attempts) return [];
+      const attempts = this.selectedItem.attempts;
+      const firstAtt = attempts[0];
+      const lastAtt = attempts[attempts.length - 1];
+
+      // Status row
+      const statusCells = attempts.map((att) => att.result?.overall?.status === 'NEEDS_ADDITIONAL_CARE' ? '⚠️ ควรดูแลเพิ่ม' : (att.result ? '✅ ปกติ' : (att.status === 'CANCELLED' ? '🔄 รีเซ็ตแล้ว' : '-')));
+      const sFirst = firstAtt.result?.overall?.status === 'NEEDS_ADDITIONAL_CARE' ? 2 : 1;
+      const sLast = lastAtt.result?.overall?.status === 'NEEDS_ADDITIONAL_CARE' ? 2 : 1;
+      const statusOverallTrendClass = sLast < sFirst ? 'trend-better' : (sLast === sFirst ? 'trend-same' : 'trend-worse');
+      const statusOverallTrendText = sLast < sFirst ? 'พัฒนาการดีขึ้นมาก 🟢' : (sLast === sFirst ? 'คงที่ ⚪' : 'ต้องเฝ้าระวัง 🔴');
+
+      // Burnout row
+      const boCells = attempts.map((att) => att.result?.burnout ? this.formatLevelThai(att.result.burnout.level) : '-');
+      const boOrder = { 'LOW': 1, 'MODERATE': 2, 'HIGH': 3 };
+      const bFirst = boOrder[firstAtt.result?.burnout?.level] || 1;
+      const bLast = boOrder[lastAtt.result?.burnout?.level] || 1;
+      const boOverallTrendClass = bLast < bFirst ? 'trend-better' : (bLast === bFirst ? 'trend-same' : 'trend-worse');
+      const boOverallTrendText = bLast < bFirst ? 'ความเสี่ยงลดลง 🟢' : (bLast === bFirst ? 'คงเดิม ⚪' : 'ความเสี่ยงเพิ่ม 🔴');
+
+      // Stress row
+      const stCells = attempts.map((att) => att.result?.stress ? `${att.result.stress.totalScore}/60` : '-');
+      const stFirst = firstAtt.result?.stress?.totalScore ?? 0;
+      const stLast = lastAtt.result?.stress?.totalScore ?? 0;
+      const stDiff = stLast - stFirst;
+      const stOverallTrendClass = stDiff < 0 ? 'trend-better' : (stDiff === 0 ? 'trend-same' : 'trend-worse');
+      const stOverallTrendText = stDiff < 0 ? `ลดลง ${Math.abs(stDiff)} คะแนน 🟢` : (stDiff === 0 ? 'เท่าเดิม ⚪' : `เพิ่มขึ้น ${stDiff} คะแนน 🔴`);
+
+      // 9Q row
+      const qCells = attempts.map((att) => att.result?.q9 ? `${att.result.q9.totalScore}/27` : '-');
+      const qFirst = firstAtt.result?.q9?.totalScore ?? 0;
+      const qLast = lastAtt.result?.q9?.totalScore ?? 0;
+      const qDiff = qLast - qFirst;
+      const qOverallTrendClass = qDiff < 0 ? 'trend-better' : (qDiff === 0 ? 'trend-same' : 'trend-worse');
+      const qOverallTrendText = qDiff < 0 ? `ลดลง ${Math.abs(qDiff)} คะแนน 🟢` : (qDiff === 0 ? 'เท่าเดิม ⚪' : `เพิ่มขึ้น ${qDiff} คะแนน 🔴`);
+
+      return [
+        { dimension: 'สถานะภาพรวม', cells: statusCells, summaryTrendClass: statusOverallTrendClass, summaryTrendText: statusOverallTrendText },
+        { dimension: '1. ภาวะหมดไฟ (Burnout)', cells: boCells, summaryTrendClass: boOverallTrendClass, summaryTrendText: boOverallTrendText },
+        { dimension: '2. ความเครียด (ST-20)', cells: stCells, summaryTrendClass: stOverallTrendClass, summaryTrendText: stOverallTrendText },
+        { dimension: '3. ภาวะเสี่ยงซึมเศร้า (9Q)', cells: qCells, summaryTrendClass: qOverallTrendClass, summaryTrendText: qOverallTrendText }
+      ];
     }
   },
   data() {
@@ -541,6 +928,11 @@ export default {
         totalPages: 1
       },
       selectedItem: null,
+      currentModalRound: null,
+      isComparisonOpen: false,
+      compareMode: 'two',
+      compareRoundA: null,
+      compareRoundB: null,
       exporting: false,
       showExportMenu: false,
       exportNotice: null,
@@ -826,10 +1218,18 @@ export default {
         } else {
           this.selectedItem = item;
         }
+        this.currentModalRound = this.selectedItem.round || (this.selectedItem.attempts && this.selectedItem.attempts.length) || 1;
+        this.isComparisonOpen = false;
+        this.compareMode = 'two';
+        if (this.selectedItem.attempts && this.selectedItem.attempts.length >= 2) {
+          this.compareRoundA = this.selectedItem.attempts[0].round;
+          this.compareRoundB = this.selectedItem.attempts[this.selectedItem.attempts.length - 1].round;
+        }
         this.closePurposePrompt();
       } catch (err) {
         console.warn('Could not fetch detail with purpose', err);
         this.selectedItem = item;
+        this.currentModalRound = this.selectedItem.round || 1;
         this.closePurposePrompt();
       } finally {
         this.fetchingDetail = false;
@@ -843,6 +1243,56 @@ export default {
       this.lastLoggedPurpose = null;
       this.isPIIRevealed = false;
       this.unmaskingLoading = false;
+      this.currentModalRound = null;
+      this.isComparisonOpen = false;
+      this.compareMode = 'two';
+      this.compareRoundA = null;
+      this.compareRoundB = null;
+    },
+    selectRound(round) {
+      this.currentModalRound = round;
+    },
+    onRoundSelectChange() {
+      // Bound to currentModalRound
+    },
+    isLatestRound(att) {
+      if (!att) return false;
+      return att.round === this.latestRoundNumber;
+    },
+    formatShortDate(isoString) {
+      if (!isoString) return '-';
+      const d = new Date(isoString);
+      if (isNaN(d.getTime())) return String(isoString);
+      return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+    },
+    getRoundStatusText(att) {
+      if (att.status === 'CANCELLED') return '🔄 รีเซ็ตแล้ว';
+      if (att.result && att.result.overall && att.result.overall.status === 'NEEDS_ADDITIONAL_CARE') return '⚠️ ควรดูแลเพิ่ม';
+      return '✅ ปกติ';
+    },
+    getBannerClass(att) {
+      if (!att) return '';
+      if (att.status === 'CANCELLED') return 'is-cancelled';
+      if (att.round === 1 && this.selectedItem?.attempts?.length > 1) return 'is-round1';
+      return 'is-round2';
+    },
+    getBannerIcon(att) {
+      if (!att) return '📌';
+      if (att.status === 'CANCELLED') return '⚠️';
+      if (att.round === 1 && this.selectedItem?.attempts?.length > 1) return '📜';
+      return '📌';
+    },
+    setPresetPrevLatest() {
+      if (!this.selectedItem?.attempts || this.selectedItem.attempts.length < 2) return;
+      const atts = this.selectedItem.attempts;
+      this.compareRoundB = atts[atts.length - 1].round;
+      this.compareRoundA = atts[atts.length - 2].round;
+    },
+    setPresetBaseLatest() {
+      if (!this.selectedItem?.attempts || this.selectedItem.attempts.length < 2) return;
+      const atts = this.selectedItem.attempts;
+      this.compareRoundA = atts[0].round;
+      this.compareRoundB = atts[atts.length - 1].round;
     },
     async toggleUnmaskPII() {
       if (this.isPIIRevealed) {
@@ -1916,6 +2366,557 @@ export default {
   font-weight: 700;
   background: #ecfdf5;
   border-color: #a7f3d0;
+}
+
+/* ==========================================================================
+   Multi-Round History, Stepper, & Comparison Table (Prototype Parity)
+   ========================================================================== */
+
+.cell-round {
+  white-space: nowrap;
+}
+
+.round-badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.round-badge-multi {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+
+.history-pill {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.15rem 0.45rem;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #b45309;
+}
+
+.status-cancelled {
+  background: #f1f5f9 !important;
+  color: #64748b !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+.journey-timeline-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.journey-timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.65rem;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.journey-timeline-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.journey-timeline-sub {
+  font-size: 0.74rem;
+  color: #64748b;
+}
+
+.journey-timeline-steps {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.journey-step-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.journey-step-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 0.45rem 0.75rem;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  min-width: 95px;
+  transition: all 0.15s ease;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.journey-step-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.journey-step-btn.is-active {
+  background: #eff6ff;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.25);
+}
+
+.journey-step-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.journey-step-date {
+  font-size: 0.7rem;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.journey-step-badge {
+  font-size: 0.68rem;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  font-weight: 600;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+.badge-cancelled {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.badge-danger {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.badge-normal {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.journey-step-connector {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.attempt-tabs-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.attempt-tabs-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.attempt-tab-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.round-quick-select {
+  font-size: 0.82rem;
+  padding: 0.35rem 0.6rem;
+  font-weight: 600;
+  min-width: 170px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #1e293b;
+}
+
+.attempt-tab-group {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.attempt-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.attempt-tab-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.attempt-tab-btn.is-active {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+  box-shadow: 0 1px 3px rgba(2, 132, 199, 0.3);
+}
+
+.btn-compare-rounds {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  background: #fdf4ff;
+  border: 1px solid #f0abfc;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #a21caf;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.btn-compare-rounds:hover {
+  background: #fae8ff;
+  color: #86198f;
+}
+
+.btn-compare-rounds.is-active {
+  background: #a21caf;
+  color: #ffffff;
+  border-color: #a21caf;
+}
+
+.round-history-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.round-history-banner.is-round1 {
+  background: #fefce8;
+  border: 1px solid #fef08a;
+  color: #854d0e;
+}
+
+.round-history-banner.is-round2 {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e40af;
+}
+
+.round-history-banner.is-cancelled {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.banner-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.banner-text {
+  line-height: 1.4;
+}
+
+.archived-pill {
+  margin-left: 8px;
+  font-weight: 600;
+  background: rgba(30, 58, 138, 0.08);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+}
+
+.cancelled-round-notice {
+  display: flex;
+  gap: 0.75rem;
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.cancelled-notice-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.cancelled-notice-content strong {
+  color: #9f1239;
+  font-size: 0.88rem;
+}
+
+.cancelled-notice-content p {
+  margin: 0.35rem 0 0.5rem 0;
+  font-size: 0.82rem;
+  color: #881337;
+}
+
+.cancelled-data-archived {
+  font-size: 0.74rem;
+  color: #64748b;
+  display: block;
+}
+
+.badge-reset-done {
+  padding: 0.45rem 0.9rem;
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.compare-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.compare-mode-tab-group {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.5rem;
+}
+
+.compare-mode-tab-btn {
+  padding: 0.35rem 0.75rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.compare-mode-tab-btn:hover {
+  background: #f1f5f9;
+}
+
+.compare-mode-tab-btn.is-active {
+  background: #701a75;
+  color: #ffffff;
+  border-color: #701a75;
+}
+
+.compare-filter-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+  background: #fdf4ff;
+  border: 1px solid #f0abfc;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+}
+
+.compare-selectors {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: #701a75;
+}
+
+.compare-select {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid #f0abfc;
+  border-radius: 4px;
+  background: white;
+}
+
+.vs-text {
+  font-weight: 700;
+  color: #86198f;
+}
+
+.compare-presets {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.compare-preset-btn {
+  padding: 0.25rem 0.55rem;
+  background: #ffffff;
+  border: 1px solid #e879f9;
+  border-radius: 4px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #86198f;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.compare-preset-btn:hover {
+  background: #fae8ff;
+}
+
+.compare-table-wrapper {
+  overflow-x: auto;
+}
+
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.compare-table th {
+  background: #f8fafc;
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+  color: #334155;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.compare-table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+  color: #1e293b;
+}
+
+.all-rounds-matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.all-rounds-matrix-table th {
+  background: #f8fafc;
+  padding: 0.55rem 0.75rem;
+  font-weight: 700;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.all-rounds-matrix-table th:first-child {
+  text-align: left;
+  min-width: 140px;
+}
+
+.all-rounds-matrix-table td {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  color: #1e293b;
+  text-align: center;
+}
+
+.all-rounds-matrix-table td:first-child {
+  text-align: left;
+  font-weight: 600;
+}
+
+.matrix-latest-col {
+  background: #eff6ff !important;
+}
+
+.matrix-th-date {
+  font-size: 0.7rem;
+  font-weight: normal;
+  color: #64748b;
+}
+
+.matrix-th-summary {
+  background: #f0fdf4 !important;
+  color: #166534 !important;
+}
+
+.matrix-hint {
+  margin-bottom: 0.5rem;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.trend-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.trend-tag.trend-better {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.trend-tag.trend-worse {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.trend-tag.trend-same {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
 }
 
 /* ==========================================================================

@@ -115,10 +115,15 @@ class AssessmentSessionService {
       for (const doc of this.attemptsCollection._documents) {
         if (doc && doc.attemptId) {
           this.allAttempts.set(doc.attemptId, doc);
-          if (doc.employeeId) {
+          if (doc.employeeId && doc.status !== ATTEMPT_STATUS.CANCELLED) {
             const existing = this.memoryAttempts.get(doc.employeeId);
             if (!existing || (doc.updatedAt && (!existing.updatedAt || doc.updatedAt >= existing.updatedAt))) {
               this.memoryAttempts.set(doc.employeeId, doc);
+            }
+          } else if (doc.employeeId && doc.status === ATTEMPT_STATUS.CANCELLED) {
+            const existing = this.memoryAttempts.get(doc.employeeId);
+            if (existing && existing.attemptId === doc.attemptId) {
+              this.memoryAttempts.delete(doc.employeeId);
             }
           }
         }
@@ -136,10 +141,15 @@ class AssessmentSessionService {
           for (const doc of docs) {
             if (doc && doc.attemptId) {
               this.allAttempts.set(doc.attemptId, doc);
-              if (doc.employeeId) {
+              if (doc.employeeId && doc.status !== ATTEMPT_STATUS.CANCELLED) {
                 const existing = this.memoryAttempts.get(doc.employeeId);
                 if (!existing || (doc.updatedAt && (!existing.updatedAt || doc.updatedAt >= existing.updatedAt))) {
                   this.memoryAttempts.set(doc.employeeId, doc);
+                }
+              } else if (doc.employeeId && doc.status === ATTEMPT_STATUS.CANCELLED) {
+                const existing = this.memoryAttempts.get(doc.employeeId);
+                if (existing && existing.attemptId === doc.attemptId) {
+                  this.memoryAttempts.delete(doc.employeeId);
                 }
               }
             }
@@ -163,6 +173,34 @@ class AssessmentSessionService {
     return Array.from(list.values());
   }
 
+  _getEmployeeAttempts(employeeId) {
+    this._syncFromCollectionSync();
+    const map = new Map();
+    for (const a of this.allAttempts.values()) {
+      if (a && a.employeeId === employeeId && a.attemptId) {
+        map.set(a.attemptId, a);
+      }
+    }
+    for (const a of this.memoryAttempts.values()) {
+      if (a && a.employeeId === employeeId && a.attemptId) {
+        map.set(a.attemptId, a);
+      }
+    }
+    const attempts = Array.from(map.values());
+    attempts.sort((a, b) => {
+      const tA = new Date(a.submittedAt || a.createdAt || 0).getTime();
+      const tB = new Date(b.submittedAt || b.createdAt || 0).getTime();
+      return tA - tB;
+    });
+    // Assign incremental round numbers if missing
+    attempts.forEach((att, idx) => {
+      if (!att.round) {
+        att.round = idx + 1;
+      }
+    });
+    return attempts;
+  }
+
   async getSession(employeeId) {
     if (!employeeId) {
       const err = new Error('Employee ID required');
@@ -175,14 +213,14 @@ class AssessmentSessionService {
 
     let attempt = this.memoryAttempts.get(employeeId);
     if (!attempt && this.attemptsCollection) {
-      attempt = await this.attemptsCollection.findOne({ employeeId });
+      attempt = await this.attemptsCollection.findOne({ employeeId, status: { $ne: ATTEMPT_STATUS.CANCELLED } });
       if (attempt) {
         this.memoryAttempts.set(employeeId, attempt);
         this.allAttempts.set(attempt.attemptId, attempt);
       }
     }
 
-    if (!attempt) {
+    if (!attempt || attempt.status === ATTEMPT_STATUS.CANCELLED) {
       return {
         noticeAcknowledged: false,
         status: null,
@@ -217,6 +255,7 @@ class AssessmentSessionService {
       noticeAcknowledged: !!attempt.noticeAcknowledgedAt,
       status: attempt.status,
       attemptId: attempt.attemptId,
+      round: attempt.round || 1,
       noticeAcknowledgedAt: attempt.noticeAcknowledgedAt,
       submittedAt: attempt.submittedAt || null,
       result: attempt.result || null,
@@ -236,9 +275,14 @@ class AssessmentSessionService {
       throw err;
     }
 
+    await this._syncFromCollection();
     let attempt = this.memoryAttempts.get(employeeId);
+    if (attempt && attempt.status === ATTEMPT_STATUS.CANCELLED) {
+      this.memoryAttempts.delete(employeeId);
+      attempt = null;
+    }
 
-    // If attempt already exists and is submitted, cannot create a new one
+    // If attempt already exists and is submitted, cannot create a new one unless reset
     if (attempt && attempt.status === ATTEMPT_STATUS.SUBMITTED) {
       const err = new Error('พนักงานได้ทำการส่งแบบประเมินเรียบร้อยแล้ว');
       err.status = 409;
@@ -246,11 +290,19 @@ class AssessmentSessionService {
       throw err;
     }
 
+    const pastAttempts = this._getEmployeeAttempts(employeeId);
+    let maxRound = 0;
+    for (const a of pastAttempts) {
+      if (a.round && a.round > maxRound) maxRound = a.round;
+    }
+    const nextRound = maxRound > 0 ? maxRound + 1 : (pastAttempts.length > 0 ? pastAttempts.length + 1 : 1);
+
     const now = new Date().toISOString();
-    if (!attempt) {
+    if (!attempt || attempt.status === ATTEMPT_STATUS.CANCELLED) {
       attempt = {
         attemptId: crypto.randomUUID(),
         employeeId,
+        round: nextRound,
         noticeVersion,
         noticeAcknowledgedAt: now,
         status: ATTEMPT_STATUS.DRAFT,
@@ -266,6 +318,7 @@ class AssessmentSessionService {
       attempt.noticeVersion = noticeVersion;
       attempt.noticeAcknowledgedAt = now;
       attempt.status = ATTEMPT_STATUS.DRAFT;
+      attempt.round = attempt.round || nextRound;
       attempt.currentStepIndex = 0;
       attempt.updatedAt = now;
       this.allAttempts.set(attempt.attemptId, attempt);
@@ -273,7 +326,7 @@ class AssessmentSessionService {
 
     if (this.attemptsCollection) {
       await this.attemptsCollection.updateOne(
-        { employeeId },
+        { attemptId: attempt.attemptId },
         { $set: attempt },
         { upsert: true }
       );
@@ -282,6 +335,7 @@ class AssessmentSessionService {
     return {
       success: true,
       attemptId: attempt.attemptId,
+      round: attempt.round,
       status: attempt.status,
       noticeAcknowledgedAt: attempt.noticeAcknowledgedAt
     };
@@ -290,8 +344,12 @@ class AssessmentSessionService {
   async getDraft(employeeId) {
     await this._syncFromCollection();
     let attempt = this.memoryAttempts.get(employeeId);
+    if (attempt && attempt.status === ATTEMPT_STATUS.CANCELLED) {
+      this.memoryAttempts.delete(employeeId);
+      attempt = null;
+    }
     if (!attempt && this.attemptsCollection) {
-      attempt = await this.attemptsCollection.findOne({ employeeId });
+      attempt = await this.attemptsCollection.findOne({ employeeId, status: ATTEMPT_STATUS.DRAFT });
       if (attempt) {
         this.memoryAttempts.set(employeeId, attempt);
         this.allAttempts.set(attempt.attemptId, attempt);
@@ -336,7 +394,11 @@ class AssessmentSessionService {
   }
 
   async nextStep(employeeId) {
-    const attempt = this.memoryAttempts.get(employeeId);
+    let attempt = this.memoryAttempts.get(employeeId);
+    if (attempt && attempt.status === ATTEMPT_STATUS.CANCELLED) {
+      this.memoryAttempts.delete(employeeId);
+      attempt = null;
+    }
     if (!attempt || attempt.status !== ATTEMPT_STATUS.DRAFT) {
       const err = new Error('ไม่พบแบบร่างที่สามารถแก้ไขได้');
       err.status = 400;
@@ -393,7 +455,11 @@ class AssessmentSessionService {
   }
 
   async prevStep(employeeId) {
-    const attempt = this.memoryAttempts.get(employeeId);
+    let attempt = this.memoryAttempts.get(employeeId);
+    if (attempt && attempt.status === ATTEMPT_STATUS.CANCELLED) {
+      this.memoryAttempts.delete(employeeId);
+      attempt = null;
+    }
     if (!attempt || attempt.status !== ATTEMPT_STATUS.DRAFT) {
       const err = new Error('ไม่พบแบบร่างที่สามารถแก้ไขได้');
       err.status = 400;
@@ -424,19 +490,31 @@ class AssessmentSessionService {
   async submitAssessment(employeeId, customSnapshot = {}, submittedAnswers = null, feedback = null) {
     await this._syncFromCollection();
     let attempt = this.memoryAttempts.get(employeeId);
+    if (attempt && attempt.status === ATTEMPT_STATUS.CANCELLED) {
+      this.memoryAttempts.delete(employeeId);
+      attempt = null;
+    }
     if (!attempt && this.attemptsCollection) {
-      attempt = await this.attemptsCollection.findOne({ employeeId });
+      attempt = await this.attemptsCollection.findOne({ employeeId, status: ATTEMPT_STATUS.DRAFT });
       if (attempt) {
         this.memoryAttempts.set(employeeId, attempt);
         this.allAttempts.set(attempt.attemptId, attempt);
       }
     }
 
+    const pastAttempts = this._getEmployeeAttempts(employeeId);
+    let maxRound = 0;
+    for (const a of pastAttempts) {
+      if (a.round && a.round > maxRound) maxRound = a.round;
+    }
+    const nextRound = maxRound > 0 ? maxRound + 1 : (pastAttempts.length > 0 ? pastAttempts.length + 1 : 1);
+
     if (!attempt) {
       const now = new Date().toISOString();
       attempt = {
         attemptId: crypto.randomUUID(),
         employeeId,
+        round: nextRound,
         noticeVersion: '2026-09-03',
         noticeAcknowledgedAt: now,
         status: ATTEMPT_STATUS.DRAFT,
@@ -448,6 +526,8 @@ class AssessmentSessionService {
       };
       this.memoryAttempts.set(employeeId, attempt);
       this.allAttempts.set(attempt.attemptId, attempt);
+    } else if (!attempt.round) {
+      attempt.round = nextRound;
     }
 
     if (submittedAnswers && typeof submittedAnswers === 'object') {
@@ -466,6 +546,7 @@ class AssessmentSessionService {
       return {
         success: true,
         attemptId: attempt.attemptId,
+        round: attempt.round || 1,
         status: ATTEMPT_STATUS.SUBMITTED,
         submittedAt: attempt.submittedAt,
         snapshot: attempt.snapshot
@@ -533,6 +614,8 @@ class AssessmentSessionService {
 
     if (feedback || customSnapshot.feedback) {
       attempt.feedback = String(feedback || customSnapshot.feedback).trim().slice(0, 500);
+    } else {
+      attempt.feedback = null;
     }
 
     this.memoryAttempts.set(employeeId, attempt);
@@ -540,7 +623,7 @@ class AssessmentSessionService {
 
     if (this.attemptsCollection) {
       await this.attemptsCollection.updateOne(
-        { employeeId },
+        { attemptId: attempt.attemptId },
         { $set: attempt },
         { upsert: true }
       );
@@ -549,6 +632,7 @@ class AssessmentSessionService {
     return {
       success: true,
       attemptId: attempt.attemptId,
+      round: attempt.round || 1,
       status: ATTEMPT_STATUS.SUBMITTED,
       submittedAt: attempt.submittedAt,
       result: attempt.result,
@@ -560,11 +644,12 @@ class AssessmentSessionService {
   async getResult(employeeId) {
     await this._syncFromCollection();
     let attempt = this.memoryAttempts.get(employeeId);
-    if (!attempt && this.attemptsCollection) {
-      attempt = await this.attemptsCollection.findOne({ employeeId });
-      if (attempt) {
-        this.memoryAttempts.set(employeeId, attempt);
-        this.allAttempts.set(attempt.attemptId, attempt);
+    if (!attempt || attempt.status !== ATTEMPT_STATUS.SUBMITTED) {
+      const pastAttempts = this._getEmployeeAttempts(employeeId);
+      const submitted = pastAttempts.filter(a => a.status === ATTEMPT_STATUS.SUBMITTED);
+      if (submitted.length > 0) {
+        submitted.sort((a, b) => (b.round || 0) - (a.round || 0) || new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0));
+        attempt = submitted[0];
       }
     }
     if (!attempt || attempt.status !== ATTEMPT_STATUS.SUBMITTED) {
@@ -574,24 +659,36 @@ class AssessmentSessionService {
       throw err;
     }
 
+    const pastAttempts = this._getEmployeeAttempts(employeeId);
+    const sanitizedAttempts = pastAttempts.map((a, idx) => {
+      const copy = { ...a };
+      delete copy.answers;
+      copy.round = copy.round || (idx + 1);
+      return copy;
+    });
+
     return {
       attemptId: attempt.attemptId,
+      round: attempt.round || 1,
+      totalRounds: pastAttempts.length,
       status: attempt.status,
       submittedAt: attempt.submittedAt,
       result: attempt.result,
       snapshot: attempt.snapshot,
-      feedback: attempt.feedback || null
+      feedback: attempt.feedback || null,
+      attempts: sanitizedAttempts
     };
   }
 
   async saveFeedback(employeeId, feedbackText) {
     await this._syncFromCollection();
     let attempt = this.memoryAttempts.get(employeeId);
-    if (!attempt && this.attemptsCollection) {
-      attempt = await this.attemptsCollection.findOne({ employeeId });
-      if (attempt) {
-        this.memoryAttempts.set(employeeId, attempt);
-        this.allAttempts.set(attempt.attemptId, attempt);
+    if (!attempt || attempt.status !== ATTEMPT_STATUS.SUBMITTED) {
+      const pastAttempts = this._getEmployeeAttempts(employeeId);
+      const submitted = pastAttempts.filter(a => a.status === ATTEMPT_STATUS.SUBMITTED);
+      if (submitted.length > 0) {
+        submitted.sort((a, b) => (b.round || 0) - (a.round || 0) || new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0));
+        attempt = submitted[0];
       }
     }
     if (!attempt) {
@@ -606,7 +703,7 @@ class AssessmentSessionService {
 
     if (this.attemptsCollection) {
       await this.attemptsCollection.updateOne(
-        { employeeId },
+        { attemptId: attempt.attemptId },
         { $set: { feedback: attempt.feedback, updatedAt: attempt.updatedAt } }
       );
     }
@@ -618,13 +715,32 @@ class AssessmentSessionService {
   }
 
   async saveAnswers(employeeId, newAnswers = {}) {
+    await this._syncFromCollection();
     let attempt = this.memoryAttempts.get(employeeId);
+    if (attempt && attempt.status === ATTEMPT_STATUS.CANCELLED) {
+      this.memoryAttempts.delete(employeeId);
+      attempt = null;
+    }
+    if (!attempt && this.attemptsCollection) {
+      attempt = await this.attemptsCollection.findOne({ employeeId, status: ATTEMPT_STATUS.DRAFT });
+      if (attempt) {
+        this.memoryAttempts.set(employeeId, attempt);
+        this.allAttempts.set(attempt.attemptId, attempt);
+      }
+    }
 
     if (!attempt) {
+      const pastAttempts = this._getEmployeeAttempts(employeeId);
+      let maxRound = 0;
+      for (const a of pastAttempts) {
+        if (a.round && a.round > maxRound) maxRound = a.round;
+      }
+      const nextRound = maxRound > 0 ? maxRound + 1 : (pastAttempts.length > 0 ? pastAttempts.length + 1 : 1);
       const now = new Date().toISOString();
       attempt = {
         attemptId: crypto.randomUUID(),
         employeeId,
+        round: nextRound,
         noticeVersion: '2026-09-03',
         noticeAcknowledgedAt: now,
         status: ATTEMPT_STATUS.DRAFT,
@@ -665,8 +781,9 @@ class AssessmentSessionService {
 
     if (this.attemptsCollection) {
       await this.attemptsCollection.updateOne(
-        { employeeId },
-        { $set: { answers: attempt.answers, updatedAt: attempt.updatedAt } }
+        { attemptId: attempt.attemptId },
+        { $set: { answers: attempt.answers, updatedAt: attempt.updatedAt, round: attempt.round, status: attempt.status, noticeAcknowledgedAt: attempt.noticeAcknowledgedAt } },
+        { upsert: true }
       );
     }
 
@@ -702,7 +819,7 @@ class AssessmentSessionService {
 
     if (this.attemptsCollection) {
       await this.attemptsCollection.updateOne(
-        { employeeId },
+        { attemptId: attempt.attemptId },
         { $set: { answers: {}, noticeAcknowledgedAt: null, status: null, currentStepIndex: 0, updatedAt: attempt.updatedAt } }
       );
     }
@@ -797,19 +914,45 @@ class AssessmentSessionService {
     const startIndex = (p - 1) * lim;
     const paginated = attempts.slice(startIndex, startIndex + lim);
 
+    const allAttemptsList = this._getAllAttempts();
     // CRITICAL PRIVACY REQUIREMENT: Strictly strip answers (Answer entities)
-    const items = paginated.map((a) => ({
-      attemptId: a.attemptId,
-      employeeId: a.employeeId,
-      status: a.status,
-      submittedAt: a.submittedAt,
-      cancelledAt: a.cancelledAt || null,
-      cancelledReason: a.cancelledReason || null,
-      createdAt: a.createdAt,
-      snapshot: a.snapshot || null,
-      result: a.result || null,
-      feedback: a.feedback || null
-    }));
+    const items = paginated.map((a) => {
+      const empAll = (allAttemptsList.filter((x) => x.employeeId === a.employeeId))
+        .sort((x, y) => (x.round || 0) - (y.round || 0) || new Date(x.createdAt || 0) - new Date(y.createdAt || 0));
+
+      const empAttemptsSummary = empAll.map((ea, idx) => ({
+        attemptId: ea.attemptId,
+        round: ea.round || (idx + 1),
+        status: ea.status,
+        submittedAt: ea.submittedAt || null,
+        cancelledAt: ea.cancelledAt || null,
+        cancelledReason: ea.cancelledReason || null,
+        cancelledBy: ea.cancelledBy || null,
+        createdAt: ea.createdAt,
+        result: ea.result || null,
+        feedback: ea.feedback || null,
+        snapshot: ea.snapshot || null
+      }));
+
+      const curRound = a.round || (empAll.findIndex((x) => x.attemptId === a.attemptId) + 1) || 1;
+
+      return {
+        attemptId: a.attemptId,
+        employeeId: a.employeeId,
+        round: curRound,
+        totalRounds: empAttemptsSummary.length,
+        status: a.status,
+        submittedAt: a.submittedAt,
+        cancelledAt: a.cancelledAt || null,
+        cancelledReason: a.cancelledReason || null,
+        cancelledBy: a.cancelledBy || null,
+        createdAt: a.createdAt,
+        snapshot: a.snapshot || null,
+        result: a.result || null,
+        feedback: a.feedback || null,
+        attempts: empAttemptsSummary
+      };
+    });
 
     return {
       items,
@@ -1005,8 +1148,24 @@ class AssessmentSessionService {
     }
 
     // STRICT PRIVACY RULE (ADR-0009): NEVER leak raw question-level answers
+    const allAttemptsList = this._getAllAttempts();
+    const empAll = (allAttemptsList.filter((x) => x.employeeId === attempt.employeeId))
+      .sort((x, y) => (x.round || 0) - (y.round || 0) || new Date(x.createdAt || 0) - new Date(y.createdAt || 0));
+
+    const empAttemptsSummary = empAll.map((ea, idx) => {
+      const copy = { ...ea };
+      delete copy.answers;
+      copy.round = copy.round || (idx + 1);
+      return copy;
+    });
+
+    const curRound = attempt.round || (empAll.findIndex((x) => x.attemptId === attempt.attemptId) + 1) || 1;
+
     const sanitized = { ...attempt };
     delete sanitized.answers;
+    sanitized.round = curRound;
+    sanitized.totalRounds = empAttemptsSummary.length;
+    sanitized.attempts = empAttemptsSummary;
 
     return sanitized;
   }
