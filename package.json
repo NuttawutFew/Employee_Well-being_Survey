@@ -1,0 +1,34 @@
+{
+  "name": "employee-well-being-survey-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "clean": "rm -rf apps/*/dist packages/*/dist",
+    "dev:api": "npm --workspace=apps/api run dev",
+    "dev:employee": "npm --workspace=apps/employee-web run dev",
+    "dev:admin": "npm --workspace=apps/admin-web run dev",
+    "dev:uat:frontend-user": "PORT=32301 API_TARGET=http://localhost:32302 npm --workspace=apps/employee-web run dev",
+    "dev:uat:backend-user": "PORT=32302 SERVICE_ROLE=user npm --workspace=apps/api run dev",
+    "dev:uat:frontend-admin": "PORT=32303 API_TARGET=http://localhost:32304 npm --workspace=apps/admin-web run dev",
+    "dev:uat:backend-admin": "PORT=32304 SERVICE_ROLE=admin npm --workspace=apps/api run dev",
+    "dev:prd:frontend-user": "PORT=33301 API_TARGET=http://localhost:33302 npm --workspace=apps/employee-web run dev",
+    "dev:prd:backend-user": "PORT=33302 SERVICE_ROLE=user npm --workspace=apps/api run dev",
+    "dev:prd:frontend-admin": "PORT=33303 API_TARGET=http://localhost:33304 npm --workspace=apps/admin-web run dev",
+    "dev:prd:backend-admin": "PORT=33304 SERVICE_ROLE=admin npm --workspace=apps/api run dev",
+    "docker:dev": "docker compose up --build",
+    "docker:down": "docker compose down",
+    "docker:uat": "docker compose -f docker-compose.uat.yml up --build",
+    "docker:uat:down": "docker compose -f docker-compose.uat.yml down",
+    "docker:prd": "docker compose -f docker-compose.prd.yml up --build",
+    "docker:prd:down": "docker compose -f docker-compose.prd.yml down"
+  },
+  "devDependencies": {
+    "@rollup/rollup-darwin-arm64": "^4.63.1"
+  }
+}

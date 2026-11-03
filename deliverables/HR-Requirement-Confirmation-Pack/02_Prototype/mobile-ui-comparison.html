@@ -1,0 +1,2373 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mobile UI Comparison & Text Legibility Showcase - Employee Well-being Survey</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --primary-light: #e0f2fe;
+      --surface: #ffffff;
+      --background: #f1f5f9;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --warning: #f59e0b;
+      --danger: #dc2626;
+      --font-scale: 1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'IBM Plex Sans Thai', sans-serif !important;
+    }
+
+    body {
+      font-family: 'IBM Plex Sans Thai', sans-serif !important;
+      font-weight: 300;
+      background: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, h5, h6, strong, b {
+      font-family: 'IBM Plex Sans Thai', sans-serif !important;
+      font-weight: 500;
+    }
+
+    /* Top Control Hub */
+    .top-hub {
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+      padding: 1rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .hub-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, #0284c7, #0ea5e9);
+      color: #ffffff;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-heading {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .brand-sub {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .hub-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #0f172a;
+      padding: 0.3rem 0.5rem;
+      border-radius: 8px;
+      border: 1px solid #334155;
+    }
+
+    .control-label {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      font-weight: 600;
+      padding-left: 0.3rem;
+    }
+
+    .hub-btn {
+      background: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid #334155;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .hub-btn:hover {
+      background: #334155;
+      color: #ffffff;
+    }
+
+    .hub-btn.is-active {
+      background: #0284c7;
+      border-color: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.4);
+    }
+
+    /* Main Showcase Layout */
+    .showcase-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      flex: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Option Selection Tabs Banner */
+    .variant-tabs-bar {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+
+    .variant-tab-card {
+      flex: 1;
+      min-width: 220px;
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      text-align: left;
+    }
+
+    .variant-tab-card:hover {
+      background: #273549;
+      border-color: #475569;
+    }
+
+    .variant-tab-card.is-active {
+      background: #1e293b;
+      border-color: #38bdf8;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.25);
+    }
+
+    .variant-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #38bdf8;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .variant-badge-rec {
+      background: #059669;
+      color: #ffffff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.68rem;
+    }
+
+    .variant-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .variant-desc {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      line-height: 1.35;
+    }
+
+    /* Main Workspace: Simulator + Info Panel */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+      .workspace-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Mobile Device Frame */
+    .phone-simulator-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .phone-frame {
+      background: #000000;
+      border-radius: 44px;
+      padding: 12px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px #334155;
+      position: relative;
+      transition: width 0.3s ease, height 0.3s ease;
+      width: 393px;
+      height: 780px;
+      max-width: 100%;
+    }
+
+    .phone-screen {
+      background: #f8fafc;
+      color: #0f172a;
+      border-radius: 34px;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      font-size: calc(1rem * var(--font-scale));
+    }
+
+    /* Dynamic Island / Notch */
+    .phone-notch {
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 28px;
+      background: rgba(248, 250, 252, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1.25rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .notch-island {
+      width: 90px;
+      height: 18px;
+      background: #000000;
+      border-radius: 12px;
+      margin: 0 auto;
+    }
+
+    /* Mobile App Header */
+    .app-header {
+      background: #ffffff;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 28px;
+      z-index: 40;
+    }
+
+    .app-header-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .app-header-step {
+      font-size: 0.78rem;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .progress-bar-track {
+      height: 4px;
+      background: #e2e8f0;
+      width: 100%;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: #0284c7;
+      width: 33%;
+      transition: width 0.3s ease;
+    }
+
+    /* Mobile Content Area */
+    .mobile-content {
+      padding: 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .instruction-card {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.82rem;
+      color: #1e40af;
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .question-box {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 1.15rem 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .question-number-badge {
+      display: inline-flex;
+      align-items: center;
+      background: #f1f5f9;
+      color: #475569;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      width: fit-content;
+    }
+
+    .question-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.45;
+    }
+
+    /* ========================================================
+       VARIANT 1: Vertical Touch Cards / Large Readable Pills
+       ======================================================== */
+    .v1-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .v1-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.85rem 1rem;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+      min-height: 52px;
+    }
+
+    .v1-card:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+
+    .v1-card:active {
+      transform: scale(0.985);
+    }
+
+    .v1-card.is-selected {
+      background: #eff6ff;
+      border-color: #0284c7;
+      box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+    }
+
+    .v1-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .v1-radio {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+      background: #ffffff;
+    }
+
+    .v1-card.is-selected .v1-radio {
+      border-color: #0284c7;
+      background: #0284c7;
+    }
+
+    .v1-radio-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffffff;
+      transform: scale(0);
+      transition: transform 0.15s ease;
+    }
+
+    .v1-card.is-selected .v1-radio-dot {
+      transform: scale(1);
+    }
+
+    .v1-text {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #1e293b;
+      line-height: 1.35;
+    }
+
+    .v1-card.is-selected .v1-text {
+      color: #0369a1;
+      font-weight: 700;
+    }
+
+    .v1-intensity-tag {
+      font-size: 0.72rem;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-weight: 600;
+      background: #f1f5f9;
+      color: #64748b;
+      white-space: nowrap;
+    }
+
+    .v1-card.is-selected .v1-intensity-tag {
+      background: #dbeafe;
+      color: #0284c7;
+    }
+
+    /* ========================================================
+       VARIANT 2: 7-Circles + Floating Zoom Label Display
+       ======================================================== */
+    .v2-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .v2-zoom-box {
+      background: #eff6ff;
+      border: 2px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      text-align: center;
+      min-height: 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.08);
+      transition: all 0.2s ease;
+    }
+
+    .v2-zoom-box.has-val {
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      border-color: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    }
+
+    .v2-zoom-caption {
+      font-size: 0.74rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 2px;
+    }
+
+    .v2-zoom-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
+
+    .v2-track-wrapper {
+      position: relative;
+      padding: 10px 4px;
+    }
+
+    .v2-track-line {
+      position: absolute;
+      top: 50%;
+      left: 18px;
+      right: 18px;
+      height: 5px;
+      background: linear-gradient(90deg, #10b981 0%, #84cc16 28%, #eab308 50%, #f97316 75%, #ef4444 100%);
+      transform: translateY(-50%);
+      border-radius: 999px;
+      z-index: 1;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .v2-circles-row {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .v2-circle-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid var(--step-color, #94a3b8);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08), 0 0 0 2px var(--step-light, transparent);
+    }
+
+    .v2-circle-btn:active, .v2-circle-btn:hover {
+      border-color: var(--step-dark, #0284c7);
+      background: var(--step-light, #eff6ff);
+      transform: scale(1.15);
+    }
+
+    .v2-circle-btn.is-selected {
+      background: linear-gradient(135deg, var(--step-color, #0284c7) 0%, var(--step-dark, #0369a1) 100%);
+      border-color: var(--step-dark, #0284c7);
+      transform: scale(1.22);
+      box-shadow: 0 0 0 4px var(--step-ring, rgba(2, 132, 199, 0.25)), 0 4px 12px var(--step-glow, rgba(2, 132, 199, 0.4));
+    }
+
+    .v2-inner-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ffffff;
+      transform: scale(0);
+      transition: transform 0.15s ease;
+    }
+
+    .v2-circle-btn.is-selected .v2-inner-dot {
+      transform: scale(1);
+    }
+
+    .v2-scale-anchors {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #64748b;
+    }
+
+    /* ========================================================
+       VARIANT 3: Interactive Stepper Slider with Big Text
+       ======================================================== */
+    .v3-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .v3-display-card {
+      background: linear-gradient(145deg, #eef6fa 0%, #DCEBF4 100%);
+      border: 2px solid #1e4b6e;
+      border-radius: 14px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(14, 42, 71, 0.12);
+    }
+
+    .v3-step-indicator {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #ffffff;
+      background: #1e4b6e;
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 999px;
+      margin-bottom: 0.35rem;
+      box-shadow: 0 1px 3px rgba(14, 42, 71, 0.15);
+    }
+
+    .v3-text {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #0a2135;
+      line-height: 1.3;
+    }
+
+    .v3-slider-wrap {
+      padding: 0.5rem 0.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .v3-range-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 12px;
+      border-radius: 6px;
+      background: #9dc2d8;
+      border: 1.5px solid #6297b8;
+      box-shadow: inset 0 2px 4px rgba(14, 42, 71, 0.18);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .v3-range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 4px solid #0e2a47;
+      box-shadow: 0 4px 12px rgba(14, 42, 71, 0.35), 0 0 0 3px #DCEBF4;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    .v3-range-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      border-color: #051626;
+    }
+
+    .v3-tick-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 8px;
+    }
+
+    .v3-tick {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #234e6f;
+      border: 2px solid #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+
+    /* ========================================================
+       VARIANT 4: 2-Column Touch Grid Tiles
+       ======================================================== */
+    .v4-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .v4-tile {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 0.85rem 0.65rem;
+      cursor: pointer;
+      text-align: center;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #1e293b;
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .v4-tile:hover {
+      border-color: #94a3b8;
+      background: #f8fafc;
+    }
+
+    .v4-tile.is-selected {
+      background: #eff6ff;
+      border-color: #0284c7;
+      color: #0369a1;
+      font-weight: 700;
+      box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+    }
+
+    .v4-tile.span-2 {
+      grid-column: span 2;
+    }
+
+    /* ========================================================
+       VARIANT 5: Original Compact 7-Circles Baseline
+       ======================================================== */
+    .v5-scale-track {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      gap: 2px;
+      padding: 6px 2px;
+      margin: 0.25rem 0;
+      width: 100%;
+    }
+
+    .v5-track-line {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 18px;
+      height: 2px;
+      background: #cbd5e1;
+      z-index: 1;
+    }
+
+    .v5-scale-item {
+      position: relative;
+      z-index: 2;
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      padding: 4px 1px 6px 1px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .v5-scale-item.is-selected {
+      background: rgba(239, 246, 255, 0.85);
+    }
+
+    .v5-label-wrap {
+      min-height: 2.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+      width: 100%;
+    }
+
+    .v5-label {
+      font-size: 0.62rem; /* Notice the cramped text! */
+      line-height: 1.15;
+      color: #475569;
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    .v5-scale-item.is-selected .v5-label {
+      color: #1d4ed8;
+      font-weight: 700;
+    }
+
+    .v5-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid #cbd5e1;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .v5-scale-item.is-selected .v5-circle {
+      background: #0284c7;
+      border-color: #0284c7;
+    }
+
+    .v5-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffffff;
+      transform: scale(0);
+      transition: transform 0.15s ease;
+    }
+
+    .v5-scale-item.is-selected .v5-dot {
+      transform: scale(1);
+    }
+
+    /* ========================================================
+       VARIANT 6: Mobile Touch Dropdown & Bottom Sheet Menu
+       ======================================================== */
+    .v6-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    /* Sub-mode switcher inside V6 */
+    .v6-mode-toggle {
+      display: flex;
+      background: #f1f5f9;
+      padding: 4px;
+      border-radius: 10px;
+      gap: 4px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .v6-mode-btn {
+      flex: 1;
+      padding: 0.45rem 0.5rem;
+      border: none;
+      background: transparent;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #64748b;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+
+    .v6-mode-btn.is-active {
+      background: #ffffff;
+      color: #0284c7;
+      font-weight: 700;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Trigger Box (Dropdown styling) */
+    .v6-trigger-box {
+      width: 100%;
+      min-height: 54px;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      transition: all 0.18s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .v6-trigger-box:hover {
+      border-color: #0284c7;
+      background: #f8fafc;
+    }
+
+    .v6-trigger-box:focus {
+      outline: none;
+      border-color: #0284c7;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
+    }
+
+    .v6-trigger-box.has-val {
+      border-color: #0284c7;
+      background: #f0f9ff;
+    }
+
+    .v6-trigger-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .v6-trigger-caption {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .v6-trigger-val {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0f172a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .v6-trigger-placeholder {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    .v6-trigger-badge {
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .v6-trigger-arrow {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0284c7;
+      font-size: 0.85rem;
+      transition: transform 0.2s ease;
+    }
+
+    /* Bottom Sheet Modal & Backdrop inside phone frame */
+    .v6-backdrop {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      border-radius: 34px;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+      animation: v6FadeIn 0.2s ease forwards;
+    }
+
+    @keyframes v6FadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes v6SlideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .v6-bottom-sheet {
+      background: #ffffff;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      padding: 0.85rem 1rem 1.5rem 1rem;
+      max-height: 85%;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.25);
+      animation: v6SlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      z-index: 95;
+    }
+
+    .v6-sheet-drag-handle {
+      width: 44px;
+      height: 5px;
+      background: #cbd5e1;
+      border-radius: 3px;
+      margin: 0 auto 0.75rem auto;
+      cursor: pointer;
+    }
+
+    .v6-sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 0.5rem;
+    }
+
+    .v6-sheet-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .v6-sheet-close-btn {
+      background: #f1f5f9;
+      border: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: #64748b;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.15s ease;
+    }
+
+    .v6-sheet-close-btn:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .v6-sheet-list {
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding-right: 2px;
+      margin-top: 0.25rem;
+    }
+
+    .v6-sheet-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      border: 1.5px solid #e2e8f0;
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: #1e293b;
+      font-weight: 500;
+      transition: all 0.15s ease;
+      min-height: 50px;
+    }
+
+    .v6-sheet-item:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    .v6-sheet-item.is-selected {
+      background: #f0f9ff;
+      border-color: #0284c7;
+      color: #0369a1;
+      font-weight: 700;
+    }
+
+    .v6-item-left {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .v6-item-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      background: #ffffff;
+      font-weight: 700;
+    }
+
+    .v6-sheet-item.is-selected .v6-item-icon {
+      border-color: #0284c7;
+      background: #0284c7;
+      color: #ffffff;
+    }
+
+    .v6-sheet-item-check {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0284c7;
+      visibility: hidden;
+    }
+
+    .v6-sheet-item.is-selected .v6-sheet-item-check {
+      visibility: visible;
+    }
+
+    /* Native Select Option Mode */
+    .v6-native-select-wrap {
+      position: relative;
+      width: 100%;
+    }
+
+    .v6-native-select {
+      width: 100%;
+      min-height: 52px;
+      padding: 0.75rem 2.5rem 0.75rem 1rem;
+      background: #ffffff;
+      border: 1.5px solid #0284c7;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #0f172a;
+      appearance: none;
+      -webkit-appearance: none;
+      outline: none;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+    }
+
+    .v6-native-select:focus {
+      border-color: #0369a1;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.3);
+    }
+
+    .v6-native-select-arrow {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #0284c7;
+      font-size: 0.9rem;
+    }
+
+    /* Mobile Bottom Navigation Bar */
+    .mobile-nav-bar {
+      background: #ffffff;
+      border-top: 1px solid #e2e8f0;
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      position: sticky;
+      bottom: 0;
+      z-index: 40;
+    }
+
+    .m-btn-prev {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #475569;
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .m-btn-next {
+      background: #0284c7;
+      border: 1px solid #0284c7;
+      color: #ffffff;
+      padding: 0.65rem 1.25rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      flex: 1;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3);
+    }
+
+    /* Side Analysis / UX Insights Card */
+    .analysis-panel {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .analysis-header {
+      border-bottom: 1px solid #334155;
+      padding-bottom: 1rem;
+    }
+
+    .analysis-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .analysis-sub {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 0.25rem;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .metric-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .metric-label {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .metric-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #38bdf8;
+    }
+
+    .metric-detail {
+      font-size: 0.75rem;
+      color: #cbd5e1;
+      line-height: 1.35;
+    }
+
+    /* Comparison Table Card */
+    .compare-section {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .compare-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    .eval-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+
+    .eval-table th {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      border-bottom: 1px solid #334155;
+      white-space: nowrap;
+    }
+
+    .eval-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid #334155;
+      color: #e2e8f0;
+      vertical-align: middle;
+    }
+
+    .eval-table tr:hover td {
+      background: rgba(51, 65, 85, 0.4);
+    }
+
+    .score-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .score-high {
+      background: rgba(22, 163, 74, 0.2);
+      color: #4ade80;
+      border: 1px solid rgba(74, 222, 128, 0.3);
+    }
+
+    .score-mid {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .score-low {
+      background: rgba(220, 38, 38, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(248, 113, 113, 0.3);
+    }
+
+    /* 4-Screen Side-by-Side Mode */
+    .side-by-side-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .mini-phone-card {
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 18px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .mini-phone-card.is-recommended {
+      border-color: #38bdf8;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+    }
+
+    .mini-phone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      color: #ffffff;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Hub: Device, Font & Mode Switcher -->
+  <header class="top-hub">
+    <div class="hub-header">
+      <div class="brand-title">
+        <span class="brand-badge">MOBILE UX LAB</span>
+        <div>
+          <h1 class="brand-heading">Employee Well-being Survey</h1>
+          <p class="brand-sub">เครื่องมือทดสอบและเปรียบเทียบขนาดตัวอักษรและรูปแบบคำตอบบนมุมมองโทรศัพท์มือถือ</p>
+        </div>
+      </div>
+
+      <div class="hub-controls">
+        <!-- Device Simulator -->
+        <div class="control-group">
+          <span class="control-label">📱 อุปกรณ์:</span>
+          <button type="button" class="hub-btn is-active" data-device="iphone15">iPhone 15/16 (393px)</button>
+          <button type="button" class="hub-btn" data-device="iphonese">จอเล็ก (360px)</button>
+          <button type="button" class="hub-btn" data-device="galaxy">Galaxy S24 (412px)</button>
+        </div>
+
+        <!-- Font Scaler -->
+        <div class="control-group">
+          <span class="control-label">🔍 ขนาดตัวอักษร:</span>
+          <button type="button" class="hub-btn is-active" data-font="1">A ปกติ (100%)</button>
+          <button type="button" class="hub-btn" data-font="1.15">A+ ใหญ่ (115%)</button>
+          <button type="button" class="hub-btn" data-font="1.3">A++ สูงอายุ (130%)</button>
+        </div>
+
+        <!-- View Mode -->
+        <div class="control-group">
+          <span class="control-label">👁️ มุมมอง:</span>
+          <button type="button" class="hub-btn is-active" data-viewmode="interactive">จำลองมือถือจริง</button>
+          <button type="button" class="hub-btn" data-viewmode="sidebyside">เทียบทุกมุมมองพร้อมกัน</button>
+        </div>
+
+        <a href="./employee-well-being-survey-mobile-simulator.html" class="hub-btn" style="text-decoration:none; background:linear-gradient(135deg,#0284c7,#0369a1); color:#fff; border-color:#38bdf8; font-weight:700; box-shadow:0 0 10px rgba(56,189,248,0.35);" title="เปิดดูระบบจริงแบบจำลองบนโทรศัพท์มือถือ">
+          📱 ดูระบบจริงบนมือถือ ↗
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="showcase-container">
+
+    <!-- Option Selection Tabs Banner -->
+    <div class="variant-tabs-bar" id="variantTabsBar">
+      <div class="variant-tab-card is-active" data-variant="v1">
+        <div class="variant-tag">
+          <span>OPTION 1</span>
+          <span class="variant-badge-rec">⭐ แนะนำสำหรับมือถือ</span>
+        </div>
+        <div class="variant-name">การ์ดแนวตั้งขนาดใหญ่ (Vertical Touch Cards)</div>
+        <div class="variant-desc">ตัวหนังสือใหญ่ ชัดเจน ไม่ต้องเพ่ง แตะนิ้วโป้งมือเดียวได้แม่นยำ 100%</div>
+      </div>
+
+      <div class="variant-tab-card" data-variant="v2">
+        <div class="variant-tag">
+          <span>OPTION 2</span>
+          <span style="color:#38bdf8;">✨ นวัตกรรม UI</span>
+        </div>
+        <div class="variant-name">วงกลม 7 วง + ป้ายซูมตัวหนังสือ (Dynamic Zoom Display)</div>
+        <div class="variant-desc">คงวงกลม 7 วงแนวนอนไว้ แต่ขยายข้อความที่เลือกเป็นตัวหนังสือใหญ่พิเศษด้านบน</div>
+      </div>
+
+      <div class="variant-tab-card" data-variant="v3">
+        <div class="variant-tag">
+          <span>OPTION 3</span>
+          <span style="color:#f59e0b;">⚡ สไลเดอร์</span>
+        </div>
+        <div class="variant-name">สไลเดอร์สัมผัส 7 ระดับ (Interactive Stepper Slider)</div>
+        <div class="variant-desc">ลากหรือแตะสไลเดอร์ แสดงคำตอบขนาดใหญ่ยักษ์ตรงกลาง ทันสมัย สไตล์โมเดิร์น</div>
+      </div>
+
+      <div class="variant-tab-card" data-variant="v4">
+        <div class="variant-tag">
+          <span>OPTION 4</span>
+          <span style="color:#a855f7;">📋 ตาราง</span>
+        </div>
+        <div class="variant-name">ตารางการ์ด 2 คอลัมน์ (2-Column Touch Grid)</div>
+        <div class="variant-desc">จัดกลุ่มตัวเลือกเป็น 2 คอลัมน์ ลดความยาวหน้าจอ ตัวหนังสืออ่านง่ายชัดเจน</div>
+      </div>
+
+      <div class="variant-tab-card" data-variant="v6">
+        <div class="variant-tag">
+          <span style="color:#06b6d4;">OPTION 6</span>
+          <span style="color:#06b6d4;">🔽 ดรอปดาวน์</span>
+        </div>
+        <div class="variant-name">ดรอปดาวน์มือถือ & แผ่นล่าง (Mobile Dropdown & Bottom Sheet)</div>
+        <div class="variant-desc">ประหยัดพื้นที่แนวตั้ง 100% ตัวหนังสือ 16px ชัดเจน เลือกระหว่าง Bottom Sheet หรือ Native Select ได้</div>
+      </div>
+
+      <div class="variant-tab-card" data-variant="v5">
+        <div class="variant-tag">
+          <span style="color:#f87171;">OPTION 5</span>
+          <span style="color:#f87171;">⚠️ แบบเดิม (สำหรับเทียบ)</span>
+        </div>
+        <div class="variant-name">วงกลม 7 วงแบบเดิม (Original Baseline 7-Circles)</div>
+        <div class="variant-desc">ตัวหนังสือเล็กอยู่บนวงกลมทั้ง 7 วงบนมือถือ (สาเหตุที่ตัวหนังสือเล็กและอ่านยาก)</div>
+      </div>
+    </div>
+
+    <!-- Workspace: Interactive Phone Simulator vs Side-by-Side -->
+    <div id="interactiveWorkspace" class="workspace-grid">
+
+      <!-- Phone Simulator Frame -->
+      <div class="phone-simulator-wrap">
+        <div class="phone-frame" id="phoneFrame">
+          <div class="phone-screen">
+            
+            <!-- Island / Notch -->
+            <div class="phone-notch">
+              <span>9:41</span>
+              <div class="notch-island"></div>
+              <span>📶 5G 100%</span>
+            </div>
+
+            <!-- App Header -->
+            <div class="app-header">
+              <div>
+                <div class="app-header-title">Employee Well-being Survey</div>
+                <div class="app-header-step" id="qProgressText">คำถามข้อที่ 1 จาก 3</div>
+              </div>
+              <span style="font-size:1.1rem;">🔒 PDPA</span>
+            </div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill" id="progressBarFill" style="width: 33%;"></div>
+            </div>
+
+            <!-- Mobile Questionnaire Area -->
+            <div class="mobile-content">
+              <div class="instruction-card">
+                <span>💡</span>
+                <span><strong>คำชี้แจง:</strong> โปรดเลือกความถี่ที่ตรงกับความรู้สึกของคุณเกี่ยวกับการทำงานมากที่สุด (ไม่มีถูก-ผิด)</span>
+              </div>
+
+              <!-- Question Card -->
+              <div class="question-box">
+                <span class="question-number-badge" id="qBadge">หมวดที่ 1: ภาวะหมดไฟ (Burnout)</span>
+                <h2 class="question-text" id="qTitle">1. ฉันรู้สึกห่อเหี่ยวจิตใจกับงานที่ทำอยู่</h2>
+
+                <!-- DYNAMIC ANSWER VARIANT CONTAINER -->
+                <div id="answerContainer">
+                  <!-- Injected via JavaScript based on selected variant -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Mobile Bottom Action Bar -->
+            <div class="mobile-nav-bar">
+              <button type="button" class="m-btn-prev" id="btnPrevQ" style="visibility:hidden;">ย้อนกลับ</button>
+              <button type="button" class="m-btn-next" id="btnNextQ">ข้อถัดไป ➔</button>
+            </div>
+
+          </div>
+
+          <!-- Mobile Bottom Sheet Overlay for Option 6 -->
+          <div id="v6SheetOverlay" class="v6-backdrop" style="display:none;" onclick="closeV6Sheet(event)">
+            <div class="v6-bottom-sheet" onclick="event.stopPropagation()">
+              <div class="v6-sheet-drag-handle" onclick="closeV6Sheet()"></div>
+              <div class="v6-sheet-header">
+                <div class="v6-sheet-title">เลือกความถี่ที่ตรงกับคุณ</div>
+                <button type="button" class="v6-sheet-close-btn" onclick="closeV6Sheet()">✕</button>
+              </div>
+              <div class="v6-sheet-list" id="v6SheetList">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div style="font-size:0.8rem; color:#94a3b8; text-align:center;">
+          💡 คุณสามารถใช้เมาส์แตะเลือกตัวเลือก หรือลากสไลเดอร์ในหน้าจอด้านบนได้เสมือนใช้งานบนมือถือจริง
+        </div>
+      </div>
+
+      <!-- UX Analysis & Legibility Evaluation Panel -->
+      <div class="analysis-panel">
+        <div class="analysis-header">
+          <h2 class="analysis-title" id="panelVariantTitle">
+            ⭐ Option 1: การ์ดแนวตั้งขนาดใหญ่ (Vertical Touch Cards)
+          </h2>
+          <p class="analysis-sub" id="panelVariantSub">
+            ออกแบบตามหลัก Ergonomics และ Fitts's Law สำหรับการใช้งานบนสมาร์ทโฟนด้วยมือเดียว
+          </p>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <span class="metric-label">ขนาดตัวอักษรจริงบนมือถือ</span>
+            <span class="metric-value" id="mFontSize">15 - 16 px</span>
+            <span class="metric-detail" id="mFontDetail">ใหญ่ ชัดเจน อ่านสบายตา 100% ไม่ต้องเพ่งสายตา</span>
+          </div>
+
+          <div class="metric-card">
+            <span class="metric-label">พื้นที่เป้าหมายสัมผัส (Touch Target)</span>
+            <span class="metric-value" id="mTouchTarget">52 px (เต็มความกว้าง)</span>
+            <span class="metric-detail" id="mTouchDetail">เกินเกณฑ์มาตรฐาน Apple (44px) และ Google (48px) ลดการกดผิดข้อ</span>
+          </div>
+
+          <div class="metric-card">
+            <span class="metric-label">ความเหมาะสมกับผู้สูงวัย (Accessibility)</span>
+            <span class="metric-value" id="mSeniorScore">ระดับยอดเยี่ยม (98%)</span>
+            <span class="metric-detail" id="mSeniorDetail">รองรับพนักงานที่มีสายตายาวหรือมองจอเล็กไม่ชัดได้ดีที่สุด</span>
+          </div>
+
+          <div class="metric-card">
+            <span class="metric-label">การรองรับหน้าจอมือถือทุกขนาด</span>
+            <span class="metric-value" id="mResponsiveScore">100% Responsive</span>
+            <span class="metric-detail" id="mResponsiveDetail">ไม่เกิดปัญหาข้อความตกขอบหรือเบียดกันแม้บนหน้าจอขนาด 360px</span>
+          </div>
+        </div>
+
+        <div style="background:#0f172a; border-radius:12px; padding:1.15rem; border:1px solid #334155;">
+          <h3 style="color:#ffffff; font-size:0.95rem; font-weight:700; margin-bottom:0.5rem;">
+            📌 ข้อวิเคราะห์และมุมมองเชิงสรีรศาสตร์ (UX Insights):
+          </h3>
+          <p style="font-size:0.85rem; color:#cbd5e1; line-height:1.6;" id="panelLongExplanation">
+            การวางตัวเลือก 7 ตัวเลือกในแนวตั้ง (Vertical Cards) เป็นรูปแบบที่สากลนิยมใช้มากที่สุดในแอปพลิเคชันมือถือชั้นนำ (เช่น Apple Health, Google Forms, Typeform) เพราะหน้าจอโทรศัพท์มีพื้นที่ <strong>แนวตั้ง (Vertical Space)</strong> กว้างขวางกว่าแนวนอน การจัดวางแบบนี้ทำให้นิ้วโป้งสามารถแตะเลือกได้โดยตรง ไม่ต้องกังวลว่าตัวหนังสือจะถูกบีบให้เล็กลงเหมือนแบบแนวนอน
+          </p>
+        </div>
+
+        <!-- Quick Switcher to Other Variants from Panel -->
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+          <span style="font-size:0.8rem; color:#94a3b8; font-weight:600;">ลองสลับดูตัวเลือกอื่น:</span>
+          <button type="button" class="hub-btn" onclick="selectVariant('v1')">Option 1 (แนวตั้ง)</button>
+          <button type="button" class="hub-btn" onclick="selectVariant('v2')">Option 2 (วงกลม+ซูม)</button>
+          <button type="button" class="hub-btn" onclick="selectVariant('v3')">Option 3 (สไลเดอร์)</button>
+          <button type="button" class="hub-btn" onclick="selectVariant('v4')">Option 4 (ตาราง 2 คอลัมน์)</button>
+          <button type="button" class="hub-btn" onclick="selectVariant('v6')">Option 6 (ดรอปดาวน์)</button>
+          <button type="button" class="hub-btn" onclick="selectVariant('v5')">Option 5 (แบบเดิม)</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Side-by-Side 4-Screen Comparison Container (Hidden by default, toggled via Top Hub) -->
+    <div id="sideBySideWorkspace" style="display:none;" class="side-by-side-grid">
+      <!-- Injected by JavaScript -->
+    </div>
+
+    <!-- Comprehensive Evaluation Matrix Table -->
+    <section class="compare-section">
+      <h2 class="compare-title">
+        📊 ตารางเปรียบเทียบเชิงลึกทุกมิติ เพื่อการตัดสินใจเลือกรูปแบบ UI ที่ดีที่สุด
+      </h2>
+      <div class="table-responsive">
+        <table class="eval-table">
+          <thead>
+            <tr>
+              <th>รูปแบบ UI (Design Variant)</th>
+              <th>ขนาดตัวหนังสือบนมือถือ</th>
+              <th>ความสะดวกในการแตะสัมผัส (Touch Target)</th>
+              <th>ความเสี่ยงในการกดผิดข้อ</th>
+              <th>ความเข้ากันได้กับผู้ใช้ทุกวัย</th>
+              <th>ความเร็วในการตอบ</th>
+              <th>ข้อสรุปและคำแนะนำจากทีมออกแบบ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background: rgba(2, 132, 199, 0.1);">
+              <td>
+                <strong style="color:#38bdf8;">Option 1: การ์ดแนวตั้งขนาดใหญ่</strong><br>
+                <small style="color:#94a3b8;">(Vertical Touch Cards)</small><br>
+                <span class="score-badge score-high" style="margin-top:4px;">⭐ แนะนำสูงสุด</span>
+              </td>
+              <td><span class="score-badge score-high">15-16 px (ใหญ่ชัดเจน)</span></td>
+              <td><span class="score-badge score-high">ดีเยี่ยม (สูง 52px เต็มจอ)</span></td>
+              <td><span class="score-badge score-high">ต่ำมาก (แยกแถวชัดเจน)</span></td>
+              <td><span class="score-badge score-high">สูงมาก (สายตายาวอ่านสบาย)</span></td>
+              <td><span class="score-badge score-high">เร็วมาก (แตะได้ทันที)</span></td>
+              <td style="color:#e0f2fe;"><strong>ดีที่สุดสำหรับการใช้งานบนมือถือ</strong> พนักงานอ่านได้ทันทีโดยไม่ต้องเพ่ง แก้ปัญหาเรื่องตัวหนังสือเล็กได้ 100%</td>
+            </tr>
+
+            <tr>
+              <td>
+                <strong style="color:#ffffff;">Option 2: วงกลม 7 วง + ป้ายซูมตัวหนังสือ</strong><br>
+                <small style="color:#94a3b8;">(Dynamic Zoom Label Bar)</small>
+              </td>
+              <td><span class="score-badge score-high">16-18 px (ในป้ายซูม)</span></td>
+              <td><span class="score-badge score-mid">ปานกลาง (วงกลม 40px)</span></td>
+              <td><span class="score-badge score-mid">ต่ำ-ปานกลาง</span></td>
+              <td><span class="score-badge score-high">สูง (ป้ายซูมชัดเจนมาก)</span></td>
+              <td><span class="score-badge score-high">เร็ว</span></td>
+              <td><strong>ทางเลือกที่ยอดเยี่ยม</strong> หากผู้บริหารยังชอบรูปลักษณ์วงกลม 7 วงแบบเดิม แต่ต้องการตัวหนังสือขนาดใหญ่ไม่ให้เบียดกัน</td>
+            </tr>
+
+            <tr>
+              <td>
+                <strong style="color:#ffffff;">Option 3: สไลเดอร์สัมผัส 7 ระดับ</strong><br>
+                <small style="color:#94a3b8;">(Interactive Stepper Slider)</small>
+              </td>
+              <td><span class="score-badge score-high">18-20 px (ตัวหนังสือยักษ์)</span></td>
+              <td><span class="score-badge score-high">ดีเยี่ยม (ลากหรือแตะได้)</span></td>
+              <td><span class="score-badge score-low">ต่ำ (มี Snap แต่ต้องลาก)</span></td>
+              <td><span class="score-badge score-high">สูง</span></td>
+              <td><span class="score-badge score-mid">ปานกลาง</span></td>
+              <td>ดูทันสมัยสไตล์แอปสุขภาพ (iOS Health) สนุกในการเลื่อน แต่พนักงานสูงอายุบางท่านอาจไม่คุ้นเคยกับการสไลด์</td>
+            </tr>
+
+            <tr>
+              <td>
+                <strong style="color:#ffffff;">Option 4: ตารางการ์ด 2 คอลัมน์</strong><br>
+                <small style="color:#94a3b8;">(2-Column Touch Grid)</small>
+              </td>
+              <td><span class="score-badge score-mid">13.5-14.5 px</span></td>
+              <td><span class="score-badge score-high">ดีเยี่ยม (ปุ่มกว้าง)</span></td>
+              <td><span class="score-badge score-mid">ต่ำ</span></td>
+              <td><span class="score-badge score-mid">ปานกลาง-สูง</span></td>
+              <td><span class="score-badge score-high">เร็วมาก</span></td>
+              <td>กะทัดรัด หน้าจอไม่ยาวเกินไป แต่การอ่านอาจต้องกวาดสายตาซ้าย-ขวา สลับกัน</td>
+            </tr>
+
+            <tr>
+              <td>
+                <strong style="color:#06b6d4;">Option 6: ดรอปดาวน์มือถือ & แผ่นล่าง</strong><br>
+                <small style="color:#94a3b8;">(Mobile Dropdown & Bottom Sheet)</small><br>
+                <span class="score-badge score-high" style="margin-top:4px;">🔽 ประหยัดพื้นที่ 100%</span>
+              </td>
+              <td><span class="score-badge score-high">16 px (ขนาดมาตรฐานแอป)</span></td>
+              <td><span class="score-badge score-high">ดีเยี่ยม (ปุ่ม 54px + แผ่นล่าง 50px)</span></td>
+              <td><span class="score-badge score-high">ต่ำมาก (แยกแถวชัดเจน)</span></td>
+              <td><span class="score-badge score-mid">ดีมาก (88% ตัวใหญ่แตะสบาย)</span></td>
+              <td><span class="score-badge score-mid">ปานกลาง (แตะ 2 จังหวะ)</span></td>
+              <td><strong>ประหยัดพื้นที่แนวตั้งมากที่สุด</strong> ข้อความคำถามและปุ่มถัดไปแสดงครบใน 1 จอโดยไม่ต้องเลื่อน (No Scroll) ตัวหนังสือ 16px ชัดเจน 100% มีข้อพิจารณาคือต้องแตะ 2 ครั้งต่อหนึ่งข้อ</td>
+            </tr>
+
+            <tr style="background: rgba(220, 38, 38, 0.08);">
+              <td>
+                <strong style="color:#f87171;">Option 5: วงกลม 7 วงแบบเดิม</strong><br>
+                <small style="color:#94a3b8;">(Original Baseline 7-Circles)</small><br>
+                <span class="score-badge score-low" style="margin-top:4px;">⚠️ ข้อความเล็กเกินไปบนมือถือ</span>
+              </td>
+              <td><span class="score-badge score-low">9.5 - 10 px (เล็กมาก)</span></td>
+              <td><span class="score-badge score-low">แคบ (32px เว้นช่อง 2px)</span></td>
+              <td><span class="score-badge score-low">สูง (ปุ่มติดกันมาก)</span></td>
+              <td><span class="score-badge score-low">ต่ำ (ผู้สูงอายุเพ่งไม่เห็น)</span></td>
+              <td><span class="score-badge score-mid">ปานกลาง (ต้องเพ่งอ่าน)</span></td>
+              <td style="color:#fca5a5;">บนคอมพิวเตอร์ดูดี แต่บนโทรศัพท์หน้าจอ 360-390px ตัวหนังสือจะถูกบีบเหลือ 2-3 บรรทัดและมีขนาดเล็กมากจนอ่านยากจริงตามที่กังวล</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Burnout 7-point scale labels
+    const burnoutOptions = [
+      'ไม่เคยรู้สึกเช่นนั้นเลย',
+      'ปีละ 2–3 ครั้ง',
+      'เดือนละ 1 ครั้ง',
+      'เดือนละ 2–3 ครั้ง',
+      'สัปดาห์ละ 1 ครั้ง',
+      'สัปดาห์ละ 2–3 ครั้ง',
+      'ทุกวัน'
+    ];
+
+    const getScaleColor = (index, total) => {
+      const stops7 = [
+        { color: '#10b981', dark: '#047857', light: '#ecfdf5', border: '#6ee7b7', text: '#065f46', glow: 'rgba(16, 185, 129, 0.35)', ring: 'rgba(16, 185, 129, 0.25)' },
+        { color: '#22c55e', dark: '#15803d', light: '#f0fdf4', border: '#86efac', text: '#166534', glow: 'rgba(34, 197, 94, 0.35)', ring: 'rgba(34, 197, 94, 0.25)' },
+        { color: '#84cc16', dark: '#4d7c0f', light: '#f7fee7', border: '#bef264', text: '#3f6212', glow: 'rgba(132, 204, 22, 0.35)', ring: 'rgba(132, 204, 22, 0.25)' },
+        { color: '#eab308', dark: '#a16207', light: '#fefce8', border: '#fde047', text: '#854d0e', glow: 'rgba(234, 179, 8, 0.35)', ring: 'rgba(234, 179, 8, 0.25)' },
+        { color: '#f59e0b', dark: '#b45309', light: '#fffbeb', border: '#fcd34d', text: '#92400e', glow: 'rgba(245, 158, 11, 0.35)', ring: 'rgba(245, 158, 11, 0.25)' },
+        { color: '#f97316', dark: '#c2410c', light: '#fff7ed', border: '#fdba74', text: '#9a3412', glow: 'rgba(249, 115, 22, 0.35)', ring: 'rgba(249, 115, 22, 0.25)' },
+        { color: '#ef4444', dark: '#b91c1c', light: '#fef2f2', border: '#fca5a5', text: '#991b1b', glow: 'rgba(239, 68, 68, 0.35)', ring: 'rgba(239, 68, 68, 0.25)' },
+      ];
+      if (total === 7) return stops7[index];
+      const ratio = (total > 1) ? index / (total - 1) : 0;
+      return stops7[Math.min(6, Math.max(0, Math.round(ratio * 6)))];
+    };
+
+    // Sample Questions
+    const questions = [
+      {
+        id: 1,
+        category: 'หมวดที่ 1: ภาวะหมดไฟ (Burnout - Emotional Exhaustion)',
+        title: '1. ฉันรู้สึกห่อเหี่ยวจิตใจกับงานที่ทำอยู่'
+      },
+      {
+        id: 2,
+        category: 'หมวดที่ 1: ภาวะหมดไฟ (Burnout - Emotional Exhaustion)',
+        title: '2. ฉันรู้สึกอ่อนเพลียตอนตื่นนอนและตอนเข้าทำงาน'
+      },
+      {
+        id: 3,
+        category: 'หมวดที่ 1: ภาวะหมดไฟ (Burnout - Emotional Exhaustion)',
+        title: '3. ฉันรู้สึกเหนื่อยหน่ายกับงานที่ทำอยู่'
+      }
+    ];
+
+    let currentQIndex = 0;
+    let currentVariant = 'v1';
+    let answers = { 0: 0, 1: 2, 2: 4 }; // Pre-populate some answers
+    let currentDevice = 'iphone15';
+    let currentFontScale = 1;
+    let currentViewMode = 'interactive';
+
+    const variantDetails = {
+      v1: {
+        title: '⭐ Option 1: การ์ดแนวตั้งขนาดใหญ่ (Vertical Touch Cards)',
+        sub: 'ออกแบบตามหลัก Ergonomics และ Fitts\'s Law สำหรับการใช้งานบนสมาร์ทโฟนด้วยมือเดียว',
+        fontSize: '15 - 16 px',
+        fontDetail: 'ใหญ่ ชัดเจน อ่านสบายตา 100% ไม่ต้องเพ่งสายตา',
+        touchTarget: '52 px (เต็มความกว้าง)',
+        touchDetail: 'เกินเกณฑ์มาตรฐาน Apple (44px) และ Google (48px) ลดการกดผิดข้อ',
+        seniorScore: 'ระดับยอดเยี่ยม (98%)',
+        seniorDetail: 'รองรับพนักงานที่มีสายตายาวหรือมองจอเล็กไม่ชัดได้ดีที่สุด',
+        responsiveScore: '100% Responsive',
+        responsiveDetail: 'ไม่เกิดปัญหาข้อความตกขอบหรือเบียดกันแม้บนหน้าจอขนาด 360px',
+        explanation: 'การวางตัวเลือก 7 ตัวเลือกในแนวตั้ง (Vertical Cards) เป็นรูปแบบที่สากลนิยมใช้มากที่สุดในแอปพลิเคชันมือถือชั้นนำ (เช่น Apple Health, Google Forms, Typeform) เพราะหน้าจอโทรศัพท์มีพื้นที่ <strong>แนวตั้ง (Vertical Space)</strong> กว้างขวางกว่าแนวนอน การจัดวางแบบนี้ทำให้นิ้วโป้งสามารถแตะเลือกได้โดยตรง ไม่ต้องกังวลว่าตัวหนังสือจะถูกบีบให้เล็กลงเหมือนแบบแนวนอน'
+      },
+      v2: {
+        title: '✨ Option 2: วงกลม 7 วง + ป้ายซูมตัวหนังสือ (Dynamic Zoom Display)',
+        sub: 'ผสมผสานความต้องการวงกลม 7 วง เข้ากับกล่องขยายตัวหนังสือขนาดใหญ่ด้านบน',
+        fontSize: '16 - 18 px (ในป้ายซูม)',
+        fontDetail: 'ตัดตัวหนังสือเล็กๆ ออก แล้วแสดงตัวเลือกที่เลือกในกล่องซูมขนาดใหญ่',
+        touchTarget: '40 px (วงกลม)',
+        touchDetail: 'วงกลมมีพื้นที่สัมผัสเพิ่มขึ้น 25% จากแบบเดิม',
+        seniorScore: 'ระดับดีมาก (90%)',
+        seniorDetail: 'ป้ายข้อความด้านบนเห็นชัดเจนมาก มีฟีดแบ็กทันทีเมื่อแตะ',
+        responsiveScore: '95% Responsive',
+        responsiveDetail: 'เหมาะกับผู้ที่ต้องการแถบวัดความต่อเนื่องของระดับ 1-7',
+        explanation: 'สำหรับองค์กรที่ยังต้องการความต่อเนื่องของวงกลม 7 วง (Continuum Scale) ตัวเลือกนี้แก้ปัญหาตัวหนังสือเล็กด้วยการ <strong>ยกตัวหนังสือที่แออัดออกจากหัววงกลม</strong> แล้วนำมาแสดงใน <strong>กล่องขยายอักษรขนาดใหญ่ (Dynamic Zoom Box)</strong> ด้านบนแทน เมื่อผู้ใช้แตะที่วงกลมใด ข้อความตัวเลือกจะเด้งขึ้นมาในกล่องด้วยขนาด 18px ชัดเจนทันที'
+      },
+      v3: {
+        title: '⚡ Option 3: สไลเดอร์สัมผัส 7 ระดับ (Interactive Stepper Slider)',
+        sub: 'ประสบการณ์ใช้งานแบบ Mobile-First ปรับระดับความรู้สึกด้วยการลากหรือแตะ',
+        fontSize: '18 - 20 px (ตัวหนังสือยักษ์)',
+        fontDetail: 'ข้อความตัวเลือกขนาดใหญ่พิเศษตรงกลางหน้าจอ',
+        touchTarget: '34 px Knob + Track กว้าง',
+        touchDetail: 'สามารถแตะตำแหน่งใดบนแทร็กเพื่อ Snap ไปยังจุดนั้นได้ทันที',
+        seniorScore: 'ระดับดี (85%)',
+        seniorDetail: 'ตัวหนังสือใหญ่มาก แต่อาจต้องอาศัยความคุ้นเคยกับการสไลด์',
+        responsiveScore: '100% Responsive',
+        responsiveDetail: 'ใช้พื้นที่น้อยมาก ตัวหนังสือไม่ชนกันแน่นอน',
+        explanation: 'สไลเดอร์แบบมีจุด Snap 7 ระดับ นำเอาจุดเด่นของแอปยุคใหม่มาใช้ โดยแปลงตัวเลือก 7 ตัวเลือกให้กลายเป็นแถบระดับความถี่ (Frequency Track) มีข้อความแสดงสถานะขนาดใหญ่ยักษ์ตรงกลาง ช่วยให้หน้าจอไม่รก และตัวหนังสืออ่านง่ายที่สุด'
+      },
+      v4: {
+        title: '📋 Option 4: ตารางการ์ด 2 คอลัมน์ (2-Column Touch Grid)',
+        sub: 'แบ่งตัวเลือกออกเป็น 2 คอลัมน์ ลดความยาวของการเลื่อนจอลง 50%',
+        fontSize: '13.5 - 14.5 px',
+        fontDetail: 'มีพื้นที่ข้อความมากกว่าแบบ 7 วงกลมถึง 2 เท่า',
+        touchTarget: '48 px สูง',
+        touchDetail: 'ปุ่มสัมผัสเป็นบล็อกสี่เหลี่ยม แตะได้ง่าย',
+        seniorScore: 'ระดับดี (88%)',
+        seniorDetail: 'ขนาดตัวหนังสือกำลังพอดี อ่านได้สะดวก',
+        responsiveScore: '95% Responsive',
+        responsiveDetail: 'เหมาะสำหรับคนที่ต้องการให้คำถามและตัวเลือกอยู่ในจอเดียว',
+        explanation: 'การจัดตัวเลือก 7 ข้อให้อยู่ในรูปแบบตาราง 2 คอลัมน์ (3 แถวคู่ + 1 แถวเดี่ยวเต็มความกว้าง "ทุกวัน") ช่วยให้ความยาวหน้าจอไม่ยืดจนเกินไป และยังมีพื้นที่สำหรับตัวหนังสือที่กว้างกว่าแบบวงกลมแนวนอนถึง 2 เท่า ทำให้ไม่ต้องบีบอักษรให้เล็กลง'
+      },
+      v6: {
+        title: '🔽 Option 6: ดรอปดาวน์สำหรับมือถือ (Mobile Dropdown & Bottom Sheet)',
+        sub: 'ประหยัดพื้นที่หน้าจอสูงสุด ตัวหนังสือ 16px ชัดเจน 100% เลือกระหว่าง Bottom Sheet หรือ Native Select ได้',
+        fontSize: '16 px (ขนาดมาตรฐานโมบายแอป)',
+        fontDetail: 'ตัวหนังสือใหญ่และชัดเจน 100% อ่านง่ายสบายตา ไม่มีการตัดคำหรือบีบตัวอักษร',
+        touchTarget: '54 px (กล่องตัวเลือกเต็มความกว้าง)',
+        touchDetail: 'กดง่ายมากตามมาตรฐาน Mobile UI และในโหมด Bottom Sheet ตัวเลือกแต่ละแถวสูง 50px',
+        seniorScore: 'ระดับดีมาก (88%)',
+        seniorDetail: 'ตัวหนังสือใหญ่และชัดมาก แต่ต้องกด 2 จังหวะ (แตะเปิดกล่อง ➔ แตะเลือกคำตอบ)',
+        responsiveScore: '100% Responsive',
+        responsiveDetail: 'ประหยัดพื้นที่แนวตั้งสูงที่สุด คำถามและปุ่มถัดไปแสดงพอดีใน 1 หน้าจอโดยไม่ต้องเลื่อน (No Scroll)',
+        explanation: 'รูปแบบดรอปดาวน์สำหรับมือถือ (Mobile Touch Dropdown & Bottom Sheet) เป็นท่ามาตรฐานที่พบในแอปพลิเคชันยุคใหม่ (เช่น Grab, LINE MAN, Shopee, iOS Settings) <strong>จุดเด่นสูงสุด</strong> คือประหยัดพื้นที่แนวตั้ง ทำให้ข้อความคำถามและปุ่ม "ข้อถัดไป" สามารถปรากฏในหน้าจอเดียวกันได้โดยไม่ต้องเลื่อนจอ (No vertical scroll) และตัวหนังสือมีขนาดใหญ่ 16px ชัดเจน 100%<br><br><strong>ข้อพิจารณา (Trade-off):</strong> ผู้ใช้งานต้องใช้การแตะ 2 ครั้งต่อหนึ่งข้อ (แตะเปิดดรอปดาวน์ ➔ แตะเลือกคำตอบ) เมื่อเทียบกับแบบการ์ดแนวตั้ง (Option 1) ที่แตะเพียงครั้งเดียวแล้วตอบได้ทันที'
+      },
+      v5: {
+        title: '⚠️ Option 5: วงกลม 7 วงแบบเดิม (Original Baseline 7-Circles)',
+        sub: 'แสดงให้เห็นปัญหาจริงเมื่อวางตัวหนังสือ 7 ตัวเลือกไว้เหนือวงกลมบนหน้าจอมือถือ',
+        fontSize: '9.5 - 10 px (เล็กมาก)',
+        fontDetail: 'ตัวหนังสือต้องถูกบีบให้เหลือ 2-3 บรรทัดและมีขนาดเล็กมากจนอ่านยาก',
+        touchTarget: '28 - 32 px (แคบมาก)',
+        touchDetail: 'วงกลมอยู่ชิดกันมาก เสี่ยงต่อการกดผิดข้อด้วยนิ้วมือ',
+        seniorScore: 'ต่ำ (55%)',
+        seniorDetail: 'พนักงานอายุ 40+ ปี หรือมีสายตายาว จะต้องเพ่งสายตาอย่างมาก',
+        responsiveScore: '65% (หน้าจอเล็กจะล้น)',
+        responsiveDetail: 'บนหน้าจอขนาด 360-375px ข้อความจะชนกันจนอ่านไม่ออก',
+        explanation: 'นี่คือรูปแบบที่ใช้งานอยู่ในหน้าจอเดิม สาเหตุที่ตัวหนังสือเล็กมากเป็นเพราะหน้าจอโทรศัพท์มีความกว้างเพียงประมาณ 360-390 พิกเซล เมื่อต้องแบ่งพื้นที่ออกเป็น 7 ช่องเท่าๆ กัน แต่ละช่องจะเหลือความกว้างเพียง 45 พิกเซล ทำให้ข้อความภาษาไทยยาวๆ เช่น "สัปดาห์ละ 2-3 ครั้ง" จำเป็นต้องย่อขนาดฟอนต์ลงเหลือเพียง 9.5-10 พิกเซล ซึ่งขัดต่อหลักการออกแบบ Universal Accessibility บนมือถือ'
+      }
+    };
+
+    let v6SubMode = 'sheet'; // 'sheet' or 'native'
+
+    function setV6SubMode(mode) {
+      v6SubMode = mode;
+      renderQuestionnaire();
+    }
+
+    function renderV6SheetOptions() {
+      const selectedValue = answers[currentQIndex];
+      const listEl = document.getElementById('v6SheetList');
+      if (!listEl) return;
+      listEl.innerHTML = burnoutOptions.map((opt, idx) => {
+        const isSel = selectedValue === idx;
+        return `
+          <div class="v6-sheet-item ${isSel ? 'is-selected' : ''}" onclick="selectAnswerFromSheet(${idx})">
+            <div class="v6-item-left">
+              <div class="v6-item-icon">${isSel ? '✓' : ''}</div>
+              <span>${opt}</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span style="font-size:0.75rem; color:${isSel ? '#0284c7' : '#94a3b8'}; font-weight:600;">
+                ${idx === 0 ? 'ต่ำสุด' : idx === 6 ? 'สูงสุด' : `ระดับ ${idx + 1}`}
+              </span>
+              <span class="v6-sheet-item-check">${isSel ? '✓' : ''}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectAnswerFromSheet(idx) {
+      selectAnswer(idx);
+      closeV6Sheet();
+    }
+
+    function openV6Sheet() {
+      renderV6SheetOptions();
+      const overlay = document.getElementById('v6SheetOverlay');
+      if (overlay) {
+        overlay.style.display = 'flex';
+      }
+    }
+
+    function closeV6Sheet(e) {
+      if (e && e.target && e.target.closest && e.target.closest('.v6-bottom-sheet') && !e.target.closest('.v6-sheet-close-btn') && !e.target.closest('.v6-sheet-drag-handle')) {
+        return;
+      }
+      const overlay = document.getElementById('v6SheetOverlay');
+      if (overlay) {
+        overlay.style.display = 'none';
+      }
+    }
+
+    // Render Function
+    function renderQuestionnaire() {
+      const q = questions[currentQIndex];
+      const selectedValue = answers[currentQIndex];
+
+      // Update question text and progress
+      document.getElementById('qBadge').textContent = q.category;
+      document.getElementById('qTitle').textContent = q.title;
+      document.getElementById('qProgressText').textContent = `คำถามข้อที่ ${currentQIndex + 1} จาก ${questions.length}`;
+      document.getElementById('progressBarFill').style.width = `${((currentQIndex + 1) / questions.length) * 100}%`;
+
+      // Update Prev / Next buttons
+      document.getElementById('btnPrevQ').style.visibility = currentQIndex > 0 ? 'visible' : 'hidden';
+      document.getElementById('btnNextQ').textContent = currentQIndex === questions.length - 1 ? '✓ สรุปผลประเมิน' : 'ข้อถัดไป ➔';
+
+      const container = document.getElementById('answerContainer');
+
+      if (currentVariant === 'v1') {
+        // Option 1: Vertical Cards
+        container.innerHTML = `
+          <div class="v1-list">
+            ${burnoutOptions.map((opt, idx) => {
+              const isSel = selectedValue === idx;
+              return `
+                <div class="v1-card ${isSel ? 'is-selected' : ''}" onclick="selectAnswer(${idx})">
+                  <div class="v1-left">
+                    <div class="v1-radio">
+                      <div class="v1-radio-dot"></div>
+                    </div>
+                    <span class="v1-text">${opt}</span>
+                  </div>
+                  <span class="v1-intensity-tag">${idx === 0 ? 'ต่ำสุด' : idx === 6 ? 'สูงสุด' : `ระดับ ${idx + 1}`}</span>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      } else if (currentVariant === 'v2') {
+        // Option 2: 7-Circles + Floating Zoom Label Display (Gradient Green-Yellow-Red)
+        const hasVal = selectedValue !== undefined && selectedValue !== null;
+        const currentText = hasVal ? burnoutOptions[selectedValue] : 'โปรดแตะเลือกวงกลมด้านล่าง';
+        const activeStepInfo = hasVal ? getScaleColor(selectedValue, burnoutOptions.length) : null;
+        const zoomStyle = hasVal 
+          ? `style="background:${activeStepInfo.light}; border-color:${activeStepInfo.border}; color:${activeStepInfo.dark}; box-shadow: 0 4px 14px ${activeStepInfo.glow};"` 
+          : '';
+
+        container.innerHTML = `
+          <div class="v2-container">
+            <div class="v2-zoom-box ${hasVal ? 'has-val' : ''}" ${zoomStyle}>
+              <div class="v2-zoom-caption" style="${hasVal ? `color:${activeStepInfo.text}` : ''}">✓ คำตอบที่คุณเลือก:</div>
+              <div class="v2-zoom-value" style="${hasVal ? `color:${activeStepInfo.dark}` : ''}">${currentText}</div>
+            </div>
+
+            <div class="v2-track-wrapper">
+              <div class="v2-track-line"></div>
+              <div class="v2-circles-row">
+                ${burnoutOptions.map((opt, idx) => {
+                  const isSel = selectedValue === idx;
+                  const stepInfo = getScaleColor(idx, burnoutOptions.length);
+                  const styleVars = `--step-color:${stepInfo.color}; --step-dark:${stepInfo.dark}; --step-light:${stepInfo.light}; --step-border:${stepInfo.border}; --step-text:${stepInfo.text}; --step-glow:${stepInfo.glow}; --step-ring:${stepInfo.ring};`;
+                  return `
+                    <button type="button" class="v2-circle-btn ${isSel ? 'is-selected' : ''}" style="${styleVars}" onclick="selectAnswer(${idx})" title="${opt}">
+                      <div class="v2-inner-dot"></div>
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+
+            <div class="v2-scale-anchors">
+              <span style="color:#059669; font-weight:700;">◀ ไม่เคยรู้สึกเลย</span>
+              <span style="color:#dc2626; font-weight:700;">ทุกวัน ▶</span>
+            </div>
+          </div>
+        `;
+      } else if (currentVariant === 'v3') {
+        // Option 3: Stepper Slider with Big Text
+        const curVal = selectedValue !== undefined ? selectedValue : 0;
+        const curText = burnoutOptions[curVal];
+
+        container.innerHTML = `
+          <div class="v3-container">
+            <div class="v3-display-card">
+              <span class="v3-step-indicator">คำตอบที่คุณเลือก</span>
+              <div class="v3-text">${curText}</div>
+            </div>
+
+            <div class="v3-slider-wrap">
+              <input type="range" min="0" max="6" value="${curVal}" class="v3-range-slider" id="v3Slider" oninput="onSliderMove(this.value)">
+              <div class="v3-tick-row">
+                ${burnoutOptions.map(() => '<span class="v3-tick"></span>').join('')}
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#2b5577; font-weight:600;">
+              <span>ไม่เคยเลย</span>
+              <span>ทุกวัน</span>
+            </div>
+          </div>
+        `;
+      } else if (currentVariant === 'v4') {
+        // Option 4: 2-Column Grid Tiles
+        container.innerHTML = `
+          <div class="v4-grid">
+            ${burnoutOptions.map((opt, idx) => {
+              const isSel = selectedValue === idx;
+              const isLast = idx === 6;
+              return `
+                <div class="v4-tile ${isSel ? 'is-selected' : ''} ${isLast ? 'span-2' : ''}" onclick="selectAnswer(${idx})">
+                  ${opt}
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      } else if (currentVariant === 'v6') {
+        // Option 6: Mobile Touch Dropdown & Bottom Sheet Menu
+        const hasVal = selectedValue !== undefined && selectedValue !== null;
+        const currentText = hasVal ? burnoutOptions[selectedValue] : '— กรุณาแตะเพื่อเลือกคำตอบ —';
+
+        container.innerHTML = `
+          <div class="v6-container">
+            <!-- Mode Switcher -->
+            <div class="v6-mode-toggle">
+              <button type="button" class="v6-mode-btn ${v6SubMode === 'sheet' ? 'is-active' : ''}" onclick="setV6SubMode('sheet')">
+                📱 แบบที่ 1: Bottom Sheet (แผ่นลอย)
+              </button>
+              <button type="button" class="v6-mode-btn ${v6SubMode === 'native' ? 'is-active' : ''}" onclick="setV6SubMode('native')">
+                🌐 แบบที่ 2: Native &lt;select&gt;
+              </button>
+            </div>
+
+            ${v6SubMode === 'sheet' ? `
+              <!-- Bottom Sheet Trigger -->
+              <div class="v6-trigger-box ${hasVal ? 'has-val' : ''}" onclick="openV6Sheet()" role="button" tabindex="0">
+                <div class="v6-trigger-content">
+                  <span class="v6-trigger-caption">ความถี่ที่คุณรู้สึก</span>
+                  <div class="v6-trigger-val" style="${!hasVal ? 'color:#94a3b8; font-weight:500;' : ''}">
+                    ${currentText}
+                  </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  ${hasVal ? `<span class="v6-trigger-badge">${selectedValue === 0 ? 'ต่ำสุด' : selectedValue === 6 ? 'สูงสุด' : `ระดับ ${selectedValue + 1}`}</span>` : ''}
+                  <span class="v6-trigger-arrow">▼</span>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:0.4rem; font-size:0.78rem; color:#64748b; margin-top:2px;">
+                <span>👆</span>
+                <span><strong>แตะที่กล่องด้านบน:</strong> เพื่อเปิดแผ่นเมนูตัวเลือกขนาดใหญ่จากขอบล่าง</span>
+              </div>
+            ` : `
+              <!-- Native Select Mode -->
+              <div class="v6-native-select-wrap">
+                <select class="v6-native-select" onchange="selectAnswer(parseInt(this.value, 10))">
+                  <option value="" disabled ${!hasVal ? 'selected' : ''}>— กรุณาเลือกคำตอบ —</option>
+                  ${burnoutOptions.map((opt, idx) => `
+                    <option value="${idx}" ${selectedValue === idx ? 'selected' : ''}>
+                      ${idx + 1}. ${opt} ${idx === 0 ? '(ต่ำสุด)' : idx === 6 ? '(สูงสุด)' : ''}
+                    </option>
+                  `).join('')}
+                </select>
+                <div class="v6-native-select-arrow">▼</div>
+              </div>
+
+              <div style="font-size:0.78rem; color:#0369a1; background:#f0f9ff; border:1px solid #bae6fd; border-radius:8px; padding:0.6rem 0.75rem; line-height:1.45;">
+                📲 <strong>Native Select:</strong> บนโทรศัพท์มือถือจริง เมื่อแตะที่ช่องนี้ ระบบ iOS จะเปิด <em>Wheel Picker</em> หรือ Android จะเปิด <em>Native Dialog</em> ของตัวเครื่องขึ้นมาให้เลื่อนเลือกทันที
+              </div>
+            `}
+
+            <!-- Space Savings Callout -->
+            <div style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; padding:0.65rem 0.85rem; font-size:0.78rem; color:#475569; display:flex; gap:0.5rem; align-items:center;">
+              <span style="font-size:1.1rem;">📐</span>
+              <div>
+                <strong>จุดเด่นเรื่องพื้นที่:</strong> ประหยัดพื้นที่ได้สูงสุด คำถามและปุ่มถัดไปอยู่พอดีในจอเดียว 100% โดยไม่ต้องเลื่อนหน้าจอ
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (currentVariant === 'v5') {
+        // Option 5: Original Baseline
+        container.innerHTML = `
+          <div style="display:flex; flex-direction:column; gap:0.5rem;">
+            <div class="v5-scale-track">
+              <div class="v5-track-line"></div>
+              ${burnoutOptions.map((opt, idx) => {
+                const isSel = selectedValue === idx;
+                return `
+                  <div class="v5-scale-item ${isSel ? 'is-selected' : ''}" onclick="selectAnswer(${idx})">
+                    <div class="v5-label-wrap">
+                      <span class="v5-label">${opt}</span>
+                    </div>
+                    <div class="v5-circle">
+                      <div class="v5-dot"></div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+            <div style="font-size:0.75rem; color:#dc2626; background:#fef2f2; padding:6px 10px; border-radius:6px; border:1px solid #fecaca; text-align:center;">
+              ⚠️ ตัวหนังสือด้านบนวงกลมมีขนาดเพียง 9.5-10px ซ้อนกัน 2-3 บรรทัด ทำให้อ่านยากบนมือถือ
+            </div>
+          </div>
+        `;
+      }
+
+      // Update Analysis Panel Content
+      const details = variantDetails[currentVariant];
+      document.getElementById('panelVariantTitle').innerHTML = details.title;
+      document.getElementById('panelVariantSub').textContent = details.sub;
+      document.getElementById('mFontSize').textContent = details.fontSize;
+      document.getElementById('mFontDetail').textContent = details.fontDetail;
+      document.getElementById('mTouchTarget').textContent = details.touchTarget;
+      document.getElementById('mTouchDetail').textContent = details.touchDetail;
+      document.getElementById('mSeniorScore').textContent = details.seniorScore;
+      document.getElementById('mSeniorDetail').textContent = details.seniorDetail;
+      document.getElementById('mResponsiveScore').textContent = details.responsiveScore;
+      document.getElementById('mResponsiveDetail').textContent = details.responsiveDetail;
+      document.getElementById('panelLongExplanation').innerHTML = details.explanation;
+    }
+
+    function selectAnswer(val) {
+      answers[currentQIndex] = val;
+      renderQuestionnaire();
+    }
+
+    function onSliderMove(val) {
+      answers[currentQIndex] = parseInt(val, 10);
+      renderQuestionnaire();
+    }
+
+    function selectVariant(varKey) {
+      closeV6Sheet();
+      currentVariant = varKey;
+      document.querySelectorAll('.variant-tab-card').forEach(card => {
+        card.classList.toggle('is-active', card.dataset.variant === varKey);
+      });
+      renderQuestionnaire();
+    }
+
+    // Attach Event Listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      // Variant Tab clicks
+      document.querySelectorAll('.variant-tab-card').forEach(card => {
+        card.addEventListener('click', () => {
+          selectVariant(card.dataset.variant);
+        });
+      });
+
+      // Device Buttons
+      document.querySelectorAll('[data-device]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('[data-device]').forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+          const dev = btn.dataset.device;
+          currentDevice = dev;
+          const frame = document.getElementById('phoneFrame');
+          if (dev === 'iphonese') {
+            frame.style.width = '360px';
+            frame.style.height = '680px';
+          } else if (dev === 'galaxy') {
+            frame.style.width = '412px';
+            frame.style.height = '840px';
+          } else {
+            frame.style.width = '393px';
+            frame.style.height = '780px';
+          }
+        });
+      });
+
+      // Font Scaler
+      document.querySelectorAll('[data-font]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('[data-font]').forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+          const scale = parseFloat(btn.dataset.font);
+          currentFontScale = scale;
+          document.documentElement.style.setProperty('--font-scale', scale);
+        });
+      });
+
+      // View Mode (Interactive vs Side-by-Side)
+      document.querySelectorAll('[data-viewmode]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('[data-viewmode]').forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+          currentViewMode = btn.dataset.viewmode;
+
+          const interW = document.getElementById('interactiveWorkspace');
+          const sideW = document.getElementById('sideBySideWorkspace');
+
+          if (currentViewMode === 'sidebyside') {
+            interW.style.display = 'none';
+            sideW.style.display = 'grid';
+            renderSideBySideScreens();
+          } else {
+            interW.style.display = 'grid';
+            sideW.style.display = 'none';
+          }
+        });
+      });
+
+      // Navigation Prev / Next
+      document.getElementById('btnPrevQ').addEventListener('click', () => {
+        if (currentQIndex > 0) {
+          currentQIndex--;
+          renderQuestionnaire();
+        }
+      });
+
+      document.getElementById('btnNextQ').addEventListener('click', () => {
+        if (currentQIndex < questions.length - 1) {
+          currentQIndex++;
+          renderQuestionnaire();
+        } else {
+          alert('🎉 คุณได้ทดลองทำแบบประเมินครบทั้ง 3 ข้อด้วยรูปแบบ ' + variantDetails[currentVariant].title + ' เรียบร้อยแล้ว!\nสามารถลองสลับขนาดตัวอักษร หรือสลับรูปแบบตัวเลือกอื่นเพื่อดูการเปรียบเทียบได้เลยครับ');
+          currentQIndex = 0;
+          renderQuestionnaire();
+        }
+      });
+
+      renderQuestionnaire();
+    });
+
+    // Side-by-side 4-screen renderer
+    function renderSideBySideScreens() {
+      const container = document.getElementById('sideBySideWorkspace');
+      const q = questions[currentQIndex];
+
+      const renderCardMini = (varKey, title, isRec, contentHtml) => `
+        <div class="mini-phone-card ${isRec ? 'is-recommended' : ''}">
+          <div class="mini-phone-header">
+            <span>${title}</span>
+            ${isRec ? '<span class="variant-badge-rec">⭐ แนะนำสูงสุด</span>' : ''}
+          </div>
+          <div style="background:#ffffff; border-radius:12px; padding:0.85rem; color:#0f172a;">
+            <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:4px;">ข้อ 1 จาก 3</div>
+            <div style="font-size:0.95rem; font-weight:700; margin-bottom:0.75rem; line-height:1.35;">${q.title}</div>
+            ${contentHtml}
+          </div>
+          <button type="button" class="hub-btn" style="width:100%; justify-content:center;" onclick="switchToVariantInteractive('${varKey}')">
+            🔍 เลือกทดสอบแบบนี้ใน Simulator
+          </button>
+        </div>
+      `;
+
+      // Variant 1 content
+      const v1Html = `
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          ${burnoutOptions.slice(0, 4).map((opt, i) => `
+            <div style="display:flex; align-items:center; gap:6px; padding:6px 8px; border-radius:6px; border:1px solid ${i === 1 ? '#0284c7' : '#cbd5e1'}; background:${i === 1 ? '#eff6ff' : '#ffffff'}; font-size:0.85rem; font-weight:600;">
+              <span style="width:14px; height:14px; border-radius:50%; border:2px solid ${i === 1 ? '#0284c7' : '#94a3b8'}; background:${i === 1 ? '#0284c7' : '#ffffff'};"></span>
+              <span>${opt}</span>
+            </div>
+          `).join('')}
+          <div style="font-size:0.75rem; color:#64748b; text-align:center; padding:2px;">(และอีก 3 ตัวเลือก...)</div>
+        </div>
+      `;
+
+      // Variant 2 content
+      const v2Html = `
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="background:#0284c7; color:#ffffff; padding:6px; border-radius:8px; text-align:center; font-size:0.95rem; font-weight:700;">
+            เดือนละ 1 ครั้ง
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; position:relative; padding:6px 2px;">
+            <div style="position:absolute; left:10px; right:10px; height:2px; background:#cbd5e1;"></div>
+            ${[0, 1, 2, 3, 4, 5, 6].map(i => `
+              <span style="width:24px; height:24px; border-radius:50%; background:${i === 2 ? '#0284c7' : '#ffffff'}; border:2px solid ${i === 2 ? '#0284c7' : '#94a3b8'}; position:relative; z-index:2;"></span>
+            `).join('')}
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748b;">
+            <span>ไม่เคยเลย</span>
+            <span>ทุกวัน</span>
+          </div>
+        </div>
+      `;
+
+      // Variant 3 content
+      const v3Html = `
+        <div style="display:flex; flex-direction:column; gap:8px; text-align:center;">
+          <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:6px;">
+            <div style="font-size:0.72rem; color:#0284c7; font-weight:700;">ระดับ 3 จาก 7</div>
+            <div style="font-size:1.05rem; font-weight:700; color:#0f172a;">เดือนละ 1 ครั้ง</div>
+          </div>
+          <div style="height:6px; background:#0284c7; border-radius:3px; position:relative; margin:10px 4px;">
+            <div style="width:20px; height:20px; border-radius:50%; background:#ffffff; border:3px solid #0284c7; position:absolute; top:-7px; left:40%;"></div>
+          </div>
+        </div>
+      `;
+
+      // Variant 4 content (Grid)
+      const v4Html = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px;">
+          ${burnoutOptions.slice(0, 4).map((opt, i) => `
+            <div style="background:${i === 2 ? '#eff6ff' : '#ffffff'}; border:1px solid ${i === 2 ? '#0284c7' : '#cbd5e1'}; border-radius:6px; padding:6px; font-size:0.75rem; text-align:center; font-weight:600; color:${i === 2 ? '#0284c7' : '#1e293b'};">
+              ${opt}
+            </div>
+          `).join('')}
+        </div>
+        <div style="font-size:0.7rem; color:#64748b; text-align:center; margin-top:4px;">(จัดแบบตาราง 2 คอลัมน์)</div>
+      `;
+
+      // Variant 6 content (Dropdown)
+      const v6Html = `
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="background:#ffffff; border:1.5px solid #0284c7; border-radius:10px; padding:8px 10px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; flex-direction:column;">
+              <span style="font-size:0.65rem; color:#64748b;">ความถี่ที่เลือก:</span>
+              <span style="font-size:0.95rem; font-weight:700; color:#0284c7;">เดือนละ 1 ครั้ง</span>
+            </div>
+            <span style="color:#0284c7; font-size:0.85rem;">▼</span>
+          </div>
+          <div style="font-size:0.72rem; color:#0369a1; background:#f0f9ff; padding:5px 8px; border-radius:6px; text-align:center;">
+            📱 แตะเพื่อเปิดแผ่นตัวเลือกจากขอบล่าง (Bottom Sheet)
+          </div>
+        </div>
+      `;
+
+      // Variant 5 content (Original)
+      const v5Html = `
+        <div style="display:flex; justify-content:space-between; position:relative; padding:4px 0;">
+          <div style="position:absolute; left:6px; right:6px; bottom:10px; height:2px; background:#cbd5e1;"></div>
+          ${burnoutOptions.map((opt, i) => `
+            <div style="display:flex; flex-direction:column; align-items:center; flex:1; position:relative; z-index:2;">
+              <span style="font-size:0.55rem; color:#64748b; line-height:1.1; height:22px; text-align:center; overflow:hidden;">${opt}</span>
+              <span style="width:18px; height:18px; border-radius:50%; background:${i === 2 ? '#0284c7' : '#ffffff'}; border:1.5px solid #cbd5e1;"></span>
+            </div>
+          `).join('')}
+        </div>
+        <div style="font-size:0.7rem; color:#dc2626; margin-top:4px; text-align:center;">⚠️ ตัวหนังสือ 9-10px อัดแน่น</div>
+      `;
+
+      container.innerHTML = 
+        renderCardMini('v1', 'Option 1: การ์ดแนวตั้ง (Vertical Cards)', true, v1Html) +
+        renderCardMini('v2', 'Option 2: วงกลม + ป้ายซูมตัวหนังสือ', false, v2Html) +
+        renderCardMini('v3', 'Option 3: สไลเดอร์ 7 ระดับ', false, v3Html) +
+        renderCardMini('v4', 'Option 4: ตาราง 2 คอลัมน์ (Grid)', false, v4Html) +
+        renderCardMini('v6', 'Option 6: ดรอปดาวน์ & Bottom Sheet', false, v6Html) +
+        renderCardMini('v5', 'Option 5: วงกลม 7 วงเดิม (Baseline)', false, v5Html);
+    }
+
+    function switchToVariantInteractive(varKey) {
+      document.querySelectorAll('[data-viewmode]').forEach(b => {
+        b.classList.toggle('is-active', b.dataset.viewmode === 'interactive');
+      });
+      document.getElementById('interactiveWorkspace').style.display = 'grid';
+      document.getElementById('sideBySideWorkspace').style.display = 'none';
+      selectVariant(varKey);
+    }
+  </script>
+</body>
+</html>

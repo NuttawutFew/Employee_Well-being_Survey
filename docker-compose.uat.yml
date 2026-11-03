@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  mongo-uat:
+    image: mongo:7.0
+    container_name: mental-health-mongo-uat
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_uat_data:/data/db
+
+  backend-user-uat:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: mental-health-backend-user-uat
+    restart: unless-stopped
+    environment:
+      NODE_ENV: uat
+      PORT: 32302
+      SERVICE_ROLE: user
+      MONGODB_URI: mongodb://mongo-uat:27017/mental_health_assessment_uat
+      MONGODB_DB_NAME: mental_health_assessment_uat
+    ports:
+      - "32302:32302"
+    depends_on:
+      - mongo-uat
+
+  backend-admin-uat:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: mental-health-backend-admin-uat
+    restart: unless-stopped
+    environment:
+      NODE_ENV: uat
+      PORT: 32304
+      SERVICE_ROLE: admin
+      MONGODB_URI: mongodb://mongo-uat:27017/mental_health_assessment_uat
+      MONGODB_DB_NAME: mental_health_assessment_uat
+    ports:
+      - "32304:32304"
+    depends_on:
+      - mongo-uat
+
+  frontend-user-uat:
+    build:
+      context: .
+      dockerfile: apps/employee-web/Dockerfile
+    container_name: mental-health-frontend-user-uat
+    restart: unless-stopped
+    environment:
+      PORT: 32301
+      API_TARGET: http://backend-user-uat:32302
+    ports:
+      - "32301:32301"
+    depends_on:
+      - backend-user-uat
+
+  frontend-admin-uat:
+    build:
+      context: .
+      dockerfile: apps/admin-web/Dockerfile
+    container_name: mental-health-frontend-admin-uat
+    restart: unless-stopped
+    environment:
+      PORT: 32303
+      API_TARGET: http://backend-admin-uat:32304
+    ports:
+      - "32303:32303"
+    depends_on:
+      - backend-admin-uat
+
+volumes:
+  mongo_uat_data:

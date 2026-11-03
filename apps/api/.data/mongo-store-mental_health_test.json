@@ -1,0 +1,1178 @@
+{
+  "assessment_attempts": [
+    {
+      "_id": "6ab23fec026e49d07c34702d",
+      "attemptId": "8ab55fbb-e7d3-4289-875a-05f697fe71b4",
+      "employeeId": "EMP-00101",
+      "noticeVersion": "2026-09-03",
+      "noticeAcknowledgedAt": "2026-09-01T08:45:00.000Z",
+      "status": "SUBMITTED",
+      "definitionBundleVersion": "1.0.0",
+      "currentStepIndex": 4,
+      "answers": {
+        "B01": 1,
+        "B02": 1,
+        "B03": 1,
+        "B04": 5,
+        "B05": 1,
+        "B06": 1,
+        "B07": 5,
+        "B08": 1,
+        "B09": 5,
+        "B10": 1,
+        "B11": 1,
+        "B12": 5,
+        "B13": 1,
+        "B14": 1,
+        "B15": 1,
+        "B16": 1,
+        "B17": 5,
+        "B18": 5,
+        "B19": 5,
+        "B20": 1,
+        "B21": 5,
+        "B22": 1,
+        "S01": 1,
+        "S02": 1,
+        "S03": 1,
+        "S04": 1,
+        "S05": 1,
+        "S06": 1,
+        "S07": 1,
+        "S08": 1,
+        "S09": 1,
+        "S10": 1,
+        "S11": 0,
+        "S12": 0,
+        "S13": 0,
+        "S14": 0,
+        "S15": 0,
+        "S16": 0,
+        "S17": 0,
+        "S18": 0,
+        "S19": 0,
+        "S20": 0,
+        "Q01": 0,
+        "Q02": 0,
+        "Q03": 0,
+        "Q04": 0,
+        "Q05": 0,
+        "Q06": 0,
+        "Q07": 0,
+        "Q08": 0,
+        "Q09": 0
+      },
+      "createdAt": "2026-09-01T08:45:00.000Z",
+      "updatedAt": "2026-09-01T09:15:00.000Z",
+      "submittedAt": "2026-09-01T09:15:00.000Z",
+      "result": {
+        "burnout": {
+          "totalScore": 22,
+          "level": "LOW",
+          "dimensions": {
+            "EE": {
+              "score": 9,
+              "level": "LOW",
+              "label": "ความอ่อนล้าทางอารมณ์"
+            },
+            "DP": {
+              "score": 5,
+              "level": "LOW",
+              "label": "การลดความเป็นบุคคล"
+            },
+            "PA": {
+              "score": 8,
+              "level": "LOW",
+              "label": "ความสำเร็จส่วนบุคคล"
+            }
+          }
+        },
+        "stress": {
+          "totalScore": 10,
+          "level": "NORMAL",
+          "label": "ปกติ"
+        },
+        "q9": {
+          "totalScore": 0,
+          "level": "NONE",
+          "label": "ไม่มีอาการหรือมีน้อยมาก"
+        },
+        "overall": {
+          "status": "NORMAL",
+          "label": "ระดับปกติ",
+          "hasSuicideRisk": false
+        }
+      },
+      "snapshot": {
+        "employeeId": "EMP-00101",
+        "firstName": "สมชาย",
+        "lastName": "ใจมั่น",
+        "gender": "ชาย",
+        "age": 34,
+        "telephone": "081-456-7890",
+        "company": "บ. เทค โซลูชั่นส์ จำกัด",
+        "department": "วิศวกรรม",
+        "position": "วิศวกรซอฟต์แวร์อาวุโส",
+        "workArea": "อาคาร A ชั้น 4",
+        "startDate": "2023-03-15"
+      }
+    },
+    {
+      "_id": "6ab23fec13c3d18aa968754f",
+      "attemptId": "7ce33c63-9841-4258-89e1-75129121364a",
+      "employeeId": "EMP-00102",
+      "noticeVersion": "2026-09-03",
+      "noticeAcknowledgedAt": "2026-09-01T11:00:00.000Z",
+      "status": "SUBMITTED",
+      "definitionBundleVersion": "1.0.0",
+      "currentStepIndex": 4,
+      "answers": {
+        "B01": 3,
+        "B02": 3,
+        "B03": 3,
+        "B04": 3,
+        "B05": 3,
+        "B06": 3,
+        "B07": 3,
+        "B08": 3,
+        "B09": 3,
+        "B10": 3,
+        "B11": 3,
+        "B12": 3,
+        "B13": 3,
+        "B14": 3,
+        "B15": 3,
+        "B16": 3,
+        "B17": 3,
+        "B18": 3,
+        "B19": 3,
+        "B20": 3,
+        "B21": 3,
+        "B22": 3,
+        "S01": 1,
+        "S02": 1,
+        "S03": 1,
+        "S04": 1,
+        "S05": 1,
+        "S06": 1,
+        "S07": 1,
+        "S08": 1,
+        "S09": 1,
+        "S10": 1,
+        "S11": 1,
+        "S12": 1,
+        "S13": 1,
+        "S14": 1,
+        "S15": 1,
+        "S16": 1,
+        "S17": 1,
+        "S18": 1,
+        "S19": 1,
+        "S20": 1,
+        "Q01": 1,
+        "Q02": 1,
+        "Q03": 1,
+        "Q04": 1,
+        "Q05": 1,
+        "Q06": 1,
+        "Q07": 1,
+        "Q08": 1,
+        "Q09": 0
+      },
+      "createdAt": "2026-09-01T11:00:00.000Z",
+      "updatedAt": "2026-09-01T11:30:00.000Z",
+      "submittedAt": "2026-09-01T11:30:00.000Z",
+      "result": {
+        "burnout": {
+          "totalScore": 66,
+          "level": "HIGH",
+          "dimensions": {
+            "EE": {
+              "score": 27,
+              "level": "HIGH",
+              "label": "ความอ่อนล้าทางอารมณ์"
+            },
+            "DP": {
+              "score": 15,
+              "level": "HIGH",
+              "label": "การลดความเป็นบุคคล"
+            },
+            "PA": {
+              "score": 24,
+              "level": "LOW",
+              "label": "ความสำเร็จส่วนบุคคล"
+            }
+          }
+        },
+        "stress": {
+          "totalScore": 20,
+          "level": "MILD",
+          "label": "สูงกว่าปกติเล็กน้อย"
+        },
+        "q9": {
+          "totalScore": 8,
+          "level": "MILD",
+          "label": "น้อย"
+        },
+        "overall": {
+          "status": "NEEDS_ADDITIONAL_CARE",
+          "label": "ควรได้รับการดูแลสุขภาพใจเพิ่มเติม",
+          "hasSuicideRisk": false
+        }
+      },
+      "snapshot": {
+        "employeeId": "EMP-00102",
+        "firstName": "วิภาดา",
+        "lastName": "รัตนโชติ",
+        "gender": "หญิง",
+        "age": 28,
+        "telephone": "089-123-4567",
+        "company": "บ. เทค โซลูชั่นส์ จำกัด",
+        "department": "การตลาด",
+        "position": "ผู้เชี่ยวชาญด้านคอนเทนต์",
+        "workArea": "อาคาร A ชั้น 2",
+        "startDate": "2025-06-10"
+      }
+    },
+    {
+      "_id": "6ab23fecb07863e37d0b5624",
+      "attemptId": "a086628d-1132-4e00-815c-c2f57195eee5",
+      "employeeId": "EMP-00103",
+      "noticeVersion": "2026-09-03",
+      "noticeAcknowledgedAt": "2026-09-02T08:15:00.000Z",
+      "status": "SUBMITTED",
+      "definitionBundleVersion": "1.0.0",
+      "currentStepIndex": 4,
+      "answers": {
+        "B01": 1,
+        "B02": 1,
+        "B03": 1,
+        "B04": 5,
+        "B05": 1,
+        "B06": 1,
+        "B07": 5,
+        "B08": 1,
+        "B09": 5,
+        "B10": 1,
+        "B11": 1,
+        "B12": 5,
+        "B13": 1,
+        "B14": 1,
+        "B15": 1,
+        "B16": 1,
+        "B17": 5,
+        "B18": 5,
+        "B19": 5,
+        "B20": 1,
+        "B21": 5,
+        "B22": 1,
+        "S01": 1,
+        "S02": 1,
+        "S03": 1,
+        "S04": 0,
+        "S05": 0,
+        "S06": 0,
+        "S07": 0,
+        "S08": 0,
+        "S09": 0,
+        "S10": 0,
+        "S11": 0,
+        "S12": 0,
+        "S13": 0,
+        "S14": 0,
+        "S15": 0,
+        "S16": 0,
+        "S17": 0,
+        "S18": 0,
+        "S19": 0,
+        "S20": 0,
+        "Q01": 0,
+        "Q02": 0,
+        "Q03": 0,
+        "Q04": 0,
+        "Q05": 0,
+        "Q06": 0,
+        "Q07": 0,
+        "Q08": 0,
+        "Q09": 0
+      },
+      "createdAt": "2026-09-02T08:15:00.000Z",
+      "updatedAt": "2026-09-02T08:45:00.000Z",
+      "submittedAt": "2026-09-02T08:45:00.000Z",
+      "result": {
+        "burnout": {
+          "totalScore": 22,
+          "level": "LOW",
+          "dimensions": {
+            "EE": {
+              "score": 9,
+              "level": "LOW",
+              "label": "ความอ่อนล้าทางอารมณ์"
+            },
+            "DP": {
+              "score": 5,
+              "level": "LOW",
+              "label": "การลดความเป็นบุคคล"
+            },
+            "PA": {
+              "score": 8,
+              "level": "LOW",
+              "label": "ความสำเร็จส่วนบุคคล"
+            }
+          }
+        },
+        "stress": {
+          "totalScore": 3,
+          "level": "LOW",
+          "label": "ต่ำกว่าเกณฑ์ปกติ"
+        },
+        "q9": {
+          "totalScore": 0,
+          "level": "NONE",
+          "label": "ไม่มีอาการหรือมีน้อยมาก"
+        },
+        "overall": {
+          "status": "NORMAL",
+          "label": "ระดับปกติ",
+          "hasSuicideRisk": false
+        }
+      },
+      "snapshot": {
+        "employeeId": "EMP-00103",
+        "firstName": "ธีรพงศ์",
+        "lastName": "เจริญสุข",
+        "gender": "ชาย",
+        "age": 42,
+        "telephone": "086-789-0123",
+        "company": "บ. สยาม โลจิสติกส์ จำกัด",
+        "department": "ปฏิบัติการ",
+        "position": "ผู้จัดการฝ่ายปฏิบัติการ",
+        "workArea": "ศูนย์บางนา",
+        "startDate": "2020-07-01"
+      }
+    },
+    {
+      "_id": "6ab23fec8f0de8ecd40d5e7f",
+      "attemptId": "4bb17cca-322f-4641-91f5-eb99be8c15e3",
+      "employeeId": "EMP-00104",
+      "noticeVersion": "2026-09-03",
+      "noticeAcknowledgedAt": "2026-09-02T13:50:00.000Z",
+      "status": "SUBMITTED",
+      "definitionBundleVersion": "1.0.0",
+      "currentStepIndex": 4,
+      "answers": {
+        "B01": 1,
+        "B02": 1,
+        "B03": 1,
+        "B04": 5,
+        "B05": 1,
+        "B06": 1,
+        "B07": 5,
+        "B08": 1,
+        "B09": 5,
+        "B10": 1,
+        "B11": 1,
+        "B12": 5,
+        "B13": 1,
+        "B14": 1,
+        "B15": 1,
+        "B16": 1,
+        "B17": 5,
+        "B18": 5,
+        "B19": 5,
+        "B20": 1,
+        "B21": 5,
+        "B22": 1,
+        "S01": 1,
+        "S02": 1,
+        "S03": 1,
+        "S04": 1,
+        "S05": 1,
+        "S06": 1,
+        "S07": 1,
+        "S08": 1,
+        "S09": 1,
+        "S10": 1,
+        "S11": 0,
+        "S12": 0,
+        "S13": 0,
+        "S14": 0,
+        "S15": 0,
+        "S16": 0,
+        "S17": 0,
+        "S18": 0,
+        "S19": 0,
+        "S20": 0,
+        "Q01": 0,
+        "Q02": 0,
+        "Q03": 0,
+        "Q04": 0,
+        "Q05": 0,
+        "Q06": 0,
+        "Q07": 0,
+        "Q08": 0,
+        "Q09": 0
+      },
+      "createdAt": "2026-09-02T13:50:00.000Z",
+      "updatedAt": "2026-09-02T14:20:00.000Z",
+      "submittedAt": "2026-09-02T14:20:00.000Z",
+      "result": {
+        "burnout": {
+          "totalScore": 22,
+          "level": "LOW",
+          "dimensions": {
+            "EE": {
+              "score": 9,
+              "level": "LOW",
+              "label": "ความอ่อนล้าทางอารมณ์"
+            },
+            "DP": {
+              "score": 5,
+              "level": "LOW",
+              "label": "การลดความเป็นบุคคล"
+            },
+            "PA": {
+              "score": 8,
+              "level": "LOW",
+              "label": "ความสำเร็จส่วนบุคคล"
+            }
+          }
+        },
+        "stress": {
+          "totalScore": 10,
+          "level": "NORMAL",
+          "label": "ปกติ"
+        },
+        "q9": {
+          "totalScore": 0,
+          "level": "NONE",
+          "label": "ไม่มีอาการหรือมีน้อยมาก"
+        },
+        "overall": {
+          "status": "NORMAL",
+          "label": "ระดับปกติ",
+          "hasSuicideRisk": false
+        }
+      },
+      "snapshot": {
+        "employeeId": "EMP-00104",
+        "firstName": "กัญญาณัฐ",
+        "lastName": "วงศ์วิวัฒน์",
+        "gender": "หญิง",
+        "age": 24,
+        "telephone": "095-234-5678",
+        "company": "บ. เทค โซลูชั่นส์ จำกัด",
+        "department": "ทรัพยากรบุคคล",
+        "position": "เจ้าหน้าที่สรรหาบุคลากร",
+        "workArea": "อาคาร A ชั้น 5",
+        "startDate": "2025-12-01"
+      }
+    },
+    {
+      "_id": "6ab23fec3dcecd2f4fbe2c1c",
+      "attemptId": "931b5e15-ffd0-4849-a495-38181b9e86bd",
+      "employeeId": "EMP-00105",
+      "noticeVersion": "2026-09-03",
+      "noticeAcknowledgedAt": "2026-09-03T09:40:00.000Z",
+      "status": "SUBMITTED",
+      "definitionBundleVersion": "1.0.0",
+      "currentStepIndex": 4,
+      "answers": {
+        "B01": 5,
+        "B02": 5,
+        "B03": 5,
+        "B04": 1,
+        "B05": 5,
+        "B06": 5,
+        "B07": 1,
+        "B08": 5,
+        "B09": 1,
+        "B10": 5,
+        "B11": 5,
+        "B12": 1,
+        "B13": 5,
+        "B14": 5,
+        "B15": 5,
+        "B16": 5,
+        "B17": 1,
+        "B18": 1,
+        "B19": 1,
+        "B20": 5,
+        "B21": 1,
+        "B22": 5,
+        "S01": 2,
+        "S02": 2,
+        "S03": 2,
+        "S04": 2,
+        "S05": 2,
+        "S06": 2,
+        "S07": 2,
+        "S08": 2,
+        "S09": 2,
+        "S10": 2,
+        "S11": 2,
+        "S12": 2,
+        "S13": 2,
+        "S14": 2,
+        "S15": 2,
+        "S16": 2,
+        "S17": 0,
+        "S18": 0,
+        "S19": 0,
+        "S20": 0,
+        "Q01": 2,
+        "Q02": 2,
+        "Q03": 2,
+        "Q04": 2,
+        "Q05": 2,
+        "Q06": 2,
+        "Q07": 2,
+        "Q08": 0,
+        "Q09": 0
+      },
+      "createdAt": "2026-09-03T09:40:00.000Z",
+      "updatedAt": "2026-09-03T10:10:00.000Z",
+      "submittedAt": "2026-09-03T10:10:00.000Z",
+      "result": {
+        "burnout": {
+          "totalScore": 110,
+          "level": "HIGH",
+          "dimensions": {
+            "EE": {
+              "score": 45,
+              "level": "HIGH",
+              "label": "ความอ่อนล้าทางอารมณ์"
+            },
+            "DP": {
+              "score": 25,
+              "level": "HIGH",
+              "label": "การลดความเป็นบุคคล"
+            },
+            "PA": {
+              "score": 40,
+              "level": "HIGH",
+              "label": "ความสำเร็จส่วนบุคคล"
+            }
+          }
+        },
+        "stress": {
+          "totalScore": 32,
+          "level": "SEVERE",
+          "label": "สูงกว่าปกติมาก"
+        },
+        "q9": {
+          "totalScore": 14,
+          "level": "MODERATE",
+          "label": "ปานกลาง"
+        },
+        "overall": {
+          "status": "NEEDS_ADDITIONAL_CARE",
+          "label": "ควรได้รับการดูแลสุขภาพใจเพิ่มเติม",
+          "hasSuicideRisk": false
+        }
+      },
+      "snapshot": {
+        "employeeId": "EMP-00105",
+        "firstName": "พิชัย",
+        "lastName": "เกียรติสกุล",
+        "gender": "ชาย",
+        "age": 38,
+        "telephone": "083-987-6543",
+        "company": "บ. อรุณ โฮลดิ้ง จำกัด",
+        "department": "การเงิน",
+        "position": "นักวิเคราะห์การเงินอาวุโส",
+        "workArea": "สำนักงานใหญ่ ชั้น 18",
+        "startDate": "2022-05-18"
+      }
+    },
+    {
+      "_id": "6ab23feca370dbe35d5e3bdc",
+      "attemptId": "cd3c5e5f-ddd0-40f1-9ac0-61e8ec96f4ff",
+      "employeeId": "EMP-00106",
+      "noticeVersion": "2026-09-03",
+      "noticeAcknowledgedAt": "2026-09-03T15:35:00.000Z",
+      "status": "SUBMITTED",
+      "definitionBundleVersion": "1.0.0",
+      "currentStepIndex": 4,
+      "answers": {
+        "B01": 3,
+        "B02": 3,
+        "B03": 3,
+        "B04": 3,
+        "B05": 3,
+        "B06": 3,
+        "B07": 3,
+        "B08": 3,
+        "B09": 3,
+        "B10": 3,
+        "B11": 3,
+        "B12": 3,
+        "B13": 3,
+        "B14": 3,
+        "B15": 3,
+        "B16": 3,
+        "B17": 3,
+        "B18": 3,
+        "B19": 3,
+        "B20": 3,
+        "B21": 3,
+        "B22": 3,
+        "S01": 1,
+        "S02": 1,
+        "S03": 1,
+        "S04": 1,
+        "S05": 1,
+        "S06": 1,
+        "S07": 1,
+        "S08": 1,
+        "S09": 1,
+        "S10": 1,
+        "S11": 0,
+        "S12": 0,
+        "S13": 0,
+        "S14": 0,
+        "S15": 0,
+        "S16": 0,
+        "S17": 0,
+        "S18": 0,
+        "S19": 0,
+        "S20": 0,
+        "Q01": 0,
+        "Q02": 0,
+        "Q03": 0,
+        "Q04": 0,
+        "Q05": 0,
+        "Q06": 0,
+        "Q07": 0,
+        "Q08": 0,
+        "Q09": 0
+      },
+      "createdAt": "2026-09-03T15:35:00.000Z",
+      "updatedAt": "2026-09-03T16:05:00.000Z",
+      "submittedAt": "2026-09-03T16:05:00.000Z",
+      "result": {
+        "burnout": {
+          "totalScore": 66,
+          "level": "HIGH",
+          "dimensions": {
+            "EE": {
+              "score": 27,
+              "level": "HIGH",
+              "label": "ความอ่อนล้าทางอารมณ์"
+            },
+            "DP": {
+              "score": 15,
+              "level": "HIGH",
+              "label": "การลดความเป็นบุคคล"
+            },
+            "PA": {
+              "score": 24,
+              "level": "LOW",
+              "label": "ความสำเร็จส่วนบุคคล"
+            }
+          }
+        },
+        "stress": {
+          "totalScore": 10,
+          "level": "NORMAL",
+          "label": "ปกติ"
+        },
+        "q9": {
+          "totalScore": 0,
+          "level": "NONE",
+          "label": "ไม่มีอาการหรือมีน้อยมาก"
+        },
+        "overall": {
+          "status": "NEEDS_ADDITIONAL_CARE",
+          "label": "ควรได้รับการดูแลสุขภาพใจเพิ่มเติม",
+          "hasSuicideRisk": false
+        }
+      },
+      "snapshot": {
+        "employeeId": "EMP-00106",
+        "firstName": "ศิริพร",
+        "lastName": "บุญเสริม",
+        "gender": "หญิง",
+        "age": 31,
+        "telephone": "092-345-6789",
+        "company": "บ. เทค โซลูชั่นส์ จำกัด",
+        "department": "วิศวกรรม",
+        "position": "ผู้จัดการผลิตภัณฑ์",
+        "workArea": "อาคาร A ชั้น 3",
+        "startDate": "2023-11-01"
+      }
+    },
+    {
+      "_id": "6ab23fecb9d9b102055dfe34",
+      "attemptId": "9eeb1899-8e6a-4dea-bcd6-a890c8170669",
+      "employeeId": "EMP-00107",
+      "noticeVersion": "2026-09-03",
+      "noticeAcknowledgedAt": "2026-09-04T09:20:00.000Z",
+      "status": "SUBMITTED",
+      "definitionBundleVersion": "1.0.0",
+      "currentStepIndex": 4,
+      "answers": {
+        "B01": 3,
+        "B02": 3,
+        "B03": 3,
+        "B04": 3,
+        "B05": 3,
+        "B06": 3,
+        "B07": 3,
+        "B08": 3,
+        "B09": 3,
+        "B10": 3,
+        "B11": 3,
+        "B12": 3,
+        "B13": 3,
+        "B14": 3,
+        "B15": 3,
+        "B16": 3,
+        "B17": 3,
+        "B18": 3,
+        "B19": 3,
+        "B20": 3,
+        "B21": 3,
+        "B22": 3,
+        "S01": 2,
+        "S02": 2,
+        "S03": 2,
+        "S04": 2,
+        "S05": 2,
+        "S06": 2,
+        "S07": 2,
+        "S08": 2,
+        "S09": 2,
+        "S10": 2,
+        "S11": 2,
+        "S12": 2,
+        "S13": 2,
+        "S14": 2,
+        "S15": 0,
+        "S16": 0,
+        "S17": 0,
+        "S18": 0,
+        "S19": 0,
+        "S20": 0,
+        "Q01": 2,
+        "Q02": 2,
+        "Q03": 2,
+        "Q04": 2,
+        "Q05": 2,
+        "Q06": 2,
+        "Q07": 2,
+        "Q08": 0,
+        "Q09": 0
+      },
+      "createdAt": "2026-09-04T09:20:00.000Z",
+      "updatedAt": "2026-09-04T09:50:00.000Z",
+      "submittedAt": "2026-09-04T09:50:00.000Z",
+      "result": {
+        "burnout": {
+          "totalScore": 66,
+          "level": "HIGH",
+          "dimensions": {
+            "EE": {
+              "score": 27,
+              "level": "HIGH",
+              "label": "ความอ่อนล้าทางอารมณ์"
+            },
+            "DP": {
+              "score": 15,
+              "level": "HIGH",
+              "label": "การลดความเป็นบุคคล"
+            },
+            "PA": {
+              "score": 24,
+              "level": "LOW",
+              "label": "ความสำเร็จส่วนบุคคล"
+            }
+          }
+        },
+        "stress": {
+          "totalScore": 28,
+          "level": "MODERATE",
+          "label": "สูงกว่าปกติปานกลาง"
+        },
+        "q9": {
+          "totalScore": 14,
+          "level": "MODERATE",
+          "label": "ปานกลาง"
+        },
+        "overall": {
+          "status": "NEEDS_ADDITIONAL_CARE",
+          "label": "ควรได้รับการดูแลสุขภาพใจเพิ่มเติม",
+          "hasSuicideRisk": false
+        }
+      },
+      "snapshot": {
+        "employeeId": "EMP-00107",
+        "firstName": "อนันต์",
+        "lastName": "ศรีสวัสดิ์",
+        "gender": "ชาย",
+        "age": 29,
+        "telephone": "087-654-3210",
+        "company": "บ. สยาม โลจิสติกส์ จำกัด",
+        "department": "ปฏิบัติการ",
+        "position": "หัวหน้าทีมบริการลูกค้า",
+        "workArea": "ศูนย์ลาดกระบัง",
+        "startDate": "2025-02-14"
+      }
+    },
+    {
+      "_id": "6ab23fec89037f28663ae98f",
+      "attemptId": "33bf18ed-a922-4117-a32b-d033f20adec8",
+      "employeeId": "EMP-00108",
+      "noticeVersion": "2026-09-03",
+      "noticeAcknowledgedAt": "2026-09-04T13:10:00.000Z",
+      "status": "SUBMITTED",
+      "definitionBundleVersion": "1.0.0",
+      "currentStepIndex": 4,
+      "answers": {
+        "B01": 1,
+        "B02": 1,
+        "B03": 1,
+        "B04": 5,
+        "B05": 1,
+        "B06": 1,
+        "B07": 5,
+        "B08": 1,
+        "B09": 5,
+        "B10": 1,
+        "B11": 1,
+        "B12": 5,
+        "B13": 1,
+        "B14": 1,
+        "B15": 1,
+        "B16": 1,
+        "B17": 5,
+        "B18": 5,
+        "B19": 5,
+        "B20": 1,
+        "B21": 5,
+        "B22": 1,
+        "S01": 1,
+        "S02": 1,
+        "S03": 1,
+        "S04": 0,
+        "S05": 0,
+        "S06": 0,
+        "S07": 0,
+        "S08": 0,
+        "S09": 0,
+        "S10": 0,
+        "S11": 0,
+        "S12": 0,
+        "S13": 0,
+        "S14": 0,
+        "S15": 0,
+        "S16": 0,
+        "S17": 0,
+        "S18": 0,
+        "S19": 0,
+        "S20": 0,
+        "Q01": 0,
+        "Q02": 0,
+        "Q03": 0,
+        "Q04": 0,
+        "Q05": 0,
+        "Q06": 0,
+        "Q07": 0,
+        "Q08": 0,
+        "Q09": 0
+      },
+      "createdAt": "2026-09-04T13:10:00.000Z",
+      "updatedAt": "2026-09-04T13:40:00.000Z",
+      "submittedAt": "2026-09-04T13:40:00.000Z",
+      "result": {
+        "burnout": {
+          "totalScore": 22,
+          "level": "LOW",
+          "dimensions": {
+            "EE": {
+              "score": 9,
+              "level": "LOW",
+              "label": "ความอ่อนล้าทางอารมณ์"
+            },
+            "DP": {
+              "score": 5,
+              "level": "LOW",
+              "label": "การลดความเป็นบุคคล"
+            },
+            "PA": {
+              "score": 8,
+              "level": "LOW",
+              "label": "ความสำเร็จส่วนบุคคล"
+            }
+          }
+        },
+        "stress": {
+          "totalScore": 3,
+          "level": "LOW",
+          "label": "ต่ำกว่าเกณฑ์ปกติ"
+        },
+        "q9": {
+          "totalScore": 0,
+          "level": "NONE",
+          "label": "ไม่มีอาการหรือมีน้อยมาก"
+        },
+        "overall": {
+          "status": "NORMAL",
+          "label": "ระดับปกติ",
+          "hasSuicideRisk": false
+        }
+      },
+      "snapshot": {
+        "employeeId": "EMP-00108",
+        "firstName": "ปิยะนุช",
+        "lastName": "สดใส",
+        "gender": "หญิง",
+        "age": 36,
+        "telephone": "084-567-8901",
+        "company": "บ. อรุณ โฮลดิ้ง จำกัด",
+        "department": "การเงิน",
+        "position": "ผู้ตรวจสอบภายใน",
+        "workArea": "สำนักงานใหญ่ ชั้น 19",
+        "startDate": "2021-06-20"
+      }
+    },
+    {
+      "_id": "6ab23feca47673fb4ae47445",
+      "attemptId": "72b61bcb-4a84-44fc-834d-8b05acb54e1e",
+      "employeeId": "EMP-00109",
+      "noticeVersion": "2026-09-03",
+      "noticeAcknowledgedAt": "2026-09-05T08:00:00.000Z",
+      "status": "SUBMITTED",
+      "definitionBundleVersion": "1.0.0",
+      "currentStepIndex": 4,
+      "answers": {
+        "B01": 1,
+        "B02": 1,
+        "B03": 1,
+        "B04": 5,
+        "B05": 1,
+        "B06": 1,
+        "B07": 5,
+        "B08": 1,
+        "B09": 5,
+        "B10": 1,
+        "B11": 1,
+        "B12": 5,
+        "B13": 1,
+        "B14": 1,
+        "B15": 1,
+        "B16": 1,
+        "B17": 5,
+        "B18": 5,
+        "B19": 5,
+        "B20": 1,
+        "B21": 5,
+        "B22": 1,
+        "S01": 1,
+        "S02": 1,
+        "S03": 1,
+        "S04": 1,
+        "S05": 1,
+        "S06": 1,
+        "S07": 1,
+        "S08": 1,
+        "S09": 1,
+        "S10": 1,
+        "S11": 0,
+        "S12": 0,
+        "S13": 0,
+        "S14": 0,
+        "S15": 0,
+        "S16": 0,
+        "S17": 0,
+        "S18": 0,
+        "S19": 0,
+        "S20": 0,
+        "Q01": 0,
+        "Q02": 0,
+        "Q03": 0,
+        "Q04": 0,
+        "Q05": 0,
+        "Q06": 0,
+        "Q07": 0,
+        "Q08": 0,
+        "Q09": 0
+      },
+      "createdAt": "2026-09-05T08:00:00.000Z",
+      "updatedAt": "2026-09-05T08:30:00.000Z",
+      "submittedAt": "2026-09-05T08:30:00.000Z",
+      "result": {
+        "burnout": {
+          "totalScore": 22,
+          "level": "LOW",
+          "dimensions": {
+            "EE": {
+              "score": 9,
+              "level": "LOW",
+              "label": "ความอ่อนล้าทางอารมณ์"
+            },
+            "DP": {
+              "score": 5,
+              "level": "LOW",
+              "label": "การลดความเป็นบุคคล"
+            },
+            "PA": {
+              "score": 8,
+              "level": "LOW",
+              "label": "ความสำเร็จส่วนบุคคล"
+            }
+          }
+        },
+        "stress": {
+          "totalScore": 10,
+          "level": "NORMAL",
+          "label": "ปกติ"
+        },
+        "q9": {
+          "totalScore": 0,
+          "level": "NONE",
+          "label": "ไม่มีอาการหรือมีน้อยมาก"
+        },
+        "overall": {
+          "status": "NORMAL",
+          "label": "ระดับปกติ",
+          "hasSuicideRisk": false
+        }
+      },
+      "snapshot": {
+        "employeeId": "EMP-00109",
+        "firstName": "ณัฐวุฒิ",
+        "lastName": "ประเสริฐ",
+        "gender": "ชาย",
+        "age": 23,
+        "telephone": "098-765-4321",
+        "company": "บ. เทค โซลูชั่นส์ จำกัด",
+        "department": "วิศวกรรม",
+        "position": "วิศวกรซอฟต์แวร์ระดับต้น",
+        "workArea": "อาคาร A ชั้น 4",
+        "startDate": "2026-04-01"
+      }
+    },
+    {
+      "_id": "6ab23fec3d0e0561055f9d83",
+      "attemptId": "5917dfcb-5e2a-4705-a402-6bbdd691e0bd",
+      "employeeId": "EMP-00110",
+      "noticeVersion": "2026-09-03",
+      "noticeAcknowledgedAt": "2026-09-05T09:45:00.000Z",
+      "status": "SUBMITTED",
+      "definitionBundleVersion": "1.0.0",
+      "currentStepIndex": 4,
+      "answers": {
+        "B01": 1,
+        "B02": 1,
+        "B03": 1,
+        "B04": 5,
+        "B05": 1,
+        "B06": 1,
+        "B07": 5,
+        "B08": 1,
+        "B09": 5,
+        "B10": 1,
+        "B11": 1,
+        "B12": 5,
+        "B13": 1,
+        "B14": 1,
+        "B15": 1,
+        "B16": 1,
+        "B17": 5,
+        "B18": 5,
+        "B19": 5,
+        "B20": 1,
+        "B21": 5,
+        "B22": 1,
+        "S01": 1,
+        "S02": 1,
+        "S03": 1,
+        "S04": 1,
+        "S05": 1,
+        "S06": 1,
+        "S07": 1,
+        "S08": 1,
+        "S09": 1,
+        "S10": 1,
+        "S11": 0,
+        "S12": 0,
+        "S13": 0,
+        "S14": 0,
+        "S15": 0,
+        "S16": 0,
+        "S17": 0,
+        "S18": 0,
+        "S19": 0,
+        "S20": 0,
+        "Q01": 0,
+        "Q02": 0,
+        "Q03": 0,
+        "Q04": 0,
+        "Q05": 0,
+        "Q06": 0,
+        "Q07": 0,
+        "Q08": 0,
+        "Q09": 0
+      },
+      "createdAt": "2026-09-05T09:45:00.000Z",
+      "updatedAt": "2026-09-05T10:15:00.000Z",
+      "submittedAt": "2026-09-05T10:15:00.000Z",
+      "result": {
+        "burnout": {
+          "totalScore": 22,
+          "level": "LOW",
+          "dimensions": {
+            "EE": {
+              "score": 9,
+              "level": "LOW",
+              "label": "ความอ่อนล้าทางอารมณ์"
+            },
+            "DP": {
+              "score": 5,
+              "level": "LOW",
+              "label": "การลดความเป็นบุคคล"
+            },
+            "PA": {
+              "score": 8,
+              "level": "LOW",
+              "label": "ความสำเร็จส่วนบุคคล"
+            }
+          }
+        },
+        "stress": {
+          "totalScore": 10,
+          "level": "NORMAL",
+          "label": "ปกติ"
+        },
+        "q9": {
+          "totalScore": 0,
+          "level": "NONE",
+          "label": "ไม่มีอาการหรือมีน้อยมาก"
+        },
+        "overall": {
+          "status": "NORMAL",
+          "label": "ระดับปกติ",
+          "hasSuicideRisk": false
+        }
+      },
+      "snapshot": {
+        "employeeId": "EMP-00110",
+        "firstName": "วรัญญา",
+        "lastName": "จิตสงบ",
+        "gender": "หญิง",
+        "age": 48,
+        "telephone": "081-987-6543",
+        "company": "บ. อรุณ โฮลดิ้ง จำกัด",
+        "department": "ทรัพยากรบุคคล",
+        "position": "ผู้อำนวยการฝ่ายทรัพยากรบุคคล",
+        "workArea": "สำนักงานใหญ่ ชั้น 20",
+        "startDate": "2018-04-10"
+      }
+    }
+  ],
+  "admin_users": [],
+  "admin_sessions": [],
+  "audit_logs": [],
+  "admin_resets": []
+}

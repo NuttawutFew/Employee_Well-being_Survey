@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบประเมินสุขภาพใจสำหรับบุคลากร - Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    :root {
+      --font-prompt: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-sarabun: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+      --navy-dark: #1b3574;
+      --navy-primary: #1e3a8a;
+      --navy-hover: #152960;
+      --blue-accent: #2563eb;
+      --cream-bg: #fcfaf7;
+      --warm-glow: #fff5ea;
+    }
+
+    body {
+      font-family: var(--font-prompt);
+      margin: 0;
+      padding: 0;
+      color: #1e293b;
+      background-color: #f1f5f9;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .font-body {
+      font-family: var(--font-sarabun);
+    }
+
+    /* Top Control Bar */
+    .prototype-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #fff;
+    }
+
+    .view-btn {
+      transition: all 0.2s ease;
+    }
+    .view-btn.active {
+      background: #2563eb;
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.5);
+    }
+
+    /* Screen Views */
+    .screen-view {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .screen-view.active {
+      display: block;
+      opacity: 1;
+    }
+
+    /* Side by side mode */
+    .split-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 20px;
+      background: #e2e8f0;
+      min-height: calc(100vh - 60px);
+    }
+    .split-frame {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      border: 1px solid #cbd5e1;
+      display: flex;
+      flex-direction: column;
+    }
+    .split-header {
+      padding: 10px 16px;
+      background: #0f172a;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Pulse animation for Turnstile captcha */
+    @keyframes pulse-check {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-check {
+      animation: pulse-check 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Prototype Switcher Bar -->
+  <div class="prototype-bar">
+    <div class="flex items-center gap-3">
+      <span class="text-xs font-semibold px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-400/30">PROTOTYPE V2</span>
+      <h1 class="text-sm font-semibold tracking-wide text-slate-100 hidden sm:inline">ระบบประเมินสุขภาพใจสำหรับบุคลากร</h1>
+    </div>
+
+    <div class="flex items-center gap-1 bg-slate-800/80 p-1 rounded-lg border border-slate-700 text-xs flex-wrap">
+      <button id="btn-show-portal" onclick="switchView('portal')" class="view-btn active px-3 py-1.5 rounded-md text-slate-300 hover:text-white flex items-center gap-1.5">
+        <span>👤</span> <span>Portal พนักงาน</span>
+      </button>
+      <button id="btn-show-login" onclick="switchView('login')" class="view-btn px-3 py-1.5 rounded-md text-slate-300 hover:text-white flex items-center gap-1.5">
+        <span>👤</span> <span>Login พนักงาน</span>
+      </button>
+      <button id="btn-show-admin-portal" onclick="switchView('admin-portal')" class="view-btn px-3 py-1.5 rounded-md text-slate-300 hover:text-white flex items-center gap-1.5">
+        <span>🛡️</span> <span>Portal ผู้ดูแลระบบ</span>
+      </button>
+      <button id="btn-show-admin-login" onclick="switchView('admin-login')" class="view-btn px-3 py-1.5 rounded-md text-slate-300 hover:text-white flex items-center gap-1.5">
+        <span>🛡️</span> <span>Login ผู้ดูแลระบบ</span>
+      </button>
+      <button id="btn-show-split" onclick="switchView('split')" class="view-btn px-3 py-1.5 rounded-md text-slate-300 hover:text-white flex items-center gap-1.5 hidden lg:flex">
+        <span>◫</span> <span>ดูเคียงข้าง (Side-by-Side)</span>
+      </button>
+    </div>
+
+    <div class="flex items-center gap-2 text-xs text-slate-400">
+      <span class="hidden lg:inline">แยกหน้า Portal &amp; Login ชัดเจน 100%</span>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 1: EMPLOYEE PORTAL PAGE                                            -->
+  <!-- ========================================================================= -->
+  <div id="view-portal" class="screen-view active min-h-screen bg-[#fcfaf7]">
+    
+    <!-- Top Navigation Bar -->
+    <header class="w-full bg-white border-b border-slate-100 px-6 sm:px-12 py-3 flex items-center justify-between shadow-sm sticky top-[53px] z-40">
+      <!-- Left Logo -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('portal')">
+        <!-- Mental Health Assessment Logo -->
+        <div class="flex items-center gap-2">
+          <!-- Logo Emblem -->
+          <div class="w-10 h-10 rounded-lg overflow-hidden shadow-sm flex-shrink-0">
+            <img src="./logo.jpeg" alt="INET Logo" class="w-full h-full object-cover" />
+          </div>
+          <!-- Logo Text -->
+          <div class="flex flex-col leading-tight">
+            <span class="text-[11px] font-bold tracking-wider text-rose-500 font-mono uppercase">MENTAL HEALTH</span>
+            <span class="text-[13px] font-extrabold tracking-widest text-teal-600 font-mono uppercase -mt-0.5">ASSESSMENT</span>
+          </div>
+        </div>
+
+        <div class="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
+        <span class="text-sm md:text-base font-semibold text-slate-700 hidden sm:inline">ระบบประเมินสุขภาพใจ บุคลากรในองค์กร</span>
+      </div>
+
+      <!-- Right Link to Admin Portal -->
+      <div>
+        <button 
+          type="button" 
+          onclick="switchView('admin-portal')"
+          class="inline-flex items-center gap-1.5 text-xs text-[#1b3574] font-semibold bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3.5 py-1.5 rounded-full transition"
+        >
+          <span>🛡️</span>
+          <span>สำหรับผู้ดูแลระบบ (Admin Portal) ↗</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="relative overflow-hidden pt-12 pb-24 px-6 sm:px-12 lg:px-20 max-w-7xl mx-auto min-h-[calc(100vh-140px)] flex items-center">
+      
+      <!-- Subtle Decorative Radial Glow on the right -->
+      <div class="absolute right-0 top-1/2 -translate-y-1/2 w-[650px] h-[650px] bg-gradient-to-br from-amber-100/60 via-rose-100/30 to-transparent rounded-full blur-3xl pointer-events-none -z-0"></div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center w-full z-10">
+        
+        <!-- Left Content Column -->
+        <div class="lg:col-span-7 flex flex-col items-start space-y-6">
+          <!-- Main Headline -->
+          <h1 class="text-4xl sm:text-5xl lg:text-[54px] font-bold text-slate-900 tracking-tight leading-[1.2]">
+            ประเมินสุขภาพใจ<br>
+            <span class="text-slate-800">สำหรับบุคลากรในองค์กร</span>
+          </h1>
+
+          <!-- Subtitle / Description -->
+          <p class="font-body text-base sm:text-lg text-slate-500 max-w-xl leading-relaxed">
+            แบบประเมินสั้น ๆ เพื่อสำรวจพลังใจ ความเครียด และสัญญาณเสี่ยงด้านสุขภาพจิต รู้ผลทันทีพร้อมคำแนะนำเบื้องต้นที่เหมาะกับคุณ
+          </p>
+
+          <!-- Action Button (ทำแบบประเมิน สำหรับพนักงานเท่านั้น) -->
+          <div class="flex flex-col sm:flex-row lg:flex-col gap-3.5 w-full sm:w-auto pt-2">
+            <button 
+              type="button"
+              onclick="switchView('login')"
+              class="w-full sm:w-80 px-8 py-3.5 rounded-xl bg-[#1b3574] hover:bg-[#142858] text-white font-medium text-base shadow-lg shadow-blue-950/20 hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 group"
+            >
+              <span>เข้าสู่ระบบเพื่อทำแบบประเมิน</span>
+              <span class="text-lg transition-transform group-hover:translate-x-1">→</span>
+            </button>
+          </div>
+
+          <!-- Privacy Tagline -->
+          <div class="flex items-center gap-2 pt-2 text-xs text-slate-400 font-body">
+            <span>🔒 คุ้มครองข้อมูลตาม พ.ร.บ. ข้อมูลส่วนบุคคล (PDPA) • เข้ารหัสข้อมูลปลอดภัย</span>
+          </div>
+
+        </div>
+
+        <!-- Right Visual Graphic Column -->
+        <div class="lg:col-span-5 flex justify-center items-center">
+          
+          <!-- Outer circular track card with concentric circles -->
+          <div class="relative w-80 h-80 sm:w-96 sm:h-96 flex items-center justify-center">
+            
+            <!-- Outermost dashed ring -->
+            <div class="absolute inset-0 rounded-full border-2 border-dashed border-amber-300/40 animate-[spin_60s_linear_infinite]"></div>
+            
+            <!-- Middle soft halo -->
+            <div class="absolute inset-4 rounded-full bg-gradient-to-tr from-rose-100/40 via-white to-amber-100/40 blur-sm shadow-inner"></div>
+
+            <!-- Inner White Card Circle -->
+            <div class="relative w-72 h-72 sm:w-84 sm:h-84 rounded-full bg-white shadow-[0_20px_50px_rgba(0,0,0,0.08)] border border-slate-100 flex flex-col items-center justify-center p-6 text-center">
+              
+              <!-- Circular Arrangement of Wellness Icons -->
+              <div class="relative w-44 h-44 sm:w-48 sm:h-48 mb-2">
+                
+                <!-- Circular Orbit line -->
+                <div class="absolute inset-2 rounded-full border border-pink-200/80"></div>
+                
+                <!-- Orbit Icon 1 (Top Center): Smile Face -->
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-md shadow-rose-500/20 text-sm">
+                  😊
+                </div>
+                <!-- Orbit Icon 2 (Top Right): Bed / Sleep -->
+                <div class="absolute top-6 right-1 w-9 h-9 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-md shadow-rose-500/20 text-sm">
+                  🛏️
+                </div>
+                <!-- Orbit Icon 3 (Bottom Right): Weights / Exercise -->
+                <div class="absolute bottom-6 right-1 w-9 h-9 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-md shadow-rose-500/20 text-sm">
+                  🏋️
+                </div>
+                <!-- Orbit Icon 4 (Bottom Left): Yoga / Meditation -->
+                <div class="absolute bottom-6 left-1 w-9 h-9 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-md shadow-rose-500/20 text-sm">
+                  🧘
+                </div>
+                <!-- Orbit Icon 5 (Top Left): Apple / Healthy -->
+                <div class="absolute top-6 left-1 w-9 h-9 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-md shadow-rose-500/20 text-sm">
+                  🍎
+                </div>
+                <!-- Orbit Icon 6 (Top-Left Center): Heart + -->
+                <div class="absolute top-0 left-8 -translate-y-1/2 w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-md shadow-rose-500/20 text-xs font-bold">
+                  +
+                </div>
+
+                <!-- Center Silhouette / Location Pin Head Graphic -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="w-24 h-24 rounded-full bg-gradient-to-b from-orange-400 to-rose-500 flex items-center justify-center shadow-lg shadow-orange-500/20 p-4">
+                    <svg viewBox="0 0 100 100" class="w-full h-full text-white fill-current">
+                      <!-- Stylized Head and Heart Pin -->
+                      <path d="M50 15 C33 15 20 28 20 45 C20 65 50 88 50 88 C50 88 80 65 80 45 C80 28 67 15 50 15 Z" fill="#ffffff" opacity="0.95"/>
+                      <path d="M50 28 C42 28 36 34 36 42 C36 53 50 66 50 66 C50 66 64 53 64 42 C64 34 58 28 50 28 Z" fill="#f97316"/>
+                      <circle cx="50" cy="40" r="5" fill="#ffffff"/>
+                    </svg>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Brand Label inside badge -->
+              <div class="flex flex-col items-center">
+                <span class="text-[12px] font-bold tracking-widest text-rose-500 uppercase font-mono">MENTAL HEALTH</span>
+                <span class="text-[14px] font-extrabold tracking-[0.18em] text-teal-600 uppercase font-mono -mt-0.5">ASSESSMENT</span>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 2: EMPLOYEE LOGIN PAGE                                             -->
+  <!-- ========================================================================= -->
+  <div id="view-login" class="screen-view min-h-screen bg-[#f3f7fb]">
+    
+    <!-- Top Deep Blue Curved Hero Header -->
+    <div class="relative bg-gradient-to-b from-[#1b3574] via-[#1d4ed8] to-[#2563eb] pt-14 pb-44 px-6 text-center text-white overflow-hidden">
+      
+      <!-- Back to portal quick link -->
+      <div class="max-w-4xl mx-auto flex justify-start mb-4">
+        <button 
+          onclick="switchView('portal')" 
+          type="button" 
+          class="inline-flex items-center gap-1.5 text-xs text-blue-200 hover:text-white bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full backdrop-blur-sm transition"
+        >
+          <span>←</span> <span>กลับหน้าหลัก Employee Portal</span>
+        </button>
+      </div>
+
+      <!-- Decorative soft gradient ambient spheres -->
+      <div class="absolute -left-20 top-0 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -right-20 top-10 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Header Content -->
+      <div class="relative z-10 max-w-3xl mx-auto space-y-3.5">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white">
+          ระบบประเมินสุขภาพใจสำหรับบุคลากร
+        </h2>
+        
+        <!-- Employee Scope Pill Badge -->
+        <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-white/15 border border-white/25 backdrop-blur-sm text-xs md:text-sm font-light text-blue-50">
+          <span>👤</span>
+          <span>บัญชีพนักงานองค์กร</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Login Card Area -->
+    <div class="max-w-md mx-auto px-4 -mt-32 pb-24 relative z-20">
+      <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/80 border border-slate-100 p-8 sm:p-10">
+        
+        <!-- Card Header -->
+        <div class="text-center mb-7">
+          <h3 class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">เข้าสู่ระบบ (พนักงาน)</h3>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1 font-body">
+            เข้าสู่ระบบเพื่อยืนยันตัวตนก่อนเข้าสู่หน้าคำชี้แจงและเริ่มทำแบบประเมิน
+          </p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="employee-login-form" onsubmit="handleEmployeeLoginSubmit(event)" class="space-y-4">
+          
+          <!-- Email / Username Field -->
+          <div>
+            <label for="emp-username" class="block text-xs font-semibold text-slate-700 mb-1.5">Email / ONE ID พนักงาน</label>
+            <input 
+              type="text" 
+              id="emp-username" 
+              required
+              placeholder="example@email.com" 
+              class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-sm text-slate-800 placeholder-slate-400 transition"
+              value="nichaw@inet.co.th"
+            >
+          </div>
+
+          <!-- Password Field -->
+          <div>
+            <label for="emp-password" class="block text-xs font-semibold text-slate-700 mb-1.5">รหัสผ่าน ONE ID</label>
+            <input 
+              type="password" 
+              id="emp-password" 
+              required
+              placeholder="••••••••" 
+              class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-sm text-slate-800 placeholder-slate-400 transition"
+              value="Employee@1234!"
+            >
+          </div>
+
+          <!-- Forgot Password Link -->
+          <div class="text-center pt-0.5">
+            <a href="javascript:void(0)" onclick="alert('ระบบจะส่งลิงก์รีเซ็ตรหัสผ่านไปยังอีเมล ONE ID ของพนักงาน')" class="text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline">
+              ลืมรหัสผ่าน ?
+            </a>
+          </div>
+
+          <!-- Primary Submit Button -->
+          <div class="pt-2">
+            <button 
+              type="submit" 
+              id="btn-emp-login-submit"
+              class="w-full py-3 px-4 rounded-xl bg-[#1b3574] hover:bg-[#132756] text-white font-medium text-sm shadow-md shadow-blue-950/20 hover:shadow-lg transition flex items-center justify-center gap-2"
+            >
+              <span id="emp-login-btn-text">เข้าสู่ระบบเพื่อทำแบบประเมิน →</span>
+              <span id="emp-login-btn-spinner" class="hidden animate-spin">⟳</span>
+            </button>
+          </div>
+
+          <!-- Quick Persona Helper for Employee -->
+          <div class="pt-3 border-t border-dashed border-slate-200 text-center">
+            <span class="block text-[11px] font-semibold text-slate-400 mb-2">⚡ บัญชีทดสอบสำหรับพนักงาน:</span>
+            <button 
+              type="button" 
+              onclick="fillEmpPersona()" 
+              class="text-xs px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium border border-slate-200"
+            >
+              👤 คุณณิชา วัฒนกิจ (EMP-DEV-001)
+            </button>
+          </div>
+
+        </form>
+
+        <!-- Simulated Alert box -->
+        <div id="emp-login-alert" class="hidden mt-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs text-center font-medium">
+          ✅ เข้าสู่ระบบสำเร็จ! กำลังนำท่านเข้าสู่หน้าคำชี้แจงแบบประเมิน...
+        </div>
+
+      </div>
+
+      <!-- Security Note Footer -->
+      <div class="mt-6 text-center text-xs text-slate-400 font-body">
+        <p>🔒 บันทึก Log การ Login ของพนักงาน (employee_login) ตามข้อกำหนด PDPA</p>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 3: ADMIN PORTAL PAGE                                               -->
+  <!-- ========================================================================= -->
+  <div id="view-admin-portal" class="screen-view min-h-screen bg-slate-50">
+    
+    <!-- Top Navigation Bar -->
+    <header class="w-full bg-white border-b border-slate-200 px-6 sm:px-12 py-3 flex items-center justify-between shadow-sm sticky top-[53px] z-40">
+      <!-- Left Logo -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('admin-portal')">
+        <div class="flex items-center gap-2">
+          <div class="w-10 h-10 rounded-lg overflow-hidden shadow-sm flex-shrink-0">
+            <img src="./logo.jpeg" alt="INET Logo" class="w-full h-full object-cover" />
+          </div>
+          <div class="flex flex-col leading-tight">
+            <span class="text-[11px] font-bold tracking-wider text-blue-900 font-mono uppercase">MENTAL HEALTH</span>
+            <span class="text-[13px] font-extrabold tracking-widest text-indigo-600 font-mono uppercase -mt-0.5">ADMIN PORTAL</span>
+          </div>
+        </div>
+        <div class="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
+        <span class="text-sm md:text-base font-semibold text-slate-700 hidden sm:inline">ระบบบริหารจัดการสำหรับผู้ดูแลระบบ</span>
+      </div>
+
+      <!-- Switch back to Employee Portal -->
+      <div>
+        <button 
+          type="button" 
+          onclick="switchView('portal')"
+          class="inline-flex items-center gap-1.5 text-xs text-blue-600 font-semibold bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3.5 py-1.5 rounded-full transition"
+        >
+          <span>👤</span>
+          <span>ไปยังหน้าพนักงาน (Employee Portal) ↗</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Admin Portal Hero -->
+    <main class="max-w-7xl mx-auto px-6 sm:px-12 lg:px-20 py-12">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        
+        <!-- Left Headline & CTA -->
+        <div class="lg:col-span-6 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100/80 border border-blue-200 text-xs font-semibold text-blue-900">
+            <span>🛡️</span>
+            <span>ศูนย์กลางข้อมูลฝ่ายทรัพยากรบุคคล (HR / Admin Portal)</span>
+          </div>
+
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight">
+            ระบบบริหารจัดการ<br>
+            <span class="text-[#1b3574]">และประเมินสุขภาพใจองค์กร</span>
+          </h1>
+
+          <p class="font-body text-base text-slate-600 leading-relaxed max-w-xl">
+            ศูนย์รวมข้อมูลสถิติสุขภาพจิตบุคลากร การเฝ้าระวังกลุ่มเสี่ยง การวิเคราะห์แนวโน้มองค์กร 
+            และเครื่องมือกำหนดสิทธิ์เข้าถึงข้อมูลตามมาตรฐานความปลอดภัยขั้นสูง (PDPA)
+          </p>
+
+          <div class="pt-2">
+            <button 
+              type="button" 
+              onclick="switchView('admin-login')"
+              class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#0d1e4c] to-[#1b3574] hover:from-[#091536] hover:to-[#132756] text-white font-medium text-base shadow-lg shadow-blue-950/25 hover:shadow-xl transition-all flex items-center justify-center gap-2.5 group"
+            >
+              <span>เข้าสู่ระบบผู้ดูแลระบบ</span>
+              <span class="text-lg transition-transform group-hover:translate-x-1">→</span>
+            </button>
+          </div>
+
+          <div class="text-xs text-slate-400 font-body">
+            🔒 เข้ารหัสข้อมูลตามมาตรฐาน AES-256-GCM • ระบบระงับสถิติกลุ่มตัวอย่างน้อยกว่า 5 คน
+          </div>
+        </div>
+
+        <!-- Right 4 Core Pillars Grid -->
+        <div class="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition space-y-2">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">📊</div>
+            <h3 class="font-bold text-slate-800 text-base">Dashboard สถิติองค์กร</h3>
+            <p class="text-xs text-slate-500 leading-relaxed font-body">วิเคราะห์ภาพรวม 3 มิติ (Burnout, Stress, 9Q) คัดกรองกลุ่มเสี่ยง และแสดงสถิติตามฝ่าย</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition space-y-2">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">📋</div>
+            <h3 class="font-bold text-slate-800 text-base">ตารางผลประเมินรายบุคคล</h3>
+            <p class="text-xs text-slate-500 leading-relaxed font-body">ตรวจสอบคะแนนและระดับความเสี่ยง พร้อมระบบ Masking ข้อมูลส่วนตัวตามกฎหมาย PDPA</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition space-y-2">
+            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl">🔐</div>
+            <h3 class="font-bold text-slate-800 text-base">กำหนดสิทธิ์ผู้ดูแล (Admin)</h3>
+            <p class="text-xs text-slate-500 leading-relaxed font-body">Super Admin สามารถจัดการบัญชี Admin และมอบหมายสิทธิ์การส่งออกเอกสารรายงานได้</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition space-y-2">
+            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">📥</div>
+            <h3 class="font-bold text-slate-800 text-base">ส่งออกรายงาน (Export)</h3>
+            <p class="text-xs text-slate-500 leading-relaxed font-body">ดาวน์โหลดรายงานเชิงสถิติในรูปแบบ Excel (.xlsx) และ CSV พร้อมประทับตรายืนยัน</p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 4: ADMIN LOGIN PAGE                                                -->
+  <!-- ========================================================================= -->
+  <div id="view-admin-login" class="screen-view min-h-screen bg-[#f3f7fb]">
+    
+    <!-- Top Deep Blue Curved Hero Header -->
+    <div class="relative bg-gradient-to-b from-[#0d1e4c] via-[#152960] to-[#1b3574] pt-14 pb-44 px-6 text-center text-white overflow-hidden">
+      
+      <!-- Back to admin portal quick link -->
+      <div class="max-w-4xl mx-auto flex justify-start mb-4">
+        <button 
+          onclick="switchView('admin-portal')" 
+          type="button" 
+          class="inline-flex items-center gap-1.5 text-xs text-blue-200 hover:text-white bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full backdrop-blur-sm transition"
+        >
+          <span>←</span> <span>กลับหน้าหลัก Admin Portal</span>
+        </button>
+      </div>
+
+      <!-- Header Content -->
+      <div class="relative z-10 max-w-3xl mx-auto space-y-3.5">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white">
+          ระบบประเมินสุขภาพใจสำหรับบุคลากร
+        </h2>
+        
+        <!-- Admin Scope Pill Badge -->
+        <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-white/15 border border-white/25 backdrop-blur-sm text-xs md:text-sm font-light text-blue-50">
+          <span>🛡️</span>
+          <span>บัญชีผู้ดูแลระบบ</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Login Card Area -->
+    <div class="max-w-md mx-auto px-4 -mt-32 pb-24 relative z-20">
+      <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/80 border border-slate-100 p-8 sm:p-10">
+        
+        <!-- Card Header -->
+        <div class="text-center mb-7">
+          <h3 class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">เข้าสู่ระบบ (ผู้ดูแลระบบ)</h3>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1 font-body">
+            สำหรับฝ่ายทรัพยากรบุคคล (HR) และผู้ดูแลระบบองค์กร
+          </p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="admin-login-form" onsubmit="handleAdminLoginSubmit(event)" class="space-y-4">
+          
+          <!-- Username Field -->
+          <div>
+            <label for="admin-username" class="block text-xs font-semibold text-slate-700 mb-1.5">ชื่อผู้ใช้บัญชี OneID (Username)</label>
+            <input 
+              type="text" 
+              id="admin-username" 
+              required
+              placeholder="admin@company" 
+              class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-sm text-slate-800 placeholder-slate-400 transition"
+              value="admin"
+            >
+          </div>
+
+          <!-- Password Field -->
+          <div>
+            <label for="admin-password" class="block text-xs font-semibold text-slate-700 mb-1.5">รหัสผ่าน OneID</label>
+            <input 
+              type="password" 
+              id="admin-password" 
+              required
+              placeholder="••••••••" 
+              class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-sm text-slate-800 placeholder-slate-400 transition"
+              value="Admin@123456!"
+            >
+          </div>
+
+          <!-- Forgot Password Link -->
+          <div class="text-center pt-0.5">
+            <a href="javascript:void(0)" onclick="alert('กรุณาติดต่อ Super Admin เพื่อปลดล็อกหรือรีเซ็ตรหัสผ่านบัญชีผู้ดูแลระบบ')" class="text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline">
+              ลืมรหัสผ่าน ?
+            </a>
+          </div>
+
+          <!-- Cloudflare Turnstile CAPTCHA Box -->
+          <div class="pt-1">
+            <div 
+              id="admin-turnstile-box"
+              onclick="toggleAdminTurnstile()" 
+              class="cursor-pointer select-none bg-[#262f3e] hover:bg-[#202734] transition rounded-lg p-2.5 flex items-center justify-between border border-slate-700 text-white shadow-sm"
+              title="คลิกเพื่อจำลองการยืนยัน CAPTCHA"
+            >
+              <div class="flex items-center gap-2.5 pl-1">
+                <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white text-xs font-bold animate-check">
+                  ✓
+                </div>
+                <span class="text-xs font-medium text-slate-200">สำเร็จ!</span>
+              </div>
+
+              <div class="flex flex-col items-end pr-1 leading-tight">
+                <div class="flex items-center gap-1">
+                  <svg class="w-4 h-4 text-orange-500" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
+                  </svg>
+                  <span class="text-[10px] font-extrabold tracking-wider text-slate-200 uppercase font-mono">CLOUDFLARE</span>
+                </div>
+                <div class="text-[9px] text-slate-400 space-x-1">
+                  <span class="hover:underline">ความเป็นส่วนตัว</span> • <span class="hover:underline">ช่วยเหลือ</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Primary Submit Button -->
+          <div class="pt-2">
+            <button 
+              type="submit" 
+              id="btn-admin-login-submit"
+              class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#0d1e4c] to-[#1b3574] hover:from-[#091536] hover:to-[#132756] text-white font-medium text-sm shadow-md shadow-blue-950/20 hover:shadow-lg transition flex items-center justify-center gap-2"
+            >
+              <span id="admin-login-btn-text">เข้าสู่ระบบผู้ดูแลระบบ →</span>
+              <span id="admin-login-btn-spinner" class="hidden animate-spin">⟳</span>
+            </button>
+          </div>
+
+          <!-- Quick Persona Helper for Admin -->
+          <div class="pt-3 border-t border-dashed border-slate-200 text-center">
+            <span class="block text-[11px] font-semibold text-slate-400 mb-2">⚡ เลือกบทบาทผู้ดูแลเพื่อทดสอบ:</span>
+            <div class="flex flex-wrap gap-1.5 justify-center">
+              <button 
+                type="button" 
+                onclick="fillAdminPersona('super')" 
+                class="text-[11px] px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium border border-slate-200"
+              >
+                👑 Super Admin
+              </button>
+              <button 
+                type="button" 
+                onclick="fillAdminPersona('export')" 
+                class="text-[11px] px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium border border-slate-200"
+              >
+                👤 Admin (Export)
+              </button>
+              <button 
+                type="button" 
+                onclick="fillAdminPersona('no_export')" 
+                class="text-[11px] px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium border border-slate-200"
+              >
+                👤 Admin (No Export)
+              </button>
+            </div>
+          </div>
+
+        </form>
+
+        <!-- Simulated Alert box -->
+        <div id="admin-login-alert" class="hidden mt-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs text-center font-medium">
+          ✅ เข้าสู่ระบบผู้ดูแลสำเร็จ! บันทึก Audit Log เรียบร้อยแล้ว
+        </div>
+
+      </div>
+
+      <!-- Security / Audit Note Footer -->
+      <div class="mt-6 text-center text-xs text-slate-400 font-body">
+        <p>🔒 ระบบบันทึก Log การเข้าใช้งานของผู้ดูแลระบบ (admin_login) จัดเก็บไว้อย่างปลอดภัยเป็นเวลา 2 ปี</p>
+      </div>
+
+    </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 5: SIDE-BY-SIDE SPLIT VIEW (EMPLOYEE VS ADMIN ARCHITECTURE)        -->
+  <!-- ========================================================================= -->
+  <div id="view-split" class="screen-view">
+    <div class="split-container">
+      
+      <!-- Left: Employee Experience Frame -->
+      <div class="split-frame">
+        <div class="split-header bg-[#1b3574]">
+          <span class="flex items-center gap-2 text-white">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span>
+            1. ฝั่งพนักงาน (Employee Portal &amp; Login)
+          </span>
+          <div class="flex items-center gap-2">
+            <button onclick="switchView('portal')" class="text-xs text-blue-200 hover:text-white underline">Portal เต็มจอ ↗</button>
+            <span class="text-slate-400">•</span>
+            <button onclick="switchView('login')" class="text-xs text-blue-200 hover:text-white underline">Login เต็มจอ ↗</button>
+          </div>
+        </div>
+        <div class="flex-1 overflow-auto bg-[#fcfaf7] p-6 space-y-5">
+          <div class="border-b border-slate-200 pb-4">
+            <span class="text-[11px] font-bold text-blue-800 uppercase tracking-wide bg-blue-100 px-2 py-0.5 rounded">1.1 Employee Portal (localhost:3000)</span>
+            <h3 class="text-lg font-bold text-slate-900 mt-2">ประเมินสุขภาพใจสำหรับบุคลากรในองค์กร</h3>
+            <p class="text-xs text-slate-500 mt-1 font-body">แบบประเมินสำรวจพลังใจ ความเครียด และสัญญาณเสี่ยง ปราศจากปุ่ม Admin ปะปน</p>
+            <div class="mt-3">
+              <button onclick="switchView('login')" class="w-full py-2.5 px-4 bg-[#1b3574] text-white rounded-lg text-xs font-semibold shadow-sm hover:bg-[#132756] flex items-center justify-center gap-1">
+                เข้าสู่ระบบเพื่อทำแบบประเมิน →
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <span class="text-[11px] font-bold text-indigo-800 uppercase tracking-wide bg-indigo-100 px-2 py-0.5 rounded">1.2 Employee Login (Dedicated)</span>
+            <div class="mt-2 bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+              <div class="text-center">
+                <h4 class="text-sm font-bold text-slate-800">เข้าสู่ระบบ (พนักงาน)</h4>
+                <p class="text-[11px] text-slate-500 font-body">ไม่มี CAPTCHA • ไม่มี Switcher สลับไปเป็น Admin</p>
+              </div>
+              <input type="text" readonly class="w-full px-3 py-1.5 border rounded text-xs bg-slate-50 text-slate-700" value="nichaw@inet.co.th">
+              <input type="password" readonly class="w-full px-3 py-1.5 border rounded text-xs bg-slate-50 text-slate-700" value="••••••••">
+              <button onclick="switchView('login')" class="w-full py-2 bg-[#1b3574] text-white rounded-lg text-xs font-medium hover:bg-[#132756]">
+                เข้าสู่ระบบเพื่อทำแบบประเมิน →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Admin Experience Frame -->
+      <div class="split-frame">
+        <div class="split-header bg-[#0d1e4c]">
+          <span class="flex items-center gap-2 text-white">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-400 inline-block"></span>
+            2. ฝั่งผู้ดูแลระบบ (Admin Portal &amp; Login)
+          </span>
+          <div class="flex items-center gap-2">
+            <button onclick="switchView('admin-portal')" class="text-xs text-blue-200 hover:text-white underline">Portal เต็มจอ ↗</button>
+            <span class="text-slate-400">•</span>
+            <button onclick="switchView('admin-login')" class="text-xs text-blue-200 hover:text-white underline">Login เต็มจอ ↗</button>
+          </div>
+        </div>
+        <div class="flex-1 overflow-auto bg-slate-50 p-6 space-y-5">
+          <div class="border-b border-slate-200 pb-4">
+            <span class="text-[11px] font-bold text-purple-800 uppercase tracking-wide bg-purple-100 px-2 py-0.5 rounded">2.1 Admin Portal (localhost:3001)</span>
+            <h3 class="text-lg font-bold text-slate-900 mt-2">ระบบบริหารจัดการและประเมินสุขภาพใจองค์กร</h3>
+            <p class="text-xs text-slate-500 mt-1 font-body">ศูนย์กลาง HR Governance, Dashboard สถิติ, และกำหนดสิทธิ์</p>
+            <div class="mt-3">
+              <button onclick="switchView('admin-login')" class="w-full py-2.5 px-4 bg-gradient-to-r from-[#0d1e4c] to-[#1b3574] text-white rounded-lg text-xs font-semibold shadow-sm hover:from-[#091536] hover:to-[#132756] flex items-center justify-center gap-1">
+                เข้าสู่ระบบผู้ดูแลระบบ →
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <span class="text-[11px] font-bold text-amber-800 uppercase tracking-wide bg-amber-100 px-2 py-0.5 rounded">2.2 Admin Login (High Security)</span>
+            <div class="mt-2 bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+              <div class="text-center">
+                <h4 class="text-sm font-bold text-slate-800">เข้าสู่ระบบ (ผู้ดูแลระบบ)</h4>
+                <p class="text-[11px] text-slate-500 font-body">Cloudflare Turnstile CAPTCHA + ล็อกเอาต์อัตโนมัติ + Audit Log</p>
+              </div>
+              <input type="text" readonly class="w-full px-3 py-1.5 border rounded text-xs bg-slate-50 text-slate-700" value="superadmin@inet.co.th">
+              <input type="password" readonly class="w-full px-3 py-1.5 border rounded text-xs bg-slate-50 text-slate-700" value="••••••••">
+              <div class="bg-[#262f3e] text-white p-2 rounded flex items-center justify-between text-[10px]">
+                <span class="text-emerald-400 font-bold">✓ CAPTCHA ยืนยันสำเร็จ</span>
+                <span class="text-slate-400 font-mono text-[9px]">CLOUDFLARE</span>
+              </div>
+              <button onclick="switchView('admin-login')" class="w-full py-2 bg-[#0d1e4c] text-white rounded-lg text-xs font-medium hover:bg-[#07122e]">
+                เข้าสู่ระบบผู้ดูแลระบบ →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- Assessment Start Preview Modal (Simulated) -->
+  <div id="modal-assessment-start" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 animate-check">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🌿</span>
+          <h4 class="font-bold text-slate-800">แบบประเมินสุขภาพใจสำหรับบุคลากร</h4>
+        </div>
+        <button onclick="closeStartModal()" class="text-slate-400 hover:text-slate-600 text-lg">✕</button>
+      </div>
+      <div class="py-4 space-y-3 text-sm text-slate-600 font-body">
+        <p>
+          ระบบจะนำท่านเข้าสู่แบบประเมินสุขภาพจิต 3 เครื่องมือมาตรฐาน (ภาวะหมดไฟ, ความเครียด ST-20, และภาวะเสี่ยงซึมเศร้า 9Q รวม 51 ข้อ)
+        </p>
+        <div class="p-3 bg-blue-50 border border-blue-100 rounded-lg text-xs text-blue-800 space-y-1">
+          <p class="font-semibold">🔒 มาตรการคุ้มครองข้อมูลส่วนบุคคล (PDPA):</p>
+          <ul class="list-disc list-inside space-y-0.5 text-blue-700">
+            <li>ข้อมูลคำตอบรายข้อจะไม่ถูกเปิดเผยต่อผู้บริหารหรือบุคคลอื่น</li>
+            <li>ข้อมูล PII ได้รับการเข้ารหัสความปลอดภัย (Encryption at Rest)</li>
+            <li>แบบประเมินใช้เวลาประมาณ 8–10 นาที</li>
+          </ul>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+        <button onclick="closeStartModal()" class="px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-lg">ยกเลิก</button>
+        <button onclick="alert('จำลองการเข้าสู่แบบประเมินชุดแรก (Burnout)'); closeStartModal();" class="px-5 py-2 text-xs font-semibold bg-[#1b3574] text-white rounded-lg hover:bg-[#142858]">เริ่มทำแบบประเมิน</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- JavaScript for Interactions -->
+  <script>
+    function switchView(viewName) {
+      // Hide all views
+      document.querySelectorAll('.screen-view').forEach(el => {
+        el.classList.remove('active');
+      });
+
+      // Deactivate all nav buttons
+      document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      // Show selected view
+      const targetView = document.getElementById('view-' + viewName);
+      if (targetView) {
+        targetView.classList.add('active');
+      }
+
+      // Activate selected button
+      const targetBtn = document.getElementById('btn-show-' + viewName);
+      if (targetBtn) {
+        targetBtn.classList.add('active');
+      }
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // -------------------------------------------------------------
+    // Employee Login Handlers
+    // -------------------------------------------------------------
+    function handleEmployeeLoginSubmit(e) {
+      e.preventDefault();
+      const btnText = document.getElementById('emp-login-btn-text');
+      const spinner = document.getElementById('emp-login-btn-spinner');
+      const alertBox = document.getElementById('emp-login-alert');
+
+      btnText.textContent = 'กำลังยืนยันตัวตนพนักงาน...';
+      spinner.classList.remove('hidden');
+
+      setTimeout(() => {
+        btnText.textContent = 'เข้าสู่ระบบเพื่อทำแบบประเมิน →';
+        spinner.classList.add('hidden');
+        alertBox.classList.remove('hidden');
+
+        setTimeout(() => {
+          showStartModal();
+        }, 600);
+      }, 700);
+    }
+
+    function fillEmpPersona() {
+      const userEl = document.getElementById('emp-username');
+      const passEl = document.getElementById('emp-password');
+      if (userEl) userEl.value = 'nichaw@inet.co.th';
+      if (passEl) passEl.value = 'Employee@1234!';
+    }
+
+    // -------------------------------------------------------------
+    // Admin Login Handlers
+    // -------------------------------------------------------------
+    function toggleAdminTurnstile() {
+      const box = document.getElementById('admin-turnstile-box');
+      if (box) {
+        box.classList.toggle('ring-2');
+        box.classList.toggle('ring-emerald-400');
+      }
+    }
+
+    function handleAdminLoginSubmit(e) {
+      e.preventDefault();
+      const btnText = document.getElementById('admin-login-btn-text');
+      const spinner = document.getElementById('admin-login-btn-spinner');
+      const alertBox = document.getElementById('admin-login-alert');
+
+      btnText.textContent = 'กำลังตรวจสอบสิทธิ์ Admin & 2FA...';
+      spinner.classList.remove('hidden');
+
+      setTimeout(() => {
+        btnText.textContent = 'เข้าสู่ระบบผู้ดูแลระบบ →';
+        spinner.classList.add('hidden');
+        alertBox.classList.remove('hidden');
+
+        setTimeout(() => {
+          alert('เข้าสู่ระบบผู้ดูแลระบบสำเร็จ!\n\n• ระบบบันทึก Audit Log (admin_login) เรียบร้อยแล้ว\n• เตรียมนำเข้าสู่ Admin Console (Dashboard & Results)');
+        }, 500);
+      }, 800);
+    }
+
+    function fillAdminPersona(role) {
+      const userEl = document.getElementById('admin-username');
+      const passEl = document.getElementById('admin-password');
+      if (!userEl || !passEl) return;
+
+      if (role === 'super') {
+        userEl.value = 'superadmin@inet.co.th';
+        passEl.value = 'SuperAdmin@2026!';
+      } else if (role === 'export') {
+        userEl.value = 'hr_export@inet.co.th';
+        passEl.value = 'HrExport@2026!';
+      } else if (role === 'no_export') {
+        userEl.value = 'hr_viewer@inet.co.th';
+        passEl.value = 'HrViewer@2026!';
+      }
+    }
+
+    // -------------------------------------------------------------
+    // Modal Helpers
+    // -------------------------------------------------------------
+    function showStartModal() {
+      const modal = document.getElementById('modal-assessment-start');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeStartModal() {
+      const modal = document.getElementById('modal-assessment-start');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+  </script>
+
+</body>
+</html>

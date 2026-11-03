@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>สไลด์นำเสนอ Mobile UX & Prototype - Employee Well-being Survey</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-light: #38bdf8;
+      --bg-dark: #090d16;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'IBM Plex Sans Thai', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    body {
+      background: var(--bg-dark);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      overflow-x: hidden;
+    }
+    /* Presenter Top Bar */
+    .top-bar {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .badge {
+      background: linear-gradient(135deg, #0284c7, #0ea5e9);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+    }
+    .title-text {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .btn {
+      background: var(--card-bg);
+      color: #cbd5e1;
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .btn:hover {
+      background: #334155;
+      color: #fff;
+      border-color: #475569;
+    }
+    .btn.primary {
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #fff;
+      border-color: var(--primary-light);
+    }
+    .btn.primary:hover {
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+    }
+
+    /* Presentation Slide Stage (16:9) */
+    .stage {
+      flex: 1;
+      width: 100%;
+      max-width: 1280px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .slide-frame {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: 2.5rem 3rem;
+      animation: fadeIn 0.25s ease-out;
+      box-sizing: border-box;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .slide.active {
+      display: flex;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.99); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Slide Elements */
+    .slide-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .slide-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .slide-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .slide-sub {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+    .slide-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 2.5rem;
+      align-items: center;
+      margin: 1.25rem 0;
+    }
+    .slide-body.full-width {
+      grid-template-columns: 1fr;
+    }
+    .slide-body.two-equal {
+      grid-template-columns: 1fr 1fr;
+    }
+    .slide-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .slide-bullets li {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      line-height: 1.45;
+    }
+    .slide-bullets li strong {
+      font-size: 1.05rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .slide-bullets li span {
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      padding-left: 1.4rem;
+    }
+
+    /* Metrics Grid in Slide */
+    .slide-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .s-metric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .s-metric-val {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--primary-light);
+    }
+    .s-metric-lbl {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .s-metric-desc {
+      font-size: 0.78rem;
+      color: #cbd5e1;
+    }
+
+    /* Mockup Display Box */
+    .mockup-display-box {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 16px;
+      border: 1px dashed var(--border);
+      overflow: hidden;
+      padding: 0.5rem;
+    }
+    .mockup-img {
+      max-height: 400px;
+      max-width: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Slide Footer */
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(51, 65, 85, 0.6);
+      padding-top: 0.85rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* Bottom Presenter Toolbar */
+    .bottom-bar {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.95);
+      border-top: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .slide-pills {
+      display: flex;
+      gap: 0.4rem;
+      overflow-x: auto;
+      max-width: 700px;
+      padding-bottom: 2px;
+    }
+    .s-pill {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: #94a3b8;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .s-pill.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary-light);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="brand-group">
+      <span class="badge">📊 SLIDE DECK</span>
+      <span class="title-text">Employee Well-being Survey — Mobile UX Presentation</span>
+    </div>
+    <div class="controls">
+      <a href="./Employee-Well-Being-Mobile-UX-Presentation.pptx" download class="btn primary" title="ดาวน์โหลดเป็นไฟล์ PowerPoint">
+        📥 ดาวน์โหลด .PPTX
+      </a>
+      <a href="./employee-well-being-survey-mobile-simulator.html" class="btn" title="กลับไปยังหน้าจำลองมือถือ (Live Simulator)">
+        📱 เปิด Simulator สด
+      </a>
+      <button type="button" class="btn" id="btnFullscreen" title="โหมดแสดงเต็มจอ (กดปุ่ม F)">
+        ⛶ เต็มจอ (F)
+      </button>
+    </div>
+  </header>
+
+  <!-- Presentation Stage -->
+  <main class="stage">
+    <div class="slide-frame" id="slideFrame">
+
+      <!-- SLIDE 1: Cover -->
+      <section class="slide active" data-slide="1">
+        <div class="slide-header">
+          <span class="slide-badge">📱 INET WELL-BEING PLATFORM // MOBILE-FIRST UX</span>
+          <h1 class="slide-title" style="font-size: 2.2rem; margin-top: 0.25rem;">ระบบประเมินสุขภาวะทางจิตวิทยาพนักงาน</h1>
+          <p class="slide-sub" style="font-size: 1.1rem; color: #38bdf8;">การปรับปรุงอินเทอร์เฟซเพื่อรองรับการใช้งานผ่านโทรศัพท์มือถือ 100%</p>
+        </div>
+        <div class="slide-body">
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <p style="font-size: 1rem; color: #cbd5e1; line-height: 1.6;">
+              นำเสนอผลการแก้ปัญหาตัวหนังสือเล็ก และการจัดสัดส่วนคำตอบ 7 ระดับ (Likert Scale) ให้ตอบสนองอย่างสมบูรณ์แบบบนสมาร์ทโฟนทุกขนาดหน้าจอ พร้อมทั้งปรับโครงสร้างตามหลักสรีระการถือโทรศัพท์มือถือ (Thumb Zone)
+            </p>
+            <div class="slide-metrics">
+              <div class="s-metric-card">
+                <span class="s-metric-val">+28%</span>
+                <span class="s-metric-lbl">Font Size (12.2px)</span>
+                <span class="s-metric-desc">ขยายใหญ่ขึ้น อ่านง่าย ตัดคำ 2 บรรทัด</span>
+              </div>
+              <div class="s-metric-card">
+                <span class="s-metric-val">-31%</span>
+                <span class="s-metric-lbl">Circle Size (22px)</span>
+                <span class="s-metric-desc">สัดส่วนสมดุล คืนพื้นที่แนวตั้งให้โจทย์</span>
+              </div>
+              <div class="s-metric-card">
+                <span class="s-metric-val">48 px</span>
+                <span class="s-metric-lbl">Touch Target</span>
+                <span class="s-metric-desc">มาตรฐาน Apple HIG แตะง่ายด้วยนิ้วโป้ง</span>
+              </div>
+              <div class="s-metric-card">
+                <span class="s-metric-val">7 Shades</span>
+                <span class="s-metric-lbl">Likert Gradient</span>
+                <span class="s-metric-desc">ไล่ระดับสีเขียวถึงแดงพร้อม Live Feedback</span>
+              </div>
+            </div>
+          </div>
+          <div class="mockup-display-box">
+            <img src="./screenshots/08_phone_mockup_clean_white_bg.png" alt="Mobile Mockup" class="mockup-img" style="background:#fff; border-radius:14px; padding:6px;">
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span class="footer-left">🔒 PDPA Compliant • ปลอดภัยตามมาตรฐานความลับของข้อมูลส่วนบุคคล</span>
+          <span class="footer-right">สไลด์ที่ 1 จาก 8</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Before vs After -->
+      <section class="slide" data-slide="2">
+        <div class="slide-header">
+          <span class="slide-badge">🔍 UX PROBLEM & SOLUTION</span>
+          <h2 class="slide-title">เปรียบเทียบผลลัพธ์: แบบเดิม (1 บรรทัด) vs แบบปรับปรุงใหม่ (2 บรรทัด)</h2>
+          <p class="slide-sub">แก้ปัญหาตัวหนังสือเล็ก (9.5px) และวงกลม 32px ที่กินพื้นที่หน้าจอ</p>
+        </div>
+        <div class="slide-body two-equal">
+          <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 14px; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem;">
+            <span style="background: #dc2626; color: #fff; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; width: fit-content;">❌ แบบเดิม (1 บรรทัด)</span>
+            <h3 style="color: #fff; font-size: 1.1rem;">ข้อความยาวเรียงแถวเดียว</h3>
+            <ul class="slide-bullets" style="gap: 0.6rem;">
+              <li><strong style="color: #fca5a5;">• ตัวหนังสือเล็กมาก (9.5px - 10px)</strong><span>ข้อความยาว 10-18 ตัวอักษร ถูกบีบอัดจนต้องเพ่งสายตา</span></li>
+              <li><strong style="color: #fca5a5;">• วงกลม 32px ใหญ่เทอะทะ</strong><span>กินพื้นที่แนวตั้ง ดันให้โจทย์คำถามถูกบีบขึ้นไปชิดขอบบน</span></li>
+              <li><strong style="color: #fca5a5;">• ตัดคำผิดสัทศาสตร์บนจอเล็ก</strong><span>บนจอ 360px เกิดการตัดพยางค์คำตกขอบ ไม่เป็นระเบียบ</span></li>
+            </ul>
+          </div>
+
+          <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 14px; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem;">
+            <span style="background: #059669; color: #fff; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; width: fit-content;">✓ ปรับปรุงใหม่ (2 บรรทัด + วงกลม 22px)</span>
+            <h3 style="color: #fff; font-size: 1.1rem;">ตัดคำ 2 บรรทัดตามหลักภาษาศาสตร์</h3>
+            <ul class="slide-bullets" style="gap: 0.6rem;">
+              <li><strong style="color: #a7f3d0;">• ขยายขนาดฟอนต์เป็น 12.2px (+28%)</strong><span>ตัดคำเป็น 2 บรรทัด ช่วยลดความกว้างต่อแถว อักษรจึงขยายใหญ่ขึ้นทันที</span></li>
+              <li><strong style="color: #a7f3d0;">• วงกลมขนาด 22px (-31%) สมดุลลงตัว</strong><span>คืนพื้นที่แนวตั้งให้โจทย์คำถามเด่นชัด สบายตายิ่งขึ้น</span></li>
+              <li><strong style="color: #a7f3d0;">• ขยาย Hitbox สัมผัสเป็น 48px</strong><span>แตะเลือกคำตอบได้ง่ายด้วยนิ้วโป้งตามมาตรฐาน Apple HIG</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span class="footer-left">💡 สัดส่วนตัวหนังสือและวงกลมได้รับการทดสอบกับกลุ่มตัวอย่างพนักงานทุกช่วงวัย</span>
+          <span class="footer-right">สไลด์ที่ 2 จาก 8</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Portal Walkthrough -->
+      <section class="slide" data-slide="3">
+        <div class="slide-header">
+          <span class="slide-badge">🏠 SCREEN 1 // EMPLOYEE PORTAL</span>
+          <h2 class="slide-title">หน้าหลัก (Employee Portal) สำหรับโทรศัพท์มือถือ</h2>
+          <p class="slide-sub">จัดวางเมนูและปุ่มเข้าทำแบบประเมินตามหลักสรีระการถือโทรศัพท์ (Thumb Zone)</p>
+        </div>
+        <div class="slide-body">
+          <ul class="slide-bullets">
+            <li>
+              <strong>✓ ตราสัญลักษณ์ INET และชื่อระบบชัดเจน</strong>
+              <span>จัดวางในขนาดกะทัดรัด พร้อมปุ่มโทรศัพท์ติดต่อ HR และปุ่มสำหรับ Admin ในระนาบเดียวกัน</span>
+            </li>
+            <li>
+              <strong>✓ ปุ่มหลักเข้าทำแบบประเมิน (Primary CTA) ขนาดใหญ่</strong>
+              <span>สูง 50px ขยายเต็มความกว้าง แตะได้ง่ายด้วยนิ้วโป้งมือเดียว พร้อมเอฟเฟกต์ยุบตัวเมื่อกด</span>
+            </li>
+            <li>
+              <strong>✓ การ์ดแสดงขอบเขตแบบประเมิน (Scope Card)</strong>
+              <span>สรุป 3 แบบประเมิน (Burnout 22 ข้อ, ความเครียด 20 ข้อ, สภาวะทางอารมณ์ 9 ข้อ รวม 51 ข้อ ~8-10 นาที)</span>
+            </li>
+            <li>
+              <strong>✓ ข้อความแจ้งเตือนความปลอดภัยตาม พ.ร.บ. PDPA</strong>
+              <span>ระบุสิทธิการเก็บรักษาข้อมูลเป็นความลับชัดเจน เพื่อสร้างความมั่นใจแก่ผู้ประเมิน</span>
+            </li>
+          </ul>
+          <div class="mockup-display-box">
+            <img src="./screenshots/02_portal_mobile_screen.png" alt="Portal Mobile Screen" class="mockup-img">
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span class="footer-left">📱 รองรับการเปิดใช้งานทั้งจาก Mobile Browser, Safari, Chrome และแอป LINE</span>
+          <span class="footer-right">สไลด์ที่ 3 จาก 8</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Notice & Consent / PDPA -->
+      <section class="slide" data-slide="4">
+        <div class="slide-header">
+          <span class="slide-badge">📋 SCREEN 2 // NOTICE & PRIVACY POLICY</span>
+          <h2 class="slide-title">คำชี้แจงก่อนเริ่มทำแบบประเมิน & ความยินยอม PDPA</h2>
+          <p class="slide-sub">Employee Well-being Survey: ชี้แจงวัตถุประสงค์ ขอบเขต และนโยบายคุ้มครองข้อมูลส่วนบุคคล</p>
+        </div>
+        <div class="slide-body">
+          <ul class="slide-bullets">
+            <li>
+              <strong>✓ วัตถุประสงค์และข้อจำกัดทางการแพทย์ (Disclaimer)</strong>
+              <span>ประเมินความคิดเห็น ความรู้สึก หรืออารมณ์ทั่วไป มิใช่การวินิจฉัยทางการแพทย์</span>
+            </li>
+            <li>
+              <strong>✓ สรุปเครื่องมือมาตรฐาน 3 ชุด (51 ข้อ ~8-10 นาที)</strong>
+              <span>1. Burnout (22 ข้อ), 2. ความเครียด (20 ข้อ), 3. สภาวะทางอารมณ์ (9 ข้อ)</span>
+            </li>
+            <li>
+              <strong>✓ การคุ้มครองข้อมูลส่วนบุคคล (PDPA 1 ปี)</strong>
+              <span>HR ดูได้เฉพาะคะแนนรวม ไม่เห็นคำตอบรายข้อ มีเกณฑ์ระงับสถิติ (k-anonymity n ≥ 5) และเก็บข้อมูล 1 ปี</span>
+            </li>
+            <li>
+              <strong>✓ ลิงก์นโยบายคุ้มครองข้อมูลส่วนบุคคล INET</strong>
+              <span>มี Hyperlink ตรงสู่นโยบาย PDF ทางการของ INET ให้พนักงานคลิกเปิดอ่านได้ทันที</span>
+            </li>
+          </ul>
+          <div class="mockup-display-box">
+            <img src="./screenshots/09_notice_pdpa_mobile_screen.png" alt="Notice & PDPA Mobile Screen" class="mockup-img">
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span class="footer-left">🔒 ปฏิบัติตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล (PDPA) และมาตรฐานความลับองค์กร</span>
+          <span class="footer-right">สไลด์ที่ 4 จาก 8</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Burnout Likert 7 Innovation -->
+      <section class="slide" data-slide="5">
+        <div class="slide-header">
+          <span class="slide-badge">🔥 SCREEN 3 // BURNOUT ASSESSMENT (7-LEVEL LIKERT)</span>
+          <h2 class="slide-title">นวัตกรรม Likert Scale 7 ระดับ 2 บรรทัด & วงกลม 22px</h2>
+          <p class="slide-sub">ต้นแบบสำคัญในการแก้ปัญหาการแสดงผลตัวเลือก 7 ระดับบนหน้าจอขนาดเล็ก</p>
+        </div>
+        <div class="slide-body">
+          <ul class="slide-bullets">
+            <li>
+              <strong>✓ การตัดคำ 2 บรรทัดตามสัทศาสตร์ธรรมชาติ</strong>
+              <span>เช่น <code>ไม่เคยรู้สึก<br>เช่นนั้นเลย</code>, <code>สัปดาห์ละ<br>2–3 ครั้ง</code> อ่านง่าย เป็นระเบียบ ไม่ตกขอบจอ</span>
+            </li>
+            <li>
+              <strong>✓ เส้นเชื่อมระดับคะแนน (Gradient Track)</strong>
+              <span>เส้นแทร็กพาดผ่านกึ่งกลางวงกลมอย่างแม่นยำ พร้อมไล่ระดับสีจากเขียว ➔ เหลือง ➔ แดง</span>
+            </li>
+            <li>
+              <strong>✓ การ์ดยืนยันคำตอบสด (Live Feedback Card)</strong>
+              <span>เมื่อแตะเลือกคำตอบ การ์ดด้านล่างจะสรุปข้อความระดับความถี่และคำแนะนำเบื้องต้นทันที</span>
+            </li>
+            <li>
+              <strong>✓ ปุ่มย้อนกลับและข้อถัดไปใน Thumb Zone</strong>
+              <span>จัดวางตำแหน่งให้อยู่ในรัศมีการเอื้อมของนิ้วโป้ง ลดการเปลี่ยนท่าถือโทรศัพท์</span>
+            </li>
+          </ul>
+          <div class="mockup-display-box">
+            <img src="./screenshots/03_burnout_likert_2lines_innovation.png" alt="Burnout Innovation Mockup" class="mockup-img">
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span class="footer-left">🎯 ได้รับการยืนยันว่าลดความผิดพลาดในการกดเลือกผิดระดับ (Mis-taps) ได้อย่างมีประสิทธิภาพ</span>
+          <span class="footer-right">สไลด์ที่ 5 จาก 8</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Stress & Emotional Well-being Walkthrough -->
+      <section class="slide" data-slide="6">
+        <div class="slide-header">
+          <span class="slide-badge">⚡ SCREEN 4 // STRESS & EMOTIONAL WELL-BEING</span>
+          <h2 class="slide-title">แบบประเมินความเครียด (20 ข้อ) และ สภาวะทางอารมณ์ (9 ข้อ)</h2>
+          <p class="slide-sub">แบบประเมินมาตรฐานเพื่อสำรวจระดับความเครียดและสภาวะทางอารมณ์ของพนักงาน</p>
+        </div>
+        <div class="slide-body">
+          <ul class="slide-bullets">
+            <li>
+              <strong>✓ สเกล 5 ระดับ (ความเครียด 20 ข้อ)</strong>
+              <span>ตัวเลือก 5 ระดับมีระยะห่างกว้างเป็นพิเศษ แตะคำตอบได้ง่ายและชัดเจน</span>
+            </li>
+            <li>
+              <strong>✓ สเกล 4 ระดับ (สภาวะทางอารมณ์ 9 ข้อ)</strong>
+              <span>เกณฑ์ประเมินสภาวะทางอารมณ์ (ไม่เลย ➔ เกือบทุกวัน) พร้อมระบบแจ้งเตือนเชิงบวก</span>
+            </li>
+            <li>
+              <strong>✓ คำชี้แจงให้ทำเสร็จสิ้นในคราวเดียว</strong>
+              <span>คำแนะนำให้พนักงานตอบต่อเนื่องจนเสร็จสิ้น เพื่อความสมบูรณ์และถูกต้องของผลวิเคราะห์</span>
+            </li>
+            <li>
+              <strong>✓ แถบความคืบหน้า (Progress Bar) ด้านบน</strong>
+              <span>แสดงเปอร์เซ็นต์และจำนวนข้อที่ทำไปแล้ว ช่วยให้พนักงานบริหารเวลาในการตอบแบบประเมิน</span>
+            </li>
+          </ul>
+          <div class="mockup-display-box">
+            <img src="./screenshots/04_stress_and_depression_mobile.png" alt="Stress & Depression Mockup" class="mockup-img">
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span class="footer-left">🧠 อ้างอิงเกณฑ์ประเมินความเครียดและสภาวะทางอารมณ์มาตรฐาน</span>
+          <span class="footer-right">สไลด์ที่ 6 จาก 8</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Results Dashboard -->
+      <section class="slide" data-slide="7">
+        <div class="slide-header">
+          <span class="slide-badge">📊 SCREEN 5 // RESULTS DASHBOARD</span>
+          <h2 class="slide-title">แดชบอร์ดสรุปผลการประเมินสุขภาวะรายบุคคล</h2>
+          <p class="slide-sub">ประมวลผลคะแนน 3 มิติ พร้อมข้อแนะนำการดูแลตนเองและช่องทางรับความช่วยเหลือ</p>
+        </div>
+        <div class="slide-body">
+          <ul class="slide-bullets">
+            <li>
+              <strong>✓ การ์ดสรุปคะแนน 3 มิติ (3-Pillar Cards)</strong>
+              <span>แสดงคะแนน Burnout, ความเครียด, และอารมณ์เศร้า แยกรายด้านพร้อมแถบวัดระดับ</span>
+            </li>
+            <li>
+              <strong>✓ รหัสสีสัญญาณไฟจราจร (Traffic-Light Status)</strong>
+              <span>เขียว (สุขภาวะดี/ปกติ), เหลือง (เฝ้าระวัง/ปานกลาง), แดง (ควรได้รับคำปรึกษา)</span>
+            </li>
+            <li>
+              <strong>✓ คำแนะนำการดูแลสุขภาพจิตเชิงปฏิบัติ (Actionable Advice)</strong>
+              <span>เนื้อหาคำแนะนำปรับเปลี่ยนตามระดับคะแนนของแต่ละบุคคลอย่างจำเพาะเจาะจง</span>
+            </li>
+            <li>
+              <strong>✓ ช่องทางสายด่วนและศูนย์สุขภาวะพนักงาน (Hotlines)</strong>
+              <span>ข้อมูลเบอร์สายด่วนสุขภาพจิต 1323 และช่องทางนัดหมายพูดคุยกับผู้เชี่ยวชาญ</span>
+            </li>
+          </ul>
+          <div class="mockup-display-box">
+            <img src="./screenshots/05_results_dashboard_mobile.png" alt="Results Dashboard Mockup" class="mockup-img">
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span class="footer-left">🛡️ ข้อมูลผลคะแนนจะถูกเก็บเป็นความลับ พนักงานเป็นผู้เดียวที่สามารถดูผลลัพธ์ส่วนบุคคลนี้ได้</span>
+          <span class="footer-right">สไลด์ที่ 7 จาก 8</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Responsive Benchmark Matrix -->
+      <section class="slide" data-slide="8">
+        <div class="slide-header">
+          <span class="slide-badge">📐 TECHNICAL BENCHMARKS & SUMMARY</span>
+          <h2 class="slide-title">ตารางสเปกการรองรับหน้าจอ & สรุปความพร้อมส่งมอบ</h2>
+          <p class="slide-sub">ผ่านการทดสอบบนอุปกรณ์มาตรฐาน iOS และ Android ครอบคลุมตั้งแต่ 360px ถึง 430px</p>
+        </div>
+        <div class="slide-body full-width">
+          <div style="width: 100%; overflow: hidden; border-radius: 14px; border: 1px solid var(--border);">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;">
+              <thead>
+                <tr style="background: #141f32; color: #38bdf8;">
+                  <th style="padding: 1rem 1.25rem;">ขนาดหน้าจอ (Viewport)</th>
+                  <th style="padding: 1rem 1.25rem;">ตัวอย่างอุปกรณ์</th>
+                  <th style="padding: 1rem 1.25rem;">ขนาดตัวอักษร</th>
+                  <th style="padding: 1rem 1.25rem;">ขนาดวงกลม</th>
+                  <th style="padding: 1rem 1.25rem;">Line-Height</th>
+                  <th style="padding: 1rem 1.25rem;">สถานะการรองรับ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background: #1e293b; border-bottom: 1px solid #334155;">
+                  <td style="padding: 0.85rem 1.25rem; font-weight: 700; color: #fff;">หน้าจอเล็ก (≤ 380px)</td>
+                  <td style="padding: 0.85rem 1.25rem; color: #cbd5e1;">iPhone SE, Galaxy A-series</td>
+                  <td style="padding: 0.85rem 1.25rem; color: #cbd5e1;">0.70rem (~11.2px)</td>
+                  <td style="padding: 0.85rem 1.25rem; color: #cbd5e1;">20 × 20 px</td>
+                  <td style="padding: 0.85rem 1.25rem; color: #cbd5e1;">1.16</td>
+                  <td style="padding: 0.85rem 1.25rem;"><span style="color: #34d399; font-weight: 700; background: rgba(16,185,129,0.15); padding: 3px 8px; border-radius: 6px;">✓ ไม่ตกขอบ 100%</span></td>
+                </tr>
+                <tr style="background: #172536; border-bottom: 1px solid #334155;">
+                  <td style="padding: 0.85rem 1.25rem; font-weight: 700; color: #fff;">หน้าจอมาตรฐาน (≤ 640px)</td>
+                  <td style="padding: 0.85rem 1.25rem; color: #cbd5e1;">iPhone 14/15/16, S24</td>
+                  <td style="padding: 0.85rem 1.25rem; color: #cbd5e1;">0.76rem (~12.2px)</td>
+                  <td style="padding: 0.85rem 1.25rem; color: #cbd5e1;">22 × 22 px</td>
+                  <td style="padding: 0.85rem 1.25rem; color: #cbd5e1;">1.22</td>
+                  <td style="padding: 0.85rem 1.25rem;"><span style="color: #34d399; font-weight: 700; background: rgba(16,185,129,0.15); padding: 3px 8px; border-radius: 6px;">✓ สมดุลสูงสุด (แนะนำ)</span></td>
+                </tr>
+                <tr style="background: #1e293b;">
+                  <td style="padding: 0.85rem 1.25rem; font-weight: 700; color: #fff;">หน้าจอคอมพิวเตอร์ (> 640px)</td>
+                  <td style="padding: 0.85rem 1.25rem; color: #cbd5e1;">Tablet, Laptop, Desktop</td>
+                  <td style="padding: 0.85rem 1.25rem; color: #cbd5e1;">0.88rem (~14.0px)</td>
+                  <td style="padding: 0.85rem 1.25rem; color: #cbd5e1;">28 × 28 px</td>
+                  <td style="padding: 0.85rem 1.25rem; color: #cbd5e1;">1.25</td>
+                  <td style="padding: 0.85rem 1.25rem;"><span style="color: #38bdf8; font-weight: 700; background: rgba(2,132,199,0.15); padding: 3px 8px; border-radius: 6px;">✓ กว้างขวาง คมชัด</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(16, 185, 129, 0.1); border: 1px solid #059669; border-radius: 12px; padding: 1rem 1.5rem; margin-top: 1rem;">
+            <div>
+              <h4 style="color: #34d399; font-size: 1.05rem;">🎯 สรุปผลความพร้อมการส่งมอบ (Production Ready)</h4>
+              <p style="color: #cbd5e1; font-size: 0.85rem; margin-top: 0.2rem;">Prototype และ Simulator ผ่านการทดสอบครบถ้วน พร้อมส่งต่อเข้าสู่กระบวนการลงนามยืนยัน Requirement</p>
+            </div>
+            <a href="./Employee-Well-Being-Mobile-UX-Presentation.pptx" download class="btn primary">📥 ดาวน์โหลดสไลด์ .PPTX เพื่อนำเสนอ</a>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <span class="footer-left">🏁 จบการนำเสนอ • ติดต่อฝ่ายพัฒนาระบบ INET Cloud Platform</span>
+          <span class="footer-right">สไลด์ที่ 8 จาก 8</span>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Presenter Bottom Toolbar -->
+  <footer class="bottom-bar">
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <button type="button" class="btn" id="btnPrev">◀ ก่อนหน้า</button>
+      <button type="button" class="btn primary" id="btnNext">ถัดไป ▶</button>
+      <span style="font-size: 0.85rem; color: var(--muted); margin-left: 0.5rem;" id="slideIndicator">สไลด์ 1 / 8</span>
+    </div>
+
+    <!-- Quick Slide Jump Pills -->
+    <div class="slide-pills">
+      <button type="button" class="s-pill active" data-jump="1">1. หน้าแรก</button>
+      <button type="button" class="s-pill" data-jump="2">2. ก่อน-หลัง</button>
+      <button type="button" class="s-pill" data-jump="3">3. Portal</button>
+      <button type="button" class="s-pill" data-jump="4">4. คำชี้แจง (Notice)</button>
+      <button type="button" class="s-pill" data-jump="5">5. Burnout 7-Likert</button>
+      <button type="button" class="s-pill" data-jump="6">6. เครียด/อารมณ์</button>
+      <button type="button" class="s-pill" data-jump="7">7. สรุปผล</button>
+      <button type="button" class="s-pill" data-jump="8">8. สเปกหน้าจอ</button>
+    </div>
+
+    <div style="font-size: 0.78rem; color: var(--muted);">
+      <span>⌨️ ใช้ปุ่มลูกศร ◀ ▶ หรือ Spacebar เลื่อนสไลด์</span>
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 8;
+    const slides = document.querySelectorAll('.slide');
+    const pills = document.querySelectorAll('.s-pill');
+    const indicator = document.getElementById('slideIndicator');
+
+    function goToSlide(n) {
+      if (n < 1) n = 1;
+      if (n > totalSlides) n = totalSlides;
+      currentSlide = n;
+
+      slides.forEach(s => s.classList.remove('active'));
+      const activeSlide = document.querySelector(`.slide[data-slide="${currentSlide}"]`);
+      if (activeSlide) activeSlide.classList.add('active');
+
+      pills.forEach(p => {
+        p.classList.toggle('active', Number(p.dataset.jump) === currentSlide);
+      });
+
+      if (indicator) indicator.textContent = `สไลด์ ${currentSlide} / ${totalSlides}`;
+    }
+
+    document.getElementById('btnPrev').addEventListener('click', () => goToSlide(currentSlide - 1));
+    document.getElementById('btnNext').addEventListener('click', () => goToSlide(currentSlide + 1));
+
+    pills.forEach(p => {
+      p.addEventListener('click', () => {
+        goToSlide(Number(p.dataset.jump));
+      });
+    });
+
+    // Keyboard controls
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        goToSlide(currentSlide + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        goToSlide(currentSlide - 1);
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullscreen();
+      }
+    });
+
+    // Fullscreen Toggle
+    function toggleFullscreen() {
+      const elem = document.documentElement;
+      if (!document.fullscreenElement) {
+        elem.requestFullscreen().catch(err => console.log(err));
+      } else {
+        document.exitFullscreen().catch(err => console.log(err));
+      }
+    }
+    document.getElementById('btnFullscreen').addEventListener('click', toggleFullscreen);
+  </script>
+</body>
+</html>

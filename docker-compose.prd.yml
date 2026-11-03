@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  mongo-prd:
+    image: mongo:7.0
+    container_name: mental-health-mongo-prd
+    restart: unless-stopped
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongo_prd_data:/data/db
+
+  backend-user-prd:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: mental-health-backend-user-prd
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 33302
+      SERVICE_ROLE: user
+      MONGODB_URI: mongodb://mongo-prd:27017/mental_health_assessment_prd
+      MONGODB_DB_NAME: mental_health_assessment_prd
+    ports:
+      - "33302:33302"
+    depends_on:
+      - mongo-prd
+
+  backend-admin-prd:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: mental-health-backend-admin-prd
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 33304
+      SERVICE_ROLE: admin
+      MONGODB_URI: mongodb://mongo-prd:27017/mental_health_assessment_prd
+      MONGODB_DB_NAME: mental_health_assessment_prd
+    ports:
+      - "33304:33304"
+    depends_on:
+      - mongo-prd
+
+  frontend-user-prd:
+    build:
+      context: .
+      dockerfile: apps/employee-web/Dockerfile
+    container_name: mental-health-frontend-user-prd
+    restart: unless-stopped
+    environment:
+      PORT: 33301
+      API_TARGET: http://backend-user-prd:33302
+    ports:
+      - "33301:33301"
+    depends_on:
+      - backend-user-prd
+
+  frontend-admin-prd:
+    build:
+      context: .
+      dockerfile: apps/admin-web/Dockerfile
+    container_name: mental-health-frontend-admin-prd
+    restart: unless-stopped
+    environment:
+      PORT: 33303
+      API_TARGET: http://backend-admin-prd:33304
+    ports:
+      - "33303:33303"
+    depends_on:
+      - backend-admin-prd
+
+volumes:
+  mongo_prd_data:

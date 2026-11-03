@@ -1,0 +1,1846 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mobile Phone Simulator & UX Showcase - Employee Well-being Survey</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --primary-light: #e0f2fe;
+      --accent: #38bdf8;
+      --surface: #1e293b;
+      --surface-dark: #0f172a;
+      --surface-card: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --phone-w: 393px;
+      --phone-h: 844px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'IBM Plex Sans Thai', sans-serif !important;
+    }
+
+    body {
+      font-family: 'IBM Plex Sans Thai', sans-serif !important;
+      font-weight: 300;
+      background: #090d16;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'IBM Plex Sans Thai', sans-serif !important;
+      font-weight: 500;
+    }
+
+    strong, b {
+      font-family: 'IBM Plex Sans Thai', sans-serif !important;
+      font-weight: 500;
+    }
+
+    /* Top Control Hub */
+    .top-hub {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid #1e293b;
+      padding: 0.85rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .hub-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      max-width: 1560px;
+      margin: 0 auto;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, #0284c7, #0ea5e9);
+      color: #ffffff;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.76rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      box-shadow: 0 2px 10px rgba(2, 132, 199, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .brand-heading {
+      font-size: 1.12rem;
+      font-weight: 500;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-sub {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-weight: 300;
+    }
+
+    .hub-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: #0f172a;
+      padding: 0.3rem 0.45rem;
+      border-radius: 10px;
+      border: 1px solid #334155;
+    }
+
+    .control-label {
+      font-size: 0.76rem;
+      color: #94a3b8;
+      font-weight: 400;
+      padding: 0 0.35rem;
+      white-space: nowrap;
+    }
+
+    .hub-btn {
+      background: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid #334155;
+      padding: 0.38rem 0.7rem;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      font-weight: 400;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+    }
+
+    .hub-btn:hover {
+      background: #334155;
+      color: #ffffff;
+      border-color: #475569;
+    }
+
+    .hub-btn.is-active {
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      border-color: #38bdf8;
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+      font-weight: 500;
+    }
+
+    .hub-link-btn {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      padding: 0.38rem 0.85rem;
+      border-radius: 7px;
+      font-size: 0.8rem;
+      font-weight: 400;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .hub-link-btn:hover {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #0284c7;
+      box-shadow: 0 0 14px rgba(2, 132, 199, 0.4);
+    }
+
+    /* Screen Jump Strip */
+    .screen-strip {
+      background: #111a2e;
+      border-bottom: 1px solid #1e293b;
+      padding: 0.55rem 1.5rem;
+    }
+
+    .screen-strip-inner {
+      max-width: 1560px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .screen-strip-title {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .screen-pills {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .screen-pill {
+      background: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid #334155;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+    }
+
+    .screen-pill:hover {
+      background: #334155;
+      color: #ffffff;
+      border-color: #0284c7;
+    }
+
+    .screen-pill.is-active {
+      background: #0284c7;
+      border-color: #38bdf8;
+      color: #ffffff;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    }
+
+    .screen-pill.pill-accent {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: #10b981;
+      color: #6ee7b7;
+    }
+    .screen-pill.pill-accent:hover {
+      background: #10b981;
+      color: #0f172a;
+    }
+
+    /* Main Showcase Container */
+    .showcase-container {
+      max-width: 1560px;
+      margin: 0 auto;
+      padding: 1.75rem 1.5rem 3rem 1.5rem;
+      flex: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* Workspace Grid */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: minmax(360px, auto) 1fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1100px) {
+      .workspace-grid {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+    }
+
+    /* Phone Simulator Wrapper */
+    .phone-simulator-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      position: sticky;
+      top: 130px;
+    }
+
+    /* Modern Phone Frame (Titanium Style) */
+    .phone-frame {
+      background: #09090b;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow: 
+        0 25px 60px -10px rgba(0, 0, 0, 0.85),
+        0 0 0 1px #27272a,
+        0 0 0 4px #18181b,
+        0 0 35px rgba(2, 132, 199, 0.15);
+      position: relative;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      width: var(--phone-w);
+      height: var(--phone-h);
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    /* Phone Side Buttons */
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 110px;
+      width: 4px;
+      height: 48px;
+      background: #27272a;
+      border-radius: 3px 0 0 3px;
+      box-shadow: 0 60px 0 #27272a, 0 110px 0 #27272a;
+    }
+
+    .phone-frame::after {
+      content: '';
+      position: absolute;
+      right: -6px;
+      top: 140px;
+      width: 4px;
+      height: 70px;
+      background: #27272a;
+      border-radius: 0 3px 3px 0;
+    }
+
+    /* Phone Screen Container */
+    .phone-screen {
+      background: #f8fafc;
+      color: #0f172a;
+      border-radius: 38px;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Dynamic Island / Status Bar */
+    .phone-status-bar {
+      height: 38px;
+      background: rgba(248, 250, 252, 0.96);
+      backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1.35rem;
+      font-size: 0.74rem;
+      font-weight: 400;
+      color: #0f172a;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      border-top-left-radius: 38px;
+      border-top-right-radius: 38px;
+      pointer-events: none;
+    }
+
+    .notch-island {
+      width: 95px;
+      height: 22px;
+      background: #000000;
+      border-radius: 14px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 8px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .notch-lens {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #090d16;
+      border: 1px solid #1e293b;
+    }
+
+    /* Embedded Iframe */
+    .phone-iframe-wrapper {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      padding-top: 36px;
+      padding-bottom: 20px;
+      background: #f8fafc;
+      overflow: hidden;
+    }
+
+    .phone-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: #f8fafc;
+      transition: filter 0.2s ease;
+    }
+
+    /* Home Indicator */
+    .home-indicator {
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 130px;
+      height: 4px;
+      background: #0f172a;
+      border-radius: 999px;
+      z-index: 60;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    /* Phone Simulator Footnote */
+    .phone-hint {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* UX Analysis & Showcase Details Panel */
+    .analysis-panel {
+      background: #111a2e;
+      border: 1px solid #1e293b;
+      border-radius: 20px;
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .panel-header {
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .panel-title-group h2 {
+      font-size: 1.35rem;
+      font-weight: 500;
+      color: #ffffff;
+      letter-spacing: -0.3px;
+    }
+
+    .panel-title-group p {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 0.25rem;
+      font-weight: 300;
+    }
+
+    .badge-status {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid #059669;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 400;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* 4-Card Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .metric-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      border-color: #38bdf8;
+    }
+
+    .metric-icon {
+      font-size: 1.4rem;
+      margin-bottom: 2px;
+    }
+
+    .metric-label {
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .metric-value {
+      font-size: 1.45rem;
+      font-weight: 500;
+      color: #ffffff;
+    }
+
+    .metric-value.highlight-blue { color: #38bdf8; }
+    .metric-value.highlight-green { color: #34d399; }
+    .metric-value.highlight-amber { color: #fbbf24; }
+
+    .metric-desc {
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      line-height: 1.45;
+      font-weight: 300;
+    }
+
+    /* Comparison Banner (Before vs After) */
+    .comparison-banner {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 1.35rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .comparison-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: #ffffff;
+    }
+
+    .compare-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 640px) {
+      .compare-cols {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .compare-box {
+      border-radius: 12px;
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .compare-box.is-before {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px dashed rgba(239, 68, 68, 0.4);
+    }
+
+    .compare-box.is-after {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .compare-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 6px;
+      width: fit-content;
+      text-transform: uppercase;
+    }
+
+    .badge-before { background: #dc2626; color: #fff; }
+    .badge-after { background: #059669; color: #fff; }
+
+    .compare-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #ffffff;
+    }
+
+    .compare-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      font-size: 0.8rem;
+    }
+
+    .compare-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      line-height: 1.4;
+      font-weight: 300;
+    }
+
+    .compare-list.is-before li { color: #fca5a5; }
+    .compare-list.is-after li { color: #a7f3d0; }
+
+    /* Deep Dive Explanations */
+    .deep-dive-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .deep-dive-title {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .deep-dive-text {
+      font-size: 0.84rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* Recommendation Matrix Table */
+    .table-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .table-header-title {
+      padding: 1rem 1.25rem;
+      background: #1e293b;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #ffffff;
+      border-bottom: 1px solid #334155;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+
+    .spec-table th, .spec-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .spec-table th {
+      background: #141f32;
+      color: #94a3b8;
+      font-weight: 400;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.5px;
+    }
+
+    .spec-table td {
+      font-weight: 300;
+    }
+
+    .spec-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .tag-pill {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 500;
+    }
+
+    .tag-good { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .tag-neutral { background: rgba(2, 132, 199, 0.2); color: #38bdf8; }
+
+    /* Quick Action Toolbar inside Panel */
+    .quick-tools-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding-top: 0.5rem;
+    }
+
+    .tools-title {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      font-weight: 400;
+    }
+
+    .tools-btns {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* Presentation & Capture Studio Styles */
+    .hub-btn-studio {
+      background: linear-gradient(135deg, #0284c7, #0ea5e9) !important;
+      color: #ffffff !important;
+      border: 1px solid #38bdf8 !important;
+      font-weight: 700 !important;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.4);
+    }
+    .hub-btn-studio:hover {
+      background: linear-gradient(135deg, #0369a1, #0284c7) !important;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
+    }
+    .pill-studio {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.25), rgba(14, 165, 233, 0.25)) !important;
+      border-color: #38bdf8 !important;
+      color: #7dd3fc !important;
+      font-weight: 700 !important;
+    }
+    .pill-studio:hover {
+      background: #0284c7 !important;
+      color: #ffffff !important;
+    }
+
+    /* Studio Modal / Overlay */
+    .studio-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 13, 22, 0.98);
+      backdrop-filter: blur(20px);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    .studio-topbar {
+      background: rgba(15, 23, 42, 0.96);
+      border-bottom: 1px solid #334155;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .studio-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .studio-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .studio-substrip {
+      background: #111a2e;
+      border-bottom: 1px solid #1e293b;
+      padding: 0.6rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .studio-canvas-container {
+      flex: 1;
+      padding: 2.5rem 1.5rem 6.5rem 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    .studio-stage {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 28px;
+      padding: 2.5rem;
+      min-width: 480px;
+    }
+    /* Backdrop Modes */
+    .stage-bg-white {
+      background: #ffffff !important;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+    }
+    .stage-bg-dark {
+      background: #090d16 !important;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
+      border: 1px solid #1e293b;
+    }
+    .stage-bg-gradient {
+      background: linear-gradient(135deg, #071933 0%, #0c2d58 50%, #0f172a 100%) !important;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+      border: 1px solid #1e3a5f;
+    }
+    .stage-bg-transparent {
+      background-image: linear-gradient(45deg, #1e293b 25%, transparent 25%), linear-gradient(-45deg, #1e293b 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #1e293b 75%), linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+      border: 2px dashed #334155;
+    }
+
+    /* 16:9 Slide Card Layout */
+    .studio-slide-card {
+      width: 1140px;
+      max-width: 95vw;
+      aspect-ratio: 16 / 9;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 2.5rem;
+      align-items: center;
+      padding: 2.5rem 3rem;
+      border-radius: 28px;
+      position: relative;
+    }
+    .slide-card-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1.15rem;
+    }
+    .slide-card-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stage-bg-white .slide-card-badge {
+      color: #0284c7;
+    }
+    .slide-card-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+    .stage-bg-white .slide-card-title {
+      color: #0f172a;
+    }
+    .slide-card-sub {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    .stage-bg-white .slide-card-sub {
+      color: #475569;
+    }
+    .slide-card-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      font-size: 0.88rem;
+      color: #cbd5e1;
+    }
+    .stage-bg-white .slide-card-bullets {
+      color: #334155;
+    }
+    .slide-card-bullets li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .slide-card-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .scm-item {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 0.65rem 0.85rem;
+    }
+    .stage-bg-white .scm-item {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+    .scm-val {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #38bdf8;
+    }
+    .stage-bg-white .scm-val {
+      color: #0284c7;
+    }
+    .scm-lbl {
+      font-size: 0.74rem;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+    .stage-bg-white .scm-lbl {
+      color: #64748b;
+    }
+
+    /* Floating Callouts */
+    .studio-callout {
+      position: absolute;
+      background: rgba(15, 23, 42, 0.94);
+      backdrop-filter: blur(12px);
+      border: 1px solid #38bdf8;
+      border-radius: 14px;
+      padding: 0.75rem 1rem;
+      color: #ffffff;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+      z-index: 80;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      width: 250px;
+    }
+    .studio-callout-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .studio-callout-desc {
+      font-size: 0.74rem;
+      color: #cbd5e1;
+      margin-top: 3px;
+      line-height: 1.35;
+    }
+    .stage-bg-white .studio-callout {
+      background: rgba(255, 255, 255, 0.98);
+      border-color: #0284c7;
+      color: #0f172a;
+      box-shadow: 0 12px 30px rgba(2, 132, 199, 0.18);
+    }
+    .stage-bg-white .studio-callout-title {
+      color: #0284c7;
+    }
+    .stage-bg-white .studio-callout-desc {
+      color: #334155;
+    }
+
+    /* Floating Action Dock */
+    .studio-dock {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(16px);
+      border: 1px solid #38bdf8;
+      border-radius: 999px;
+      padding: 0.5rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 24px rgba(56, 189, 248, 0.3);
+      z-index: 1050;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+  <!-- Top Control Hub -->
+  <header class="top-hub">
+    <div class="hub-header">
+      <div class="brand-title">
+        <span class="brand-badge">📱 PHONE SIMULATOR</span>
+        <div>
+          <h1 class="brand-heading">
+            Employee Well-being Survey
+            <span style="font-size:0.75rem; font-weight:400; color:#38bdf8; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); padding:2px 8px; border-radius:6px;">Mobile Optimized</span>
+          </h1>
+          <p class="brand-sub">เครื่องมือจำลองมุมมองการใช้งานจริงผ่านโทรศัพท์มือถือ (พร้อมระบบ Scale 3 บรรทัด & วงกลมขนาด 22px ป้องกันข้อความชนกัน)</p>
+        </div>
+      </div>
+
+      <div class="hub-controls">
+        <!-- Presentation Studio Button -->
+        <button type="button" class="hub-btn hub-btn-studio" id="btnToggleStudio" title="เปิดโหมดสตูดิโอสำหรับบันทึกและแคปภาพเพื่อนำเสนอสไลด์">
+          📸 โหมดแคปรูปสำหรับนำเสนอ
+        </button>
+
+        <!-- Links to Slide Deck and PPTX -->
+        <a href="./presentation-slides-viewer.html" class="hub-link-btn" style="color:#34d399; border-color:rgba(16,185,129,0.4);" title="เปิดดูสไลด์นำเสนอ 16:9 สำเร็จรูป">
+          📊 สไลด์ 16:9 ↗
+        </a>
+        <a href="./Mental-Health-Mobile-UX-Presentation.pptx" download class="hub-link-btn" style="color:#fbbf24; border-color:rgba(251,191,36,0.4);" title="ดาวน์โหลดไฟล์ PowerPoint .pptx">
+          📥 โหลด .PPTX
+        </a>
+
+        <!-- Device Switcher -->
+        <div class="control-group">
+          <span class="control-label">📱 รุ่นโทรศัพท์:</span>
+          <button type="button" class="hub-btn is-active" data-device="iphone15" title="ขนาด 393 x 844 px (iPhone 14/15/16 Pro)">iPhone 15 Pro (393px)</button>
+          <button type="button" class="hub-btn" data-device="compact" title="ขนาด 360 x 740 px (iPhone SE / Android Compact)">จอเล็ก (360px)</button>
+          <button type="button" class="hub-btn" data-device="galaxy" title="ขนาด 412 x 880 px (Samsung Galaxy S24)">Galaxy S24 (412px)</button>
+          <button type="button" class="hub-btn" data-device="promax" title="ขนาด 430 x 920 px (iPhone Plus / Pro Max)">Pro Max (430px)</button>
+        </div>
+
+        <!-- Font Scaler -->
+        <div class="control-group">
+          <span class="control-label">🔍 ขนาดอักษร:</span>
+          <button type="button" class="hub-btn is-active" data-scale="1" title="ขนาดมาตรฐาน 100%">100%</button>
+          <button type="button" class="hub-btn" data-scale="1.15" title="ขยายใหญ่ 115%">115%</button>
+          <button type="button" class="hub-btn" data-scale="1.25" title="ขยายพิเศษ 125%">125%</button>
+        </div>
+
+        <!-- Orientation Switcher -->
+        <button type="button" class="hub-btn" id="btnToggleRotate" title="สลับแนวตั้ง / แนวนอน">
+          🔄 สลับแนวตั้ง
+        </button>
+
+        <!-- Link to Desktop Prototype -->
+        <a href="./employee-well-being-survey-ui-prototype.html" target="_blank" class="hub-link-btn" title="เปิดดูแบบเต็มหน้าจอคอมพิวเตอร์ (Desktop Prototype)">
+          🖥️ หน้าเต็มจอคอม ↗
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Screen Navigation Strip -->
+  <nav class="screen-strip" aria-label="แถบทางลัดสลับหน้าจอ">
+    <div class="screen-strip-inner">
+      <div class="screen-strip-title">
+        <span>🚀 ทางลัดไปยังหน้าจอต่างๆ ในระบบ:</span>
+      </div>
+      <div class="screen-pills">
+        <button type="button" class="screen-pill pill-studio" id="btnQuickStudio" title="เปิดสตูดิโอช่วยแคปภาพสไลด์">📸 สตูดิโอแคปภาพสไลด์</button>
+        <button type="button" class="screen-pill" data-screen="portal">🏠 1. หน้าแรก (Portal)</button>
+        <button type="button" class="screen-pill" data-screen="notice">📋 2. คำชี้แจง (Notice & PDPA)</button>
+        <button type="button" class="screen-pill is-active" data-screen="assessment" data-ass-index="0">🔥 3. ภาวะหมดไฟ (Burnout - 22 ข้อ)</button>
+        <button type="button" class="screen-pill" data-screen="assessment" data-ass-index="1">⚡ 4. ความเครียด (20 ข้อ)</button>
+        <button type="button" class="screen-pill" data-screen="assessment" data-ass-index="2">🧠 5. สภาวะทางอารมณ์ (9 ข้อ)</button>
+        <button type="button" class="screen-pill" data-screen="result">📊 6. ผลการประเมิน (Results Dashboard)</button>
+        <button type="button" class="screen-pill pill-accent" id="btnQuickAutoFill" title="สุ่มตอบคำถามทุกข้อครบ เพื่อให้ทดสอบดูหน้าผลคะแนนได้ทันที">⚡ เติมคำตอบตัวอย่างอัตโนมัติ</button>
+        <a href="./presentation-slides-viewer.html" class="screen-pill" style="color:#34d399; text-decoration:none;" title="เปิดดูสไลด์นำเสนอ 16:9 สำเร็จรูป">📊 สไลด์นำเสนอ 16:9</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Showcase Workspace -->
+  <main class="showcase-container">
+    <div class="workspace-grid">
+
+      <!-- Column 1: Smartphone Device Simulator -->
+      <section class="phone-simulator-wrap" aria-label="กรอบจำลองโทรศัพท์มือถือ">
+        <div class="phone-frame" id="phoneFrame">
+          <div class="phone-screen">
+            
+            <!-- Dynamic Island / Status Bar -->
+            <div class="phone-status-bar">
+              <span id="statusBarClock">9:41</span>
+              <div class="notch-island">
+                <span class="notch-lens"></span>
+              </div>
+              <span>📶 5G 100%</span>
+            </div>
+
+            <!-- Embedded Live Prototype Iframe -->
+            <div class="phone-iframe-wrapper">
+              <iframe 
+                id="phoneIframe" 
+                src="./employee-well-being-survey-ui-prototype.html?mobile_view=1&tab=assessment&assessment=0" 
+                title="Mental Health Mobile Prototype" 
+                class="phone-iframe"
+                loading="eager"
+              ></iframe>
+            </div>
+
+            <!-- iOS Home Indicator -->
+            <div class="home-indicator"></div>
+
+          </div>
+        </div>
+
+        <!-- Interaction Hint -->
+        <div class="phone-hint">
+          <span>💡</span>
+          <span>แตะเลือกวงกลมคำตอบ เลื่อนหน้าจอ และกด <strong>"ข้อถัดไป"</strong> ได้เสมือนใช้งานจริงบนสมาร์ทโฟน</span>
+        </div>
+      </section>
+
+      <!-- Column 2: UX Analysis & Technical Evaluation Panel -->
+      <section class="analysis-panel" aria-label="ข้อมูลการออกแบบและวิเคราะห์ UX">
+        
+        <div class="panel-header">
+          <div class="panel-title-group">
+            <h2>ผลการปรับแต่ง UI เพื่อรองรับโทรศัพท์มือถือ 100%</h2>
+            <p>แก้ไขปัญหาตัวหนังสือเล็ก และปรับวงกลม 7 ระดับให้มีสัดส่วนสมดุล สบายตาบนหน้าจอทุกขนาด</p>
+          </div>
+          <span class="badge-status">
+            <span>✓</span> ผ่านการทดสอบ Mobile Ready
+          </span>
+        </div>
+
+        <!-- 4 Core Metrics Grid -->
+        <div class="metrics-grid">
+          
+          <div class="metric-card">
+            <span class="metric-icon">🔤</span>
+            <span class="metric-label">ขนาดตัวอักษรตัวเลือก (Font Size)</span>
+            <span class="metric-value highlight-blue">12.2 px</span>
+            <span class="metric-desc">ขยายใหญ่ขึ้น <strong>+28%</strong> (จากเดิม 9.5px) ด้วยการจัดข้อความตัดคำ 2 บรรทัด อ่านได้ชัดเจน ไม่ตกขอบ</span>
+          </div>
+
+          <div class="metric-card">
+            <span class="metric-icon">⚪</span>
+            <span class="metric-label">ขนาดวงกลม (Circle Diameter)</span>
+            <span class="metric-value highlight-green">22 px</span>
+            <span class="metric-desc">ปรับลดจาก 32px เหลือ <strong>22px (-31%)</strong> ช่วยคืนพื้นที่แนวตั้งให้การ์ดคำถาม ข้อความโจทย์จึงเด่นชัดขึ้น</span>
+          </div>
+
+          <div class="metric-card">
+            <span class="metric-icon">👆</span>
+            <span class="metric-label">พื้นที่แตะสัมผัส (Touch Target)</span>
+            <span class="metric-value highlight-amber">48 px</span>
+            <span class="metric-desc">ขยายพื้นที่สัมผัสรอบวงกลมด้วย Pseudo-element แตะโดนง่ายด้วยนิ้วโป้งตามมาตรฐาน Apple HIG</span>
+          </div>
+
+          <div class="metric-card">
+            <span class="metric-icon">🌈</span>
+            <span class="metric-label">การไล่สีคะแนน (Gradient Likert)</span>
+            <span class="metric-value highlight-blue">7 เฉดสี</span>
+            <span class="metric-desc">ไล่สีจาก <strong>เขียว (ไม่เคย) ➔ เหลือง ➔ แดง (ทุกวัน)</strong> พร้อมป้าย Live Feedback ด้านล่างยืนยันคำตอบทันที</span>
+          </div>
+
+        </div>
+
+        <!-- Before vs After Comparison Card -->
+        <div class="comparison-banner">
+          <div class="comparison-header">
+            <span>🔍 เปรียบเทียบผลลัพธ์: แบบเดิม (1 บรรทัด) vs แบบปรับปรุงใหม่ (2 บรรทัด)</span>
+          </div>
+          <div class="compare-cols">
+            
+            <div class="compare-box is-before">
+              <span class="compare-badge badge-before">ก่อนปรับปรุง (1 บรรทัด)</span>
+              <h4 class="compare-title">ข้อความยาวเรียงแถวเดียว</h4>
+              <ul class="compare-list is-before">
+                <li>❌ ตัวหนังสือถูกบีบเหลือขนาดเล็กมาก (9.5px - 10px)</li>
+                <li>❌ วงกลมขนาด 32px มีขนาดใหญ่เกินไป เบียดพื้นที่แนวตั้ง</li>
+                <li>❌ พนักงานที่มีสายตายาวหรือใช้งานกลางแจ้งต้องเพ่งสายตา</li>
+                <li>❌ บนหน้าจอ 360px เกิดการตัดพยางค์ขาดหรือไม่สวยงาม</li>
+              </ul>
+            </div>
+
+            <div class="compare-box is-after">
+              <span class="compare-badge badge-after">ปรับปรุงใหม่ (2 บรรทัด + วงกลม 22px)</span>
+              <h4 class="compare-title">ตัดคำ 2 บรรทัดตามสัทศาสตร์ธรรมชาติ</h4>
+              <ul class="compare-list is-after">
+                <li>✓ ขยายขนาดตัวหนังสือเป็น <strong>12.2px (0.76rem)</strong> ตัวหนา 600</li>
+                <li>✓ ตัดคำเป็นระเบียบ เช่น <code>ไม่เคยรู้สึก<br>เช่นนั้นเลย</code>, <code>สัปดาห์ละ<br>2–3 ครั้ง</code></li>
+                <li>✓ วงกลม 22px กะทัดรัด สัดส่วนรับกับข้อความด้านบนอย่างลงตัว</li>
+                <li>✓ เส้น Gradient Track พาดผ่านกึ่งกลางวงกลมอย่างแม่นยำทุกขนาดจอ</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Deep Dive UX Insight Card -->
+        <div class="deep-dive-card">
+          <h3 class="deep-dive-title">
+            <span>💡</span> ทำไมการตัดคำเป็น 3 บรรทัดถึงแก้ปัญหาข้อความชิดกันบนจอมือถือได้ดีที่สุด?
+          </h3>
+          <p class="deep-dive-text">
+            บนหน้าจอสมาร์ทโฟนทั่วไป โดยเฉพาะจอเล็ก (360px) พื้นที่ความกว้างแนวนอนสำหรับ 7 ตัวเลือกจะเหลือกว้างเพียงประมาณ <strong>44px – 48px ต่อช่อง</strong><br><br>
+            เมื่อตัดข้อความออกเป็น <strong>3 บรรทัดอย่างสมดุล</strong> (บรรทัด 1: <em>"สัปดาห์ละ"</em> / บรรทัด 2: <em>"2–3"</em> / บรรทัด 3: <em>"ครั้ง"</em>):<br>
+            • บรรทัดที่ 2 จะเหลือเพียงตัวเลขความถี่สั้นๆ ทำให้เกิดพื้นที่ว่าง (White Space) ด้านซ้าย-ขวาอย่างเห็นได้ชัด<br>
+            • คำของแต่ละคอลัมน์จะไม่ชนกันเป็นพรืดเดียว สายตาของผู้ใช้สามารถแยกแยะแต่ละตัวเลือกได้ทันทีโดยไม่ต้องเพ่ง<br>
+            • คำว่า <em>"ทุกวัน"</em> และ <em>"ไม่เคยรู้สึกเช่นนั้นเลย"</em> ถูกจัดวางกึ่งกลางแนวตั้งอย่างสมมาตร สบายตา 100%
+          </p>
+        </div>
+
+        <!-- Mobile Portal Highlights Card -->
+        <div class="deep-dive-card" style="border-color: #0284c7; background: linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(15, 23, 42, 0.6) 100%);">
+          <h3 class="deep-dive-title" style="color: #38bdf8;">
+            <span>📱</span> การปรับปรุงหน้าหลัก (Employee Portal) ให้รองรับมือถือ 100%
+          </h3>
+          <p class="deep-dive-text">
+            หน้าหลัก (Portal) ได้รับการปรับแต่งใหม่ให้เหมาะสมกับสรีระการถือโทรศัพท์มือถือ (Thumb Zone & Ergonomics):
+          </p>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem; color: #cbd5e1; margin-top: 6px;">
+            <li style="display: flex; gap: 8px; align-items: flex-start;">
+              <span style="color: #34d399; font-weight: 500;">✓</span>
+              <span><strong>แถบเมนูด้านบน (Topbar):</strong> จัดวางโลโก้ INET และชื่อระบบแบบกะทัดรัด พร้อมปุ่ม <em>"📞 ติดต่อ HR"</em> และ <em>"🛡️ Admin ↗"</em> ในแถวคู่ขนาน ไม่ตกขอบ</span>
+            </li>
+            <li style="display: flex; gap: 8px; align-items: flex-start;">
+              <span style="color: #34d399; font-weight: 500;">✓</span>
+              <span><strong>ปุ่มหลักเข้าทำแบบประเมิน (Primary CTA):</strong> ขยายเต็มความกว้าง (Full-width) สูง 50px แตะได้ง่ายด้วยนิ้วโป้งมือเดียว พร้อมเอฟเฟกต์ยุบตัวเมื่อกด (:active)</span>
+            </li>
+            <li style="display: flex; gap: 8px; align-items: flex-start;">
+              <span style="color: #34d399; font-weight: 500;">✓</span>
+              <span><strong>การ์ดสรุปขอบเขตแบบประเมิน (Scope Card):</strong> แสดงรายละเอียด 3 แบบประเมิน (Burnout 22 ข้อ, ความเครียด 20 ข้อ, ซึมเศร้า 9 ข้อ รวม 51 ข้อ ~12-15 นาที) และแจ้งเตือนมาตรฐานความลับ PDPA อย่างชัดเจน</span>
+            </li>
+            <li style="display: flex; gap: 8px; align-items: flex-start;">
+              <span style="color: #34d399; font-weight: 500;">✓</span>
+              <span><strong>ภาพกราฟิกวงกลมสุขภาวะ (Circular Emblem):</strong> ย่อขนาดลงอย่างได้สัดส่วน (240px บนมือถือ / 215px บนจอเล็ก 360px) ไอคอนดาวเทียมจัดวางรอบวงกลมอย่างแม่นยำ ไม่ล้นขอบจอ</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Technical Benchmark Specification Table -->
+        <div class="table-card">
+          <div class="table-header-title">
+            <span>📐 ตารางเปรียบเทียบสเปกระดับหน้าจอ (Responsive Specifications)</span>
+          </div>
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>ขนาดหน้าจอ (Viewport)</th>
+                <th>ขนาดตัวอักษร</th>
+                <th>ขนาดวงกลม</th>
+                <th>จุดภายใน</th>
+                <th>ความสูงบรรทัด (Line-Height)</th>
+                <th>สถานะการรองรับ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>หน้าจอเล็ก (&le; 380px)</strong><br><small style="color:#94a3b8;">iPhone SE, Galaxy A-series</small></td>
+                <td>0.70rem (~11.2px)</td>
+                <td>20 &times; 20 px</td>
+                <td>7 &times; 7 px</td>
+                <td>1.16</td>
+                <td><span class="tag-pill tag-good">✓ ไม่ตกขอบ 100%</span></td>
+              </tr>
+              <tr>
+                <td><strong>หน้าจอมาตรฐาน (&le; 640px)</strong><br><small style="color:#94a3b8;">iPhone 13/14/15/16, Galaxy S24</small></td>
+                <td>0.76rem (~12.2px)</td>
+                <td>22 &times; 22 px</td>
+                <td>8 &times; 8 px</td>
+                <td>1.22</td>
+                <td><span class="tag-pill tag-good">✓ สมดุลสูงสุด (แนะนำ)</span></td>
+              </tr>
+              <tr>
+                <td><strong>หน้าจอคอมพิวเตอร์ (&gt; 640px)</strong><br><small style="color:#94a3b8;">Tablet, Laptop, Desktop</small></td>
+                <td>0.88rem (~14.0px)</td>
+                <td>28 &times; 28 px</td>
+                <td>10 &times; 10 px</td>
+                <td>1.25</td>
+                <td><span class="tag-pill tag-neutral">✓ กว้างขวาง คมชัด</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Quick Actions Toolbar -->
+        <div class="quick-tools-bar">
+          <span class="tools-title">เครื่องมือและตัวช่วยทดสอบ:</span>
+          <div class="tools-btns">
+            <button type="button" class="hub-btn" onclick="reloadIframe()">🔄 โหลดหน้าจำลองใหม่</button>
+            <button type="button" class="hub-btn" onclick="jumpScreen('portal')">🏠 กลับหน้า Portal</button>
+            <button type="button" class="hub-btn" onclick="jumpAssessment(0)">🔥 ข้อแรก Burnout</button>
+            <button type="button" class="hub-btn" onclick="jumpScreen('result')">📊 ดูหน้าสรุปผลลัพธ์</button>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Presentation & Capture Studio Modal Overlay -->
+  <div id="presentationStudio" class="studio-overlay" style="display: none;">
+    <!-- Studio Header -->
+    <header class="studio-topbar">
+      <div class="studio-bar-left">
+        <span class="brand-badge" style="background:linear-gradient(135deg,#0284c7,#38bdf8);">📸 PRESENTATION STUDIO</span>
+        <h2 style="font-size:1.05rem; font-weight:700; color:#fff;">สตูดิโอจับภาพเพื่อนำเสนอสไลด์</h2>
+      </div>
+
+      <div class="studio-bar-right">
+        <!-- Backdrop Selector -->
+        <div class="control-group">
+          <span class="control-label">🎨 พื้นหลัง:</span>
+          <button type="button" class="hub-btn is-active" data-studio-bg="white" title="พื้นขาวบริสุทธิ์ สำหรับแปะลง PowerPoint/Keynote เนียนตา">⚪ พื้นขาว</button>
+          <button type="button" class="hub-btn" data-studio-bg="dark" title="พื้นมืดหรูหรา สไตล์ Apple Keynote">⬛ พื้นมืด</button>
+          <button type="button" class="hub-btn" data-studio-bg="gradient" title="สตูดิโอไล่เฉดสีฟ้า-น้ำเงินพรีเมียม">🎨 สตูดิโอไล่เฉด</button>
+          <button type="button" class="hub-btn" data-studio-bg="transparent" title="พื้นหลังโปร่งใส">🏁 โปร่งใส</button>
+        </div>
+
+        <!-- Layout Selector -->
+        <div class="control-group">
+          <span class="control-label">📐 สัดส่วน:</span>
+          <button type="button" class="hub-btn is-active" data-studio-layout="phone" title="จัดกึ่งกลางเฉพาะตัวเครื่อง สำหรับ Crop ไปใช้งาน">📱 เฉพาะตัวเครื่อง</button>
+          <button type="button" class="hub-btn" data-studio-layout="slide" title="การ์ดสไลด์ 16:9 สำเร็จรูปพร้อมหัวข้อและคำอธิบาย">🖼️ สไลด์ 16:9</button>
+        </div>
+
+        <!-- Callouts Toggle -->
+        <button type="button" class="hub-btn is-active" id="btnToggleCallouts" title="เปิด/ปิดป้ายชี้อธิบายจุดเด่นบนรูปภาพ">
+          🏷️ ป้ายอธิบาย: เปิด
+        </button>
+
+        <!-- Close Studio -->
+        <button type="button" class="hub-btn" id="btnCloseStudio" style="background:#ef4444; border-color:#f87171; color:#fff; font-weight:700;">
+          ✕ ปิดสตูดิโอ
+        </button>
+      </div>
+    </header>
+
+    <!-- Studio Sub-strip: Scene Switcher -->
+    <div class="studio-substrip">
+      <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+        <span style="font-size:0.8rem; color:#94a3b8; font-weight:700;">🎬 เลือกฉากที่ต้องการแคปรูป:</span>
+        <button type="button" class="screen-pill" data-studio-scene="portal">🏠 1. หน้าแรก Portal</button>
+        <button type="button" class="screen-pill" data-studio-scene="notice">📋 2. คำชี้แจง (Notice & PDPA)</button>
+        <button type="button" class="screen-pill is-active" data-studio-scene="burnout">🔥 3. Burnout (ข้อ 1 สเกล 7 ระดับ)</button>
+        <button type="button" class="screen-pill" data-studio-scene="stress">⚡ 4. ความเครียด (Stress)</button>
+        <button type="button" class="screen-pill" data-studio-scene="depression">🧠 5. สภาวะทางอารมณ์ (9 ข้อ)</button>
+        <button type="button" class="screen-pill" data-studio-scene="result">📊 6. ผลการประเมิน (Results)</button>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.6rem;">
+        <a href="./screenshots/" target="_blank" class="screen-pill" style="color:#38bdf8; text-decoration:none;">📁 โฟลเดอร์รูปสำเร็จรูป (9 รูป)</a>
+        <a href="./presentation-slides-viewer.html" target="_blank" class="screen-pill" style="color:#34d399; text-decoration:none;">📊 สไลด์นำเสนอ 16:9</a>
+        <a href="./Mental-Health-Mobile-UX-Presentation.pptx" download class="screen-pill" style="color:#fbbf24; text-decoration:none;">📥 สไลด์ .PPTX</a>
+      </div>
+    </div>
+
+    <!-- Canvas Stage -->
+    <div class="studio-canvas-container" id="studioCanvasContainer">
+      <div class="studio-stage stage-bg-white" id="studioStage">
+
+        <!-- Slide Info Column (Only visible in 16:9 mode) -->
+        <div class="slide-card-info" id="studioSlideInfo" style="display: none;">
+          <span class="slide-card-badge" id="studioBadgeText">INET WELL-BEING PLATFORM // MOBILE UX INNOVATION</span>
+          <h2 class="slide-card-title" id="studioTitleText">แบบประเมินภาวะหมดไฟ (Burnout Assessment)</h2>
+          <p class="slide-card-sub" id="studioSubText">นวัตกรรมการตัดคำ 2 บรรทัด & วงกลมขนาด 22px สำหรับคำถาม 7 ระดับ ช่วยให้อ่านสบายตาบนจอมือถือทุกขนาด</p>
+          <ul class="slide-card-bullets" id="studioBulletsList">
+            <li><span style="color:#38bdf8;">✓</span> <strong>ขนาดตัวอักษร 12.2px (+28%):</strong> ขยายใหญ่ขึ้น อ่านง่าย ไม่ตกขอบจอ</li>
+            <li><span style="color:#38bdf8;">✓</span> <strong>วงกลมขนาด 22px (-31%):</strong> สัดส่วนสมดุล คืนพื้นที่แนวตั้งให้โจทย์คำถาม</li>
+            <li><span style="color:#38bdf8;">✓</span> <strong>Touch Target 48px:</strong> แตะง่ายตามมาตรฐาน Apple Human Interface Guidelines</li>
+            <li><span style="color:#38bdf8;">✓</span> <strong>Likert 7 Shades:</strong> ไล่ระดับสีเขียวถึงแดง พร้อมกล่องสรุปคำตอบยืนยันสด</li>
+          </ul>
+          <div class="slide-card-metrics">
+            <div class="scm-item"><span class="scm-val">+28%</span><div class="scm-lbl">Font Legibility</div></div>
+            <div class="scm-item"><span class="scm-val">22 px</span><div class="scm-lbl">Balanced Circles</div></div>
+            <div class="scm-item"><span class="scm-val">48 px</span><div class="scm-lbl">Apple HIG Touch Target</div></div>
+            <div class="scm-item"><span class="scm-val">100%</span><div class="scm-lbl">Mobile Responsive</div></div>
+          </div>
+        </div>
+
+        <!-- Phone Slot (Phone frame moves here) -->
+        <div id="studioPhoneSlot" style="position: relative;">
+          <!-- Callout Badges -->
+          <div class="studio-callout" id="calloutFont" style="top: 140px; left: -240px;">
+            <div class="studio-callout-title"><span>🔤</span> ขนาดฟอนต์ 12.2px</div>
+            <div class="studio-callout-desc">ขยายใหญ่ขึ้น +28% ตัดคำ 2 บรรทัด อ่านง่ายไม่ตกขอบ</div>
+          </div>
+          <div class="studio-callout" id="calloutCircle" style="top: 290px; right: -240px;">
+            <div class="studio-callout-title"><span>⚪</span> วงกลมขนาด 22px</div>
+            <div class="studio-callout-desc">ลดขนาด 31% สัดส่วนสมดุล คืนพื้นที่แนวตั้งให้ข้อความโจทย์</div>
+          </div>
+          <div class="studio-callout" id="calloutTouch" style="bottom: 180px; left: -240px;">
+            <div class="studio-callout-title"><span>👆</span> Touch Target 48px</div>
+            <div class="studio-callout-desc">ขยาย Hitbox สัมผัสรอบวงกลม แตะง่ายด้วยนิ้วโป้งตาม Apple HIG</div>
+          </div>
+          <div class="studio-callout" id="calloutGradient" style="bottom: 90px; right: -240px;">
+            <div class="studio-callout-title"><span>🌈</span> Likert 7 เฉดสี</div>
+            <div class="studio-callout-desc">ไล่ระดับสีเขียวถึงแดง พร้อมป้ายยืนยันคำตอบชัดเจน</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Floating Action Dock -->
+    <div class="studio-dock">
+      <button type="button" class="hub-btn primary" id="btnDownloadCapture" style="background:#0284c7; color:#fff; font-weight:700; border-color:#38bdf8;">
+        📸 ดาวน์โหลดภาพ PNG (HD)
+      </button>
+      <button type="button" class="hub-btn" id="btnCopyCapture" style="background:#1e293b; color:#38bdf8; font-weight:700; border-color:#38bdf8;">
+        📋 คัดลอกภาพลง Clipboard
+      </button>
+      <div style="font-size:0.75rem; color:#94a3b8; padding: 0 0.5rem; border-left:1px solid #334155;">
+        <span>🍎 <strong>ทริกแคปบน Mac:</strong> กด <code style="color:#38bdf8;">Cmd + Shift + 4</code> แล้วกด <code style="color:#38bdf8;">Spacebar</code> แล้วคลิกที่ตัวเครื่อง จะได้ภาพขอบมนพร้อมเงาคมชัด 100%!</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const phoneFrame = document.getElementById('phoneFrame');
+    const phoneIframe = document.getElementById('phoneIframe');
+    const clockEl = document.getElementById('statusBarClock');
+
+    // Live Clock in status bar
+    function updateClock() {
+      const now = new Date();
+      const hrs = String(now.getHours()).padStart(2, '0');
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      if (clockEl) clockEl.textContent = `${hrs}:${mins}`;
+    }
+    updateClock();
+    setInterval(updateClock, 30000);
+
+    // Device Model Dimensions
+    const devices = {
+      iphone15: { w: 393, h: 844, name: 'iPhone 15 Pro' },
+      compact:  { w: 360, h: 740, name: 'Compact Phone (360px)' },
+      galaxy:   { w: 412, h: 880, name: 'Samsung Galaxy S24' },
+      promax:   { w: 430, h: 920, name: 'iPhone Pro Max' }
+    };
+
+    let currentDeviceKey = 'iphone15';
+    let isLandscape = false;
+    let currentFontScale = 1;
+
+    function applyDevice() {
+      const dev = devices[currentDeviceKey] || devices.iphone15;
+      const w = isLandscape ? dev.h : dev.w;
+      const h = isLandscape ? dev.w : dev.h;
+      phoneFrame.style.width = `${w}px`;
+      phoneFrame.style.height = `${h}px`;
+    }
+
+    // Device Switcher Buttons
+    document.querySelectorAll('[data-device]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('[data-device]').forEach(b => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        currentDeviceKey = btn.dataset.device;
+        applyDevice();
+      });
+    });
+
+    // Font Scaler Buttons
+    document.querySelectorAll('[data-scale]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('[data-scale]').forEach(b => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        currentFontScale = Number(btn.dataset.scale) || 1;
+        sendToIframe({ action: 'setFontScale', scale: currentFontScale });
+      });
+    });
+
+    // Orientation Toggle
+    const rotateBtn = document.getElementById('btnToggleRotate');
+    if (rotateBtn) {
+      rotateBtn.addEventListener('click', () => {
+        isLandscape = !isLandscape;
+        rotateBtn.classList.toggle('is-active', isLandscape);
+        rotateBtn.innerHTML = isLandscape ? '🔄 สลับแนวนอน' : '🔄 สลับแนวตั้ง';
+        applyDevice();
+      });
+    }
+
+    // PostMessage Sender to Iframe
+    function sendToIframe(data) {
+      if (phoneIframe && phoneIframe.contentWindow) {
+        phoneIframe.contentWindow.postMessage(data, '*');
+      }
+    }
+
+    function jumpScreen(screenId) {
+      sendToIframe({ action: 'showScreen', screenId: screenId });
+      // Update screen pill highlights
+      document.querySelectorAll('.screen-pill[data-screen]').forEach(pill => {
+        const match = pill.dataset.screen === screenId && pill.dataset.assIndex === undefined;
+        pill.classList.toggle('is-active', match);
+      });
+    }
+
+    function jumpAssessment(assIndex) {
+      sendToIframe({ action: 'switchAssessment', assessmentIndex: assIndex });
+      document.querySelectorAll('.screen-pill[data-screen="assessment"]').forEach(pill => {
+        const match = Number(pill.dataset.assIndex) === Number(assIndex);
+        pill.classList.toggle('is-active', match);
+      });
+    }
+
+    function reloadIframe() {
+      if (phoneIframe) {
+        phoneIframe.src = phoneIframe.src;
+      }
+    }
+
+    // Screen Pills Click Handlers
+    document.querySelectorAll('.screen-pill[data-screen]').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.screen-pill[data-screen]').forEach(p => p.classList.remove('is-active'));
+        pill.classList.add('is-active');
+        const screen = pill.dataset.screen;
+        const assIdx = pill.dataset.assIndex;
+        if (screen === 'assessment' && assIdx !== undefined) {
+          jumpAssessment(Number(assIdx));
+        } else {
+          jumpScreen(screen);
+        }
+      });
+    });
+
+    // Auto-fill answers button
+    const autoFillBtn = document.getElementById('btnQuickAutoFill');
+    if (autoFillBtn) {
+      autoFillBtn.addEventListener('click', () => {
+        sendToIframe({ action: 'fillSampleAnswers' });
+        autoFillBtn.textContent = '✓ เติมคำตอบเรียบร้อย!';
+        setTimeout(() => {
+          autoFillBtn.textContent = '⚡ เติมคำตอบตัวอย่างอัตโนมัติ';
+        }, 2500);
+      });
+    }
+
+    // Reapply font scale when iframe finishes loading
+    phoneIframe.addEventListener('load', () => {
+      sendToIframe({ action: 'hidePreviewbar' });
+      if (currentFontScale !== 1) {
+        sendToIframe({ action: 'setFontScale', scale: currentFontScale });
+      }
+    });
+
+    // =========================================================================
+    // PRESENTATION & CAPTURE STUDIO LOGIC
+    // =========================================================================
+    const studioOverlay = document.getElementById('presentationStudio');
+    const studioStage = document.getElementById('studioStage');
+    const studioPhoneSlot = document.getElementById('studioPhoneSlot');
+    const studioSlideInfo = document.getElementById('studioSlideInfo');
+    const phoneSimWrap = document.querySelector('.phone-simulator-wrap');
+
+    const sceneDetails = {
+      portal: {
+        badge: "INET WELL-BEING PLATFORM // MOBILE ENTRY",
+        title: "หน้าแรก (Employee Portal)",
+        sub: "หน้าแรกของระบบออกแบบตามหลัก Ergonomics & Thumb Zone เข้าถึงง่าย ปุ่มเริ่มประเมินใหญ่ พร้อมแจ้งเตือน PDPA ชัดเจน",
+        bullets: [
+          "<strong>ตราสัญลักษณ์ INET และชื่อระบบ:</strong> จัดวางกะทัดรัด ไม่เบียดพื้นที่หน้าจอ",
+          "<strong>ปุ่มหลักเข้าทำแบบประเมิน:</strong> ขนาดใหญ่ 50px แตะง่ายด้วยนิ้วโป้งมือเดียว",
+          "<strong>การ์ดสรุปขอบเขต 3 แบบประเมิน:</strong> Burnout 22 ข้อ, เครียด 20 ข้อ, สภาวะทางอารมณ์ 9 ข้อ รวม 51 ข้อ",
+          "<strong>มาตรฐานความลับ PDPA:</strong> แจ้งเตือนสิทธิความลับของข้อมูลส่วนบุคคลชัดเจน"
+        ],
+        file: "./screenshots/02_portal_mobile_screen.png"
+      },
+      notice: {
+        badge: "INET WELL-BEING PLATFORM // NOTICE & PDPA",
+        title: "คำชี้แจงก่อนเริ่มทำแบบประเมิน (Employee Well-being Survey)",
+        sub: "ชี้แจงวัตถุประสงค์ทั่วไป ขอบเขต 3 แบบประเมิน และการคุ้มครองข้อมูลส่วนบุคคลตาม พ.ร.บ. PDPA พร้อมลิงก์นโยบายอย่างเป็นทางการ",
+        bullets: [
+          "<strong>วัตถุประสงค์ทั่วไป:</strong> เพื่อสำรวจความคิดเห็นและความรู้สึกทั่วไป ไม่ถือเป็นการวินิจฉัยทางการแพทย์",
+          "<strong>3 แบบประเมิน:</strong> Burnout 22 ข้อ, ความเครียด 20 ข้อ, สภาวะทางอารมณ์ 9 ข้อ (ใช้เวลาประมาณ 8-10 นาที)",
+          "<strong>มาตรฐานความลับ PDPA:</strong> HR/Admin ดูได้เฉพาะคะแนนรวมและระดับผล ไม่สามารถดูคำตอบรายข้อได้",
+          "<strong>อายุการเก็บรักษา:</strong> จัดเก็บข้อมูลระบุตัวตน 1 ปี และมีลิงก์นโยบายคุ้มครองข้อมูลส่วนบุคคลของ INET"
+        ],
+        file: "./screenshots/09_notice_pdpa_mobile_screen.png"
+      },
+      burnout: {
+        badge: "INET WELL-BEING PLATFORM // MOBILE UX INNOVATION",
+        title: "แบบประเมินภาวะหมดไฟ (Burnout Assessment)",
+        sub: "นวัตกรรมการตัดคำ 2 บรรทัด & วงกลมขนาด 22px สำหรับคำถาม 7 ระดับ ช่วยให้อ่านสบายตาบนจอมือถือทุกขนาด",
+        bullets: [
+          "<strong>ขนาดตัวอักษร 12.2px (+28%):</strong> ขยายใหญ่ขึ้น อ่านง่าย ไม่ตกขอบจอ",
+          "<strong>วงกลมขนาด 22px (-31%):</strong> สัดส่วนสมดุล คืนพื้นที่แนวตั้งให้โจทย์คำถาม",
+          "<strong>Touch Target 48px:</strong> แตะง่ายตามมาตรฐาน Apple Human Interface Guidelines",
+          "<strong>Likert 7 Shades:</strong> ไล่ระดับสีเขียวถึงแดง พร้อมกล่องสรุปคำตอบยืนยันสด"
+        ],
+        file: "./screenshots/03_burnout_likert_2lines_innovation.png"
+      },
+      stress: {
+        badge: "CLINICAL BENCHMARK // ST-5 STRESS SCALE",
+        title: "แบบประเมินความเครียด (Stress ST-5)",
+        sub: "แบบประเมินความเครียด 5 ระดับ (ST-5) ตัวเลือกกว้างขวาง แตะง่าย รองรับการบันทึกสถานะอัตโนมัติ",
+        bullets: [
+          "<strong>สเกล 5 ระดับมาตรฐาน:</strong> แทบไม่มี ➔ เป็นประจำทุกวัน ระยะห่างกว้าง อ่านง่าย",
+          "<strong>ระบบ Auto-Save:</strong> บันทึกคำตอบทันที ไม่สูญหายแม้มีสายโทรศัพท์เข้า",
+          "<strong>แถบวัดความคืบหน้า (Progress Bar):</strong> แสดงสถานะการตอบข้อคำถามอย่างต่อเนื่อง",
+          "<strong>ปุ่มถัดไปขนาดใหญ่:</strong> อยู่ในรัศมีการเอื้อมของนิ้วโป้ง (Thumb Zone)"
+        ],
+        file: "./screenshots/04_stress_and_depression_mobile.png"
+      },
+      depression: {
+        badge: "CLINICAL BENCHMARK // EMOTIONAL STATE (9Q)",
+        title: "แบบประเมินสภาวะทางอารมณ์ (9 ข้อ)",
+        sub: "เกณฑ์ประเมินมาตรฐานกรมสุขภาพจิต (9Q) สเกล 4 ระดับ ออกแบบเพื่อให้พนักงานตอบได้อย่างสบายใจ",
+        bullets: [
+          "<strong>สเกล 4 ระดับทางการแพทย์:</strong> ไม่เลย ➔ เกือบทุกวัน ภาษาเข้าใจง่าย",
+          "<strong>การออกแบบเน้นความสบายใจ:</strong> ไม่มีข้อความเชิงตัดสิน เน้นการดูแลสุขภาวะเชิงบวก",
+          "<strong>การเชื่อมต่อไปยังระบบช่วยเหลือ:</strong> หากพบความเสี่ยง มีระบบแนะนำสายด่วนทันที",
+          "<strong>รองรับการแสดงผลหน้าจอเล็ก:</strong> ทดสอบบน iPhone SE ไม่ตกขอบ 100%"
+        ],
+        file: "./screenshots/04_stress_and_depression_mobile.png"
+      },
+      result: {
+        badge: "EXECUTIVE DASHBOARD // ACTIONABLE INSIGHTS",
+        title: "แดชบอร์ดสรุปผลการประเมิน (Results Dashboard)",
+        sub: "ประมวลผลคะแนน 3 มิติ พร้อมแสดงระดับความเสี่ยงด้วยรหัสสี และคำแนะนำการดูแลตนเองเชิงปฏิบัติ",
+        bullets: [
+          "<strong>สรุปคะแนน 3 ด้าน:</strong> Burnout, ความเครียด, และสภาวะทางอารมณ์ แยกรายด้านชัดเจน",
+          "<strong>Traffic-Light Status:</strong> เขียว (ปกติ/ดี), เหลือง (เฝ้าระวัง), แดง (ควรปรึกษา)",
+          "<strong>Actionable Guidance:</strong> ข้อแนะนำดูแลใจที่ตรงตามระดับคะแนนเฉพาะบุคคล",
+          "<strong>Support Hotlines:</strong> สายด่วนสุขภาพจิต 1323 และช่องทางติดต่อศูนย์ INET Care"
+        ],
+        file: "./screenshots/05_results_dashboard_mobile.png"
+      }
+    };
+
+    let currentStudioScene = 'burnout';
+    let currentStudioBg = 'white';
+    let currentStudioLayout = 'phone';
+    let isCalloutsVisible = true;
+
+    function openStudio() {
+      if (!studioOverlay) return;
+      // Move phone frame into studio slot
+      studioPhoneSlot.appendChild(phoneFrame);
+      studioOverlay.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      setStudioScene(currentStudioScene);
+      applyStudioBackdrop(currentStudioBg);
+      applyStudioLayout(currentStudioLayout);
+    }
+
+    function closeStudio() {
+      if (!studioOverlay) return;
+      // Move phone frame back to normal wrap
+      phoneSimWrap.insertBefore(phoneFrame, phoneSimWrap.firstChild);
+      studioOverlay.style.display = 'none';
+      document.body.style.overflow = '';
+      applyDevice();
+    }
+
+    function setStudioScene(sceneKey) {
+      currentStudioScene = sceneKey;
+      // Update pills
+      document.querySelectorAll('[data-studio-scene]').forEach(btn => {
+        btn.classList.toggle('is-active', btn.dataset.studioScene === sceneKey);
+      });
+
+      // Update text in 16:9 Slide mode
+      const info = sceneDetails[sceneKey] || sceneDetails.burnout;
+      const bEl = document.getElementById('studioBadgeText');
+      const tEl = document.getElementById('studioTitleText');
+      const sEl = document.getElementById('studioSubText');
+      const lEl = document.getElementById('studioBulletsList');
+      if (bEl) bEl.textContent = info.badge;
+      if (tEl) tEl.textContent = info.title;
+      if (sEl) sEl.textContent = info.sub;
+      if (lEl) {
+        lEl.innerHTML = info.bullets.map(b => `<li><span style="color:#38bdf8;">✓</span> ${b}</li>`).join('');
+      }
+
+      // Send postMessage to change live screen inside iframe
+      if (sceneKey === 'portal') {
+        sendToIframe({ action: 'showScreen', screenId: 'portal' });
+      } else if (sceneKey === 'notice') {
+        sendToIframe({ action: 'showScreen', screenId: 'notice' });
+      } else if (sceneKey === 'burnout') {
+        sendToIframe({ action: 'switchAssessment', assessmentIndex: 0 });
+      } else if (sceneKey === 'stress') {
+        sendToIframe({ action: 'switchAssessment', assessmentIndex: 1 });
+      } else if (sceneKey === 'depression') {
+        sendToIframe({ action: 'switchAssessment', assessmentIndex: 2 });
+      } else if (sceneKey === 'result') {
+        sendToIframe({ action: 'fillSampleAnswers' });
+        sendToIframe({ action: 'showScreen', screenId: 'result' });
+      }
+    }
+
+    function applyStudioBackdrop(bgType) {
+      currentStudioBg = bgType;
+      studioStage.classList.remove('stage-bg-white', 'stage-bg-dark', 'stage-bg-gradient', 'stage-bg-transparent');
+      studioStage.classList.add(`stage-bg-${bgType}`);
+      document.querySelectorAll('[data-studio-bg]').forEach(btn => {
+        btn.classList.toggle('is-active', btn.dataset.studioBg === bgType);
+      });
+    }
+
+    function applyStudioLayout(layoutType) {
+      currentStudioLayout = layoutType;
+      document.querySelectorAll('[data-studio-layout]').forEach(btn => {
+        btn.classList.toggle('is-active', btn.dataset.studioLayout === layoutType);
+      });
+      if (layoutType === 'slide') {
+        studioStage.classList.add('studio-slide-card');
+        studioSlideInfo.style.display = 'flex';
+      } else {
+        studioStage.classList.remove('studio-slide-card');
+        studioSlideInfo.style.display = 'none';
+      }
+    }
+
+    function toggleCallouts() {
+      isCalloutsVisible = !isCalloutsVisible;
+      const callouts = document.querySelectorAll('.studio-callout');
+      callouts.forEach(c => c.style.display = isCalloutsVisible ? 'block' : 'none');
+      const btn = document.getElementById('btnToggleCallouts');
+      if (btn) {
+        btn.classList.toggle('is-active', isCalloutsVisible);
+        btn.textContent = isCalloutsVisible ? '🏷️ ป้ายอธิบาย: เปิด' : '🏷️ ป้ายอธิบาย: ปิด';
+      }
+    }
+
+    // Capture & Download function
+    function downloadStudioCapture() {
+      const scene = sceneDetails[currentStudioScene] || sceneDetails.burnout;
+      // If layout is slide, default download is cover showcase
+      const fallbackFile = currentStudioLayout === 'slide' ? './screenshots/01_cover_mobile_ux_showcase.png' : scene.file;
+
+      if (window.html2canvas) {
+        const targetEl = currentStudioLayout === 'slide' ? studioStage : phoneFrame;
+        const btn = document.getElementById('btnDownloadCapture');
+        if (btn) btn.textContent = '⏳ กำลังบันทึกภาพ...';
+
+        window.html2canvas(targetEl, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: currentStudioBg === 'white' ? '#ffffff' : (currentStudioBg === 'dark' ? '#090d16' : null)
+        }).then(canvas => {
+          const link = document.createElement('a');
+          link.download = `Mental-Health-Mobile-${currentStudioScene}-${currentStudioLayout}.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          if (btn) btn.textContent = '✓ บันทึกภาพเรียบร้อย!';
+          setTimeout(() => { if (btn) btn.textContent = '📸 ดาวน์โหลดภาพ PNG (HD)'; }, 2000);
+        }).catch(err => {
+          console.warn('html2canvas canvas tainted or blocked, using pre-rendered fallback image:', err);
+          // Fallback to pre-rendered image
+          const link = document.createElement('a');
+          link.download = `Mental-Health-Mobile-${currentStudioScene}.png`;
+          link.href = fallbackFile;
+          link.click();
+          if (btn) btn.textContent = '✓ ดาวน์โหลดภาพ HD สำเร็จ!';
+          setTimeout(() => { if (btn) btn.textContent = '📸 ดาวน์โหลดภาพ PNG (HD)'; }, 2000);
+        });
+      } else {
+        const link = document.createElement('a');
+        link.download = `Mental-Health-Mobile-${currentStudioScene}.png`;
+        link.href = fallbackFile;
+        link.click();
+      }
+    }
+
+    // Copy Image to Clipboard
+    async function copyStudioCapture() {
+      const btn = document.getElementById('btnCopyCapture');
+      const scene = sceneDetails[currentStudioScene] || sceneDetails.burnout;
+      const fallbackFile = currentStudioLayout === 'slide' ? './screenshots/01_cover_mobile_ux_showcase.png' : scene.file;
+
+      try {
+        const response = await fetch(fallbackFile);
+        const blob = await response.blob();
+        await navigator.clipboard.write([
+          new ClipboardItem({ 'image/png': blob })
+        ]);
+        if (btn) {
+          btn.textContent = '✓ คัดลอกลง Clipboard แล้ว! (กด Cmd+V แปะได้เลย)';
+          setTimeout(() => { btn.textContent = '📋 คัดลอกภาพลง Clipboard'; }, 2500);
+        }
+      } catch (err) {
+        alert('💡 คำแนะนำการแคปภาพบน Mac:\n\n1. กด Cmd + Shift + 4\n2. กด Spacebar 1 ครั้ง (เคอร์เซอร์จะเปลี่ยนเป็นกล้อง 📷)\n3. คลิกที่ตัวเครื่องโทรศัพท์ จะได้ภาพขอบมนพร้อมเงาตกกระทบสมจริง 100%!');
+      }
+    }
+
+    // Attach Studio Listeners
+    document.getElementById('btnToggleStudio')?.addEventListener('click', openStudio);
+    document.getElementById('btnQuickStudio')?.addEventListener('click', openStudio);
+    document.getElementById('btnCloseStudio')?.addEventListener('click', closeStudio);
+    document.getElementById('btnToggleCallouts')?.addEventListener('click', toggleCallouts);
+    document.getElementById('btnDownloadCapture')?.addEventListener('click', downloadStudioCapture);
+    document.getElementById('btnCopyCapture')?.addEventListener('click', copyStudioCapture);
+
+    document.querySelectorAll('[data-studio-scene]').forEach(btn => {
+      btn.addEventListener('click', () => setStudioScene(btn.dataset.studioScene));
+    });
+
+    document.querySelectorAll('[data-studio-bg]').forEach(btn => {
+      btn.addEventListener('click', () => applyStudioBackdrop(btn.dataset.studioBg));
+    });
+
+    document.querySelectorAll('[data-studio-layout]').forEach(btn => {
+      btn.addEventListener('click', () => applyStudioLayout(btn.dataset.studioLayout));
+    });
+
+    // Close on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && studioOverlay && studioOverlay.style.display !== 'none') {
+        closeStudio();
+      }
+    });
+  </script>
+</body>
+</html>
