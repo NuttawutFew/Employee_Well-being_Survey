@@ -67,7 +67,7 @@ function createAdminAssessmentsRouter({ adminService, sessionService, auditServi
   });
 
   // GET /api/admin/assessments - Paginated list of assessments with multidimensional filters, search and sort
-  router.get('/', async (req, res, next) => {
+  router.get(['/', ''], async (req, res, next) => {
     try {
       const {
         page = 1,

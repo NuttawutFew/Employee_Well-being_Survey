@@ -38,22 +38,33 @@ function createApp({ db = null, auditService = null, exportService = null, sessi
   const isAdminRole = serviceRole === 'admin' || serviceRole === 'all';
 
   // Common Health check
-  app.use('/api', createHealthRouter({ db }));
+  const healthRouter = createHealthRouter({ db });
+  app.use('/api', healthRouter);
+  app.use('/health', healthRouter);
 
   // Employee/User assessment routes
   if (isUserRole) {
-    app.use('/api/assessment', createAssessmentRouter({ sessionService: activeSessionService }));
+    const assessmentRouter = createAssessmentRouter({ sessionService: activeSessionService });
+    app.use('/api/assessment', assessmentRouter);
+    app.use('/assessment', assessmentRouter);
   }
 
   // Admin routes
   if (isAdminRole) {
-    app.use('/api/admin/auth', createAdminAuthRouter({ adminService }));
-    app.use('/api/admin/assessments', createAdminAssessmentsRouter({ adminService, sessionService: activeSessionService, auditService: activeAuditService }));
-    app.use('/api/admin/dashboard', createAdminDashboardRouter({ adminService, sessionService: activeSessionService }));
-    app.use('/api/admin/export', createAdminExportRouter({ adminService, sessionService: activeSessionService, exportService: activeExportService, auditService: activeAuditService }));
-    app.use('/api/admin/audit-logs', createAdminAuditRouter({ adminService, auditService: activeAuditService, retentionWorker: activeRetentionWorker }));
-    app.use('/api/admin/database', createAdminDatabaseRouter({ adminService, db }));
-    app.use('/api/admin/users', createAdminUsersRouter({ adminService, auditService: activeAuditService }));
+    const adminRoutes = [
+      ['/admin/auth', createAdminAuthRouter({ adminService })],
+      ['/admin/assessments', createAdminAssessmentsRouter({ adminService, sessionService: activeSessionService, auditService: activeAuditService })],
+      ['/admin/dashboard', createAdminDashboardRouter({ adminService, sessionService: activeSessionService })],
+      ['/admin/export', createAdminExportRouter({ adminService, sessionService: activeSessionService, exportService: activeExportService, auditService: activeAuditService })],
+      ['/admin/audit-logs', createAdminAuditRouter({ adminService, auditService: activeAuditService, retentionWorker: activeRetentionWorker })],
+      ['/admin/database', createAdminDatabaseRouter({ adminService, db })],
+      ['/admin/users', createAdminUsersRouter({ adminService, auditService: activeAuditService })]
+    ];
+
+    for (const [routePath, router] of adminRoutes) {
+      app.use(`/api${routePath}`, router);
+      app.use(routePath, router);
+    }
   }
 
   // Root route

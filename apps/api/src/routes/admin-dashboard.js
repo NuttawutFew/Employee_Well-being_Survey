@@ -17,7 +17,7 @@ function createAdminDashboardRouter({ adminService, sessionService }) {
   router.use(adminAuth);
 
   // GET /api/admin/dashboard - Aggregate Dashboard with Small-Cohort Suppression (n < 5)
-  router.get('/', async (req, res, next) => {
+  router.get(['/', ''], async (req, res, next) => {
     try {
       const filters = {
         dateFrom: req.query.dateFrom,

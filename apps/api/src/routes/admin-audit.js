@@ -8,7 +8,7 @@ function createAdminAuditRouter({ adminService, auditService, retentionWorker })
   router.use(adminAuth);
 
   // 1. GET /api/admin/audit-logs - Query audit trail
-  router.get('/', async (req, res, next) => {
+  router.get(['/', ''], async (req, res, next) => {
     try {
       const { actor, action, role, search, status, page = 1, limit = 50 } = req.query;
       const result = await auditService.getEvents({

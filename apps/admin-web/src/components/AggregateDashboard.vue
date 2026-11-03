@@ -238,7 +238,9 @@ export default {
 
         const token = localStorage.getItem('admin_token');
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
-        const res = await fetch(`/api/admin/dashboard?${queryParams.toString()}`, { headers });
+        const qStr = queryParams.toString();
+        const url = qStr ? `/api/admin/dashboard?${qStr}` : '/api/admin/dashboard';
+        const res = await fetch(url, { headers });
         if (!res.ok) {
           throw new Error(`ไม่สามารถโหลดสถิติได้ (HTTP ${res.status})`);
         }

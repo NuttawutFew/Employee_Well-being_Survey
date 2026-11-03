@@ -11,7 +11,7 @@ function createAdminUsersRouter({ adminService, auditService }) {
   router.use(requireSuperAdmin);
 
   // 1. List all admins (Step 10)
-  router.get('/', async (req, res, next) => {
+  router.get(['/', ''], async (req, res, next) => {
     try {
       const admins = await adminService.listAdmins();
       res.json({
@@ -25,7 +25,7 @@ function createAdminUsersRouter({ adminService, auditService }) {
   });
 
   // 2. Create new admin (Step 10: เพิ่ม สิทธิ Admin)
-  router.post('/', async (req, res, next) => {
+  router.post(['/', ''], async (req, res, next) => {
     try {
       const { username, password, role = 'ADMIN', permissions = [], fullName, email } = req.body || {};
       const newAdmin = await adminService.createAdmin({
