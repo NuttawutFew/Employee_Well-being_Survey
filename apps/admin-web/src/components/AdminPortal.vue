@@ -5,13 +5,13 @@
         <span class="shield-icon">👑</span>
         <span>Super Admin Portal</span>
       </div>
-      <h1 class="portal-title">Portal ตรวจสอบสุขภาพใจ</h1>
+      <h1 class="portal-title">Portal Employee Well-being Survey</h1>
       <p class="portal-subtitle">
-        ยินดีต้อนรับ <strong>{{ adminName }}</strong> สู่ศูนย์กลางการบริหารจัดการระบบประเมินสุขภาพใจองค์กร (Super Admin สามารถดำเนินการได้ทุกส่วนของระบบ)
+        ยินดีต้อนรับ <strong>{{ adminName }}</strong> สู่ศูนย์กลางการบริหารจัดการระบบ Employee Well-being Survey องค์กร (Super Admin สามารถดำเนินการได้ทุกส่วนของระบบ)
       </p>
     </div>
 
-    <!-- 2 Navigation Choices: Dashboard vs กำหนดสิทธิการเข้าถึงของ Admin -->
+    <!-- Navigation Choices: Dashboard vs กำหนดสิทธิการเข้าถึงของ Admin vs Audit Logs -->
     <div class="portal-grid">
       <!-- Card 1: Dashboard ตรวจสอบสุขภาพใจ (Step 9) -->
       <div class="portal-card card-dashboard" @click="$emit('select-view', 'dashboard')">
@@ -20,9 +20,9 @@
         </div>
         <div class="card-body">
           <div class="card-tag">ระบบสถิติและรายงาน</div>
-          <h2>Dashboard ตรวจสอบสุขภาพใจ</h2>
+          <h2>Dashboard Employee Well-being Survey</h2>
           <p>
-            วิเคราะห์แนวโน้มสุขภาพจิตของบุคลากรทั้งองค์กร, ตัวชี้วัด 5 มิติ (Burnout, เครียด, RQ, ซึมเศร้า 9Q, 2Q Plus), กรองข้อมูลเชิงลึก (Filter) และส่งออกรายงาน (Export Excel / CSV)
+            วิเคราะห์แนวโน้มสุขภาพจิตของบุคลากรทั้งองค์กร, ตัวชี้วัด 3 มิติ (Burnout, เครียด ST-20, ซึมเศร้า 9Q), กรองข้อมูลเชิงลึก (Filter) และส่งออกรายงาน (Export Excel / CSV)
           </p>
           <ul class="feature-bullets">
             <li>✓ ตรวจสอบสถิติภาพรวมและกลุ่มเสี่ยง</li>
@@ -59,6 +59,29 @@
           <button class="btn-enter-card btn-secondary">จัดการสิทธิ Admin →</button>
         </div>
       </div>
+
+      <!-- Card 3: ตรวจสอบประวัติการใช้งาน (Audit Logs) -->
+      <div class="portal-card card-audit-logs" @click="$emit('select-view', 'audit-logs')">
+        <div class="card-icon-wrap green">
+          <span class="card-icon">📜</span>
+        </div>
+        <div class="card-body">
+          <div class="card-tag tag-green">ความปลอดภัยและการตรวจสอบ</div>
+          <h2>ประวัติการใช้งาน (Audit Logs)</h2>
+          <p>
+            ตรวจสอบบันทึกกิจกรรมและประวัติการทำงานของผู้ดูแลระบบทั้งหมด (Admin &amp; Super Admin Audit Trail) เช่น การเข้าดูข้อมูลที่ละเอียดอ่อน, การ Export รายงาน, การแก้ไขสิทธิ์
+          </p>
+          <ul class="feature-bullets">
+            <li>✓ บันทึก Real-time ทุกการกระทำของผู้ดูแลระบบ</li>
+            <li>✓ บันทึก Actor, IP Address, Timestamp, Purpose</li>
+            <li>✓ ตรวจสอบการเข้าถึงข้อมูลอ่อนไหวตาม PDPA &amp; ISO 27001</li>
+            <li>✓ ส่งออกรายงาน Audit Trail ย้อนหลัง (Excel / CSV)</li>
+          </ul>
+        </div>
+        <div class="card-footer">
+          <button class="btn-enter-card btn-green">เข้าสู่ Audit Logs →</button>
+        </div>
+      </div>
     </div>
 
     <!-- Quick Switch to Individual Results Table -->
@@ -67,7 +90,7 @@
         <span class="shortcut-icon">📋</span>
         <div>
           <strong>ตารางผลการประเมินรายบุคคล (Individual Results Table)</strong>
-          <p>ตรวจสอบผลการประเมินสุขภาพใจรายบุคคล พร้อมระบบ Masking ข้อมูลส่วนบุคคล (PDPA)</p>
+          <p>ตรวจสอบผลการประเมินสุขภาพใจรายบุคคล พร้อมระบบยืนยันวัตถุประสงค์ PDPA และ Unmasked View สำหรับ HR</p>
         </div>
       </div>
       <button class="btn-shortcut" @click="$emit('select-view', 'results')">
@@ -173,6 +196,10 @@ export default {
   color: #ffffff;
 }
 
+.card-audit-logs:hover .btn-enter-card {
+  background: #047857;
+}
+
 .card-icon-wrap {
   width: 56px;
   height: 56px;
@@ -190,6 +217,23 @@ export default {
 
 .card-permissions .card-icon-wrap {
   background: #faf5ff;
+}
+
+.card-audit-logs .card-icon-wrap,
+.card-icon-wrap.green {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.card-tag.tag-green {
+  color: #059669;
+}
+
+.btn-enter-card.btn-green {
+  background: #059669;
+}
+.btn-enter-card.btn-green:hover {
+  background: #047857;
 }
 
 .card-icon {

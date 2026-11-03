@@ -117,24 +117,79 @@
           </div>
         </div>
 
-        <div class="options-grid" role="radiogroup" :aria-label="q.text">
-          <label
-            v-for="opt in assessment.options"
-            :key="opt.code"
-            class="option-tile"
-            :class="{ 'is-selected': localAnswers[q.code] === opt.code }"
+        <div class="scale-rating-wrapper">
+          <div class="scale-track" role="radiogroup" :aria-label="'ระดับคำตอบสำหรับข้อที่ ' + (idx + 1)">
+            <div class="scale-track-line" aria-hidden="true"></div>
+            <label
+              v-for="(opt, optIdx) in assessment.options"
+              :key="opt.code !== undefined ? opt.code : optIdx"
+              class="scale-item"
+              :class="{ 'is-selected': isOptSelected(q.code, opt.code) }"
+              :style="getScaleItemStyle(optIdx, assessment.options.length)"
+              :title="opt.label"
+            >
+              <input
+                type="radio"
+                :name="q.code"
+                :value="opt.code"
+                :checked="isOptSelected(q.code, opt.code)"
+                class="sr-only"
+                @change="onSelectAnswer(q.code, opt.code)"
+              />
+              <div class="scale-label-wrap">
+                <span class="scale-label" v-html="formatScaleLabel(opt.label)"></span>
+              </div>
+              <div class="scale-circle-wrap">
+                <span class="scale-circle">
+                  <span class="scale-circle-dot"></span>
+                </span>
+              </div>
+            </label>
+          </div>
+          <div
+            class="scale-live-feedback"
+            :class="{ 'has-value': localAnswers[q.code] !== undefined && localAnswers[q.code] !== null }"
+            :style="getLiveFeedbackStyle(q.code)"
           >
-            <input
-              type="radio"
-              :name="q.code"
-              :value="opt.code"
-              :checked="localAnswers[q.code] === opt.code"
-              class="sr-only"
-              @change="onSelectAnswer(q.code, opt.code)"
-            />
-            <span class="opt-indicator"></span>
-            <span class="opt-label">{{ opt.label }}</span>
-          </label>
+            <span v-if="localAnswers[q.code] !== undefined && localAnswers[q.code] !== null" class="feedback-badge">
+              ✓ คำตอบที่เลือก: <strong :style="{ color: getSelectedStepInfo(q.code)?.dark }">{{ getSelectedOptionLabel(q.code) }}</strong>
+            </span>
+            <span v-else class="feedback-placeholder">
+              👆 โปรดแตะเลือกวงกลมด้านบน
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feedback Section (ส่วนสุดท้าย: คำแนะนำและข้อเสนอแนะเพื่อการปรับปรุง) -->
+      <div v-if="assessmentIndex === totalAssessments - 1" class="mh-assessment-feedback-wrap">
+        <div class="feedback-card">
+          <div class="feedback-card-header">
+            <div class="feedback-icon-box">💬</div>
+            <div class="feedback-card-title-group">
+              <div class="feedback-card-badge-row">
+                <span class="feedback-section-badge">ส่วนสุดท้าย</span>
+                <span class="feedback-optional-pill">ไม่บังคับตอบ (Optional)</span>
+              </div>
+              <h3 class="feedback-card-title">คำแนะนำและข้อเสนอแนะหากต้องการปรับปรุง</h3>
+            </div>
+          </div>
+          <p class="feedback-invitation-quote">
+            “เรายินดีรับฟังทุกข้อเสนอแนะ เพื่อนำไปปรับปรุงและพัฒนาให้ดียิ่งขึ้น”
+          </p>
+          <div class="feedback-input-wrapper">
+            <textarea
+              v-model="feedbackText"
+              class="feedback-textarea"
+              rows="3"
+              maxlength="500"
+              placeholder="พิมพ์ข้อความสั้นๆ หรือข้อเสนอแนะของคุณที่นี่ (เช่น ข้อแนะนำเกี่ยวกับการทำงาน บรรยากาศ หรือการดูแลสุขภาพใจในองค์กร)..."
+            ></textarea>
+            <div class="feedback-helper-row">
+              <span class="feedback-hint">💡 ตอบข้อความสั้นๆ หรือเว้นว่างไว้ได้ตามความสะดวกของท่าน</span>
+              <span class="feedback-counter">{{ feedbackText.length }}/500 ตัวอักษร</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -207,16 +262,21 @@ export default {
     initialAnswers: {
       type: Object,
       default: () => ({})
+    },
+    initialFeedback: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
       localAnswers: { ...this.initialAnswers },
+      feedbackText: this.initialFeedback || '',
       validationError: false,
       missingQuestions: [],
       stepNames: [
         'ภาวะหมดไฟ (Burnout)',
-        'ความเครียด (Stress)',
+        'ความเครียด (ST-20)',
         'โรคซึมเศร้า (9Q)'
       ]
     };
@@ -253,11 +313,123 @@ export default {
           this.missingQuestions = [];
         }
       }
+    },
+    initialFeedback(newVal) {
+      this.feedbackText = newVal || '';
+    },
+    feedbackText(newVal) {
+      this.$emit('feedback-updated', newVal);
     }
   },
   methods: {
     isMissing(code) {
       return this.missingQuestions.includes(code);
+    },
+    isOptSelected(qCode, optCode) {
+      if (this.localAnswers[qCode] === undefined || this.localAnswers[qCode] === null) return false;
+      return String(this.localAnswers[qCode]) === String(optCode);
+    },
+    getScaleColor(index, total) {
+      const stops7 = [
+        { color: '#10b981', dark: '#047857', light: '#ecfdf5', border: '#6ee7b7', text: '#065f46', glow: 'rgba(16, 185, 129, 0.35)', ring: 'rgba(16, 185, 129, 0.25)' }, // 0
+        { color: '#22c55e', dark: '#15803d', light: '#f0fdf4', border: '#86efac', text: '#166534', glow: 'rgba(34, 197, 94, 0.35)', ring: 'rgba(34, 197, 94, 0.25)' }, // 1
+        { color: '#84cc16', dark: '#4d7c0f', light: '#f7fee7', border: '#bef264', text: '#3f6212', glow: 'rgba(132, 204, 22, 0.35)', ring: 'rgba(132, 204, 22, 0.25)' }, // 2
+        { color: '#eab308', dark: '#a16207', light: '#fefce8', border: '#fde047', text: '#854d0e', glow: 'rgba(234, 179, 8, 0.35)', ring: 'rgba(234, 179, 8, 0.25)' }, // 3
+        { color: '#f59e0b', dark: '#b45309', light: '#fffbeb', border: '#fcd34d', text: '#92400e', glow: 'rgba(245, 158, 11, 0.35)', ring: 'rgba(245, 158, 11, 0.25)' }, // 4
+        { color: '#f97316', dark: '#c2410c', light: '#fff7ed', border: '#fdba74', text: '#9a3412', glow: 'rgba(249, 115, 22, 0.35)', ring: 'rgba(249, 115, 22, 0.25)' }, // 5
+        { color: '#ef4444', dark: '#b91c1c', light: '#fef2f2', border: '#fca5a5', text: '#991b1b', glow: 'rgba(239, 68, 68, 0.35)', ring: 'rgba(239, 68, 68, 0.25)' }, // 6
+      ];
+      if (total === 7) return stops7[index] || stops7[0];
+      if (total === 4) {
+        const stops4 = [stops7[0], stops7[2], stops7[4], stops7[6]];
+        return stops4[index] || stops4[0];
+      }
+      if (total === 2) {
+        return [stops7[0], stops7[6]][index] || stops7[0];
+      }
+      const ratio = (total > 1) ? index / (total - 1) : 0;
+      const stopIndex = Math.min(6, Math.max(0, Math.round(ratio * 6)));
+      return stops7[stopIndex];
+    },
+    getScaleItemStyle(index, total) {
+      const step = this.getScaleColor(index, total);
+      return {
+        '--step-color': step.color,
+        '--step-dark': step.dark,
+        '--step-light': step.light,
+        '--step-border': step.border,
+        '--step-text': step.text,
+        '--step-glow': step.glow,
+        '--step-ring': step.ring
+      };
+    },
+    formatScaleLabel(text) {
+      if (!text) return '';
+      const line = (t, extraClass = '') => `<span class="scale-line ${extraClass}">${t}</span>`;
+      if (text === 'ไม่เคยรู้สึกเช่นนั้นเลย') {
+        return line('ไม่เคย') + line('รู้สึก') + line('เช่นนั้นเลย');
+      }
+      if (text.includes('ไม่เคยรู้สึก')) {
+        const sub = text.replace('ไม่เคยรู้สึก', '').trim();
+        return line('ไม่เคย') + line('รู้สึก') + line(sub || '&nbsp;');
+      }
+      if (text.startsWith('ปีละ ')) {
+        const num = text.replace('ปีละ ', '').replace(' ครั้ง', '').trim();
+        return line('ปีละ') + line(num) + line('ครั้ง');
+      }
+      if (text.startsWith('เดือนละ ')) {
+        const num = text.replace('เดือนละ ', '').replace(' ครั้ง', '').trim();
+        return line('เดือนละ') + line(num) + line('ครั้ง');
+      }
+      if (text.startsWith('สัปดาห์ละ ')) {
+        const num = text.replace('สัปดาห์ละ ', '').replace(' ครั้ง', '').trim();
+        return line('สัปดาห์ละ') + line(num) + line('ครั้ง');
+      }
+      if (text === 'ทุกวัน') {
+        return line('&nbsp;') + line('ทุกวัน') + line('&nbsp;');
+      }
+      if (text === 'เป็นครั้งคราว') return line('เป็น') + line('ครั้งคราว') + line('&nbsp;');
+      if (text === 'เป็นบ่อย ๆ' || text === 'เป็นบ่อย') return line('เป็น') + line('บ่อย ๆ') + line('&nbsp;');
+      if (text === 'เป็นประจำ') return line('เป็น') + line('ประจำ') + line('&nbsp;');
+      if (text === 'จริงบางครั้ง') return line('จริง') + line('บางครั้ง') + line('&nbsp;');
+      if (text === 'ค่อนข้างจริง') return line('ค่อนข้าง') + line('จริง') + line('&nbsp;');
+      if (text === 'ไม่มีเลย (<1 วัน)') return line('ไม่มีเลย') + line('(&lt;1 วัน)') + line('&nbsp;');
+      if (text === 'เป็นบางวัน (1–7 วัน)') return line('เป็นบางวัน') + line('(1–7 วัน)') + line('&nbsp;');
+      if (text === 'เป็นบ่อย (>7 วัน)') return line('เป็นบ่อย') + line('(&gt;7 วัน)') + line('&nbsp;');
+      if (text === 'เป็นทุกวัน') return line('&nbsp;') + line('เป็นทุกวัน') + line('&nbsp;');
+      if (text === 'ไม่มีเลย') return line('&nbsp;') + line('ไม่มีเลย') + line('&nbsp;');
+      if (text === 'น้อยมาก') return line('&nbsp;') + line('น้อยมาก') + line('&nbsp;');
+      if (text === 'ปานกลาง') return line('&nbsp;') + line('ปานกลาง') + line('&nbsp;');
+      if (text === 'มาก') return line('&nbsp;') + line('มาก') + line('&nbsp;');
+      if (text === 'มากที่สุด') return line('&nbsp;') + line('มากที่สุด') + line('&nbsp;');
+
+      const parts = text.split(' ');
+      if (parts.length >= 2) {
+        return parts.map(p => line(p)).join('');
+      }
+      return line(text, 'single-line');
+    },
+    getSelectedOptionLabel(qCode) {
+      const val = this.localAnswers[qCode];
+      if (val === undefined || val === null) return '';
+      const opt = this.assessment.options.find(o => String(o.code) === String(val));
+      return opt ? opt.label : '';
+    },
+    getSelectedStepInfo(qCode) {
+      const val = this.localAnswers[qCode];
+      if (val === undefined || val === null) return null;
+      const idx = this.assessment.options.findIndex(o => String(o.code) === String(val));
+      if (idx === -1) return null;
+      return this.getScaleColor(idx, this.assessment.options.length);
+    },
+    getLiveFeedbackStyle(qCode) {
+      const step = this.getSelectedStepInfo(qCode);
+      if (!step) return {};
+      return {
+        background: step.light,
+        borderColor: step.border,
+        color: step.text
+      };
     },
     onSelectAnswer(questionCode, optionCode) {
       this.$set(this.localAnswers, questionCode, optionCode);
@@ -306,10 +478,14 @@ export default {
           this.$set(this.localAnswers, q.code, opt.code);
         }
       }
+      if (this.assessmentIndex === this.totalAssessments - 1 && !this.feedbackText) {
+        this.feedbackText = 'แบบประเมินใช้งานง่าย สะดวกดีครับ';
+      }
       this.validationError = false;
       this.missingQuestions = [];
       this.$emit('answers-updated', {
-        answers: this.localAnswers
+        answers: this.localAnswers,
+        feedback: this.feedbackText
       });
     },
     validateAndProceed() {
@@ -334,6 +510,7 @@ export default {
       this.missingQuestions = [];
       this.$emit('next', {
         answers: this.localAnswers,
+        feedback: this.feedbackText,
         isComplete: true
       });
     }
@@ -708,76 +885,383 @@ export default {
 }
 
 /* ==========================================================================
-   Option Tiles (Responsive Touch Targets)
+   Scale Rating Track & Colored Circles (Matching Prototype)
    ========================================================================== */
-.options-grid {
-  display: grid;
-  grid-template-columns: 1fr;
+.scale-rating-wrapper {
+  margin-top: 0.85rem;
+  display: flex;
+  flex-direction: column;
   gap: 0.65rem;
 }
+.scale-track {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 4px;
+  padding: 6px 4px;
+  margin: 0.25rem 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.scale-track-line {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+  height: 4px;
+  background: linear-gradient(90deg, #10b981 0%, #84cc16 28%, #eab308 50%, #f97316 75%, #ef4444 100%);
+  border-radius: 999px;
+  z-index: 1;
+  pointer-events: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+.scale-item {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  padding: 6px 2px 6px 2px;
+  border-radius: 10px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+}
+.scale-item::after {
+  content: '';
+  position: absolute;
+  inset: -4px 0 -4px 0;
+  z-index: 1;
+}
+.scale-item:hover {
+  background: var(--step-light, rgba(239, 246, 255, 0.6));
+}
+.scale-label-wrap {
+  min-height: 3.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 6px;
+  width: 100%;
+}
+.scale-label {
+  font-size: 0.82rem;
+  line-height: 1.25;
+  color: #334155;
+  text-align: center;
+  font-weight: 300;
+  transition: color 0.15s ease, font-weight 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+::v-deep .scale-line {
+  display: block;
+  white-space: nowrap !important;
+  overflow: visible;
+  text-align: center;
+  line-height: 1.25;
+  font-weight: 300;
+  letter-spacing: 0;
+}
+::v-deep .scale-line.single-line {
+  line-height: 2.4;
+}
+.scale-item:hover .scale-label,
+.scale-item:hover ::v-deep .scale-line {
+  color: var(--step-text, #1d4ed8);
+  font-weight: 400;
+}
+.scale-circle-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  height: 28px;
+}
+.scale-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2.5px solid var(--step-color, #cbd5e1);
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06), 0 0 0 2px var(--step-light, transparent);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.scale-circle-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ffffff;
+  transform: scale(0);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: block;
+}
+.scale-item:hover .scale-circle {
+  border-color: var(--step-dark, #3b82f6);
+  background: var(--step-light, #eff6ff);
+  transform: translateY(-2px) scale(1.15);
+  box-shadow: 0 4px 10px var(--step-glow, rgba(37, 99, 235, 0.25));
+}
+.scale-item.is-selected {
+  background: var(--step-light, rgba(239, 246, 255, 0.85));
+}
+.scale-item.is-selected .scale-label,
+.scale-item.is-selected ::v-deep .scale-line {
+  color: var(--step-dark, #1d4ed8);
+  font-weight: 500;
+}
+.scale-item.is-selected .scale-circle {
+  background: linear-gradient(135deg, var(--step-color, #2563eb) 0%, var(--step-dark, #1d4ed8) 100%);
+  border-color: var(--step-dark, #1d4ed8);
+  transform: translateY(-2px) scale(1.2);
+  box-shadow: 0 0 0 3px var(--step-ring, rgba(37, 99, 235, 0.22)), 0 4px 12px var(--step-glow, rgba(37, 99, 235, 0.3));
+}
+.scale-item.is-selected .scale-circle-dot {
+  background: #ffffff;
+  transform: scale(1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.scale-item input:focus-visible + .scale-label-wrap + .scale-circle-wrap .scale-circle {
+  outline: 3px solid var(--step-color, #3b82f6);
+  outline-offset: 3px;
+}
+.scale-live-feedback {
+  padding: 7px 16px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1.5px dashed #cbd5e1;
+  font-size: 0.86rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  min-height: 38px;
+  text-align: center;
+}
+.scale-live-feedback.has-value {
+  background: #eff6ff;
+  border: 1.5px solid #bfdbfe;
+  color: #1e40af;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+.feedback-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+.feedback-badge strong {
+  color: #1d4ed8;
+  font-weight: 800;
+}
+.feedback-placeholder {
+  color: #94a3b8;
+  font-size: 0.82rem;
+}
 
-@media (min-width: 640px) {
-  .options-grid {
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 0.75rem;
+/* Feedback Section (ส่วนสุดท้าย: คำแนะนำและข้อเสนอแนะเพื่อการปรับปรุง) */
+.feedback-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+  border: 1.5px solid #bae6fd;
+  border-radius: 16px;
+  padding: 1.4rem 1.5rem;
+  margin-top: 1.25rem;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.06);
+  transition: all 0.2s ease;
+}
+.feedback-card:hover {
+  border-color: #7dd3fc;
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.1);
+}
+.feedback-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+.feedback-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #e0f2fe;
+  border: 1.5px solid #7dd3fc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  color: #0284c7;
+  box-shadow: 0 2px 5px rgba(2, 132, 199, 0.12);
+}
+.feedback-card-title-group {
+  flex: 1;
+}
+.feedback-card-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+  flex-wrap: wrap;
+}
+.feedback-section-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #0369a1;
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+  padding: 0.15rem 0.55rem;
+  border-radius: 6px;
+}
+.feedback-optional-pill {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #64748b;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+}
+.feedback-card-title {
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.4;
+}
+.feedback-invitation-quote {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #0369a1;
+  background: rgba(255, 255, 255, 0.85);
+  border-left: 3.5px solid #0284c7;
+  padding: 0.75rem 1rem;
+  border-radius: 0 10px 10px 0;
+  margin: 0.65rem 0 1rem 0;
+  line-height: 1.55;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+.feedback-input-wrapper {
+  position: relative;
+}
+.feedback-textarea {
+  width: 100%;
+  min-height: 96px;
+  padding: 0.85rem 1rem;
+  font-size: 0.92rem;
+  color: #1e293b;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+  resize: vertical;
+  line-height: 1.55;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+.feedback-textarea:focus {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+.feedback-textarea::placeholder {
+  color: #94a3b8;
+  font-weight: 300;
+}
+.feedback-helper-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  font-size: 0.82rem;
+  color: #64748b;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.feedback-hint {
+  color: #64748b;
+}
+.feedback-counter {
+  font-weight: 600;
+  color: #0369a1;
+  font-family: monospace;
+}
+
+@media (max-width: 640px) {
+  .question-card {
+    padding: 0.95rem 0.45rem;
+  }
+  .scale-track {
+    gap: 3px;
+    padding: 4px 0;
+    margin: 0.25rem 0;
+  }
+  .scale-track-line {
+    left: 14px;
+    right: 14px;
+    bottom: 19px;
+    height: 3.5px;
+  }
+  .scale-item {
+    padding: 4px 1px 6px 1px;
+    border-radius: 8px;
+    background: transparent !important;
+    border: none !important;
+  }
+  .scale-label-wrap {
+    min-height: 2.75rem;
+    margin-bottom: 4px;
+  }
+  .scale-label {
+    font-size: 0.65rem;
+    line-height: 1.15;
+  }
+  ::v-deep .scale-line {
+    font-size: 0.65rem;
+    line-height: 1.15;
+  }
+  ::v-deep .scale-line.single-line {
+    line-height: 1.8;
+  }
+  .scale-circle-wrap {
+    height: 22px;
+  }
+  .scale-circle {
+    width: 22px;
+    height: 22px;
+    border-width: 2px;
+  }
+  .scale-circle-dot {
+    width: 8px;
+    height: 8px;
+  }
+  .scale-live-feedback {
+    font-size: 0.82rem;
+    padding: 6px 10px;
+    min-height: 34px;
   }
 }
 
-.option-tile {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  min-height: 52px;
-  padding: 0.85rem 1.15rem;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 12px;
-  background: #ffffff;
-  cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
-  user-select: none;
-  box-sizing: border-box;
-}
-
-.option-tile:hover {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-
-.option-tile:active {
-  transform: scale(0.985);
-}
-
-.option-tile.is-selected {
-  background: #eff6ff;
-  border-color: #2563eb;
-  color: #1d4ed8;
-  font-weight: 600;
-  box-shadow: 0 0 0 1.5px #2563eb, 0 4px 6px -1px rgba(37, 99, 235, 0.12);
-}
-
-.opt-indicator {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #cbd5e1;
-  border-radius: 50%;
-  flex-shrink: 0;
-  display: inline-block;
-  position: relative;
-  transition: all 0.18s ease;
-}
-
-.option-tile.is-selected .opt-indicator {
-  border-color: #2563eb;
-  background: #2563eb;
-  box-shadow: inset 0 0 0 4px #ffffff;
-}
-
-.opt-label {
-  font-size: 0.92rem;
-  line-height: 1.35;
+.options-grid {
+  display: none;
 }
 
 .sr-only {

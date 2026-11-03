@@ -196,7 +196,8 @@ function createAssessmentRouter({ sessionService }) {
       const result = await sessionService.submitAssessment(
         req.employee.employeeId,
         req.body?.snapshot,
-        req.body?.answers
+        req.body?.answers,
+        req.body?.feedback
       );
       res.json(result);
     } catch (err) {
@@ -207,6 +208,19 @@ function createAssessmentRouter({ sessionService }) {
           missingQuestions: err.missingQuestions
         });
       }
+      next(err);
+    }
+  });
+
+  // Submit/update feedback for assessment
+  router.post('/feedback', async (req, res, next) => {
+    try {
+      const result = await sessionService.saveFeedback(
+        req.employee.employeeId,
+        req.body?.feedback
+      );
+      res.json(result);
+    } catch (err) {
       next(err);
     }
   });

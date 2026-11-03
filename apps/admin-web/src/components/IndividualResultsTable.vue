@@ -359,6 +359,17 @@
             </div>
           </div>
 
+          <!-- Employee Feedback (Optional) -->
+          <div v-if="selectedItem.feedback" class="detail-section">
+            <div class="snapshot-header-bar">
+              <h4>ข้อเสนอแนะเพิ่มเติมจากพนักงาน (Employee Feedback)</h4>
+            </div>
+            <div class="feedback-quote-box">
+              <span class="feedback-quote-icon">💬</span>
+              <p class="feedback-quote-text">“{{ selectedItem.feedback }}”</p>
+            </div>
+          </div>
+
           <!-- PDPA Notice -->
           <div class="pdpa-callout">
             <span class="icon">🔒</span>
@@ -1465,6 +1476,30 @@ export default {
 
 .pdpa-callout p {
   margin: 0;
+}
+
+.feedback-quote-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-left: 4px solid #0284c7;
+  border-radius: 8px;
+  padding: 0.85rem 1.15rem;
+}
+
+.feedback-quote-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.feedback-quote-text {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #0369a1;
+  font-style: italic;
+  line-height: 1.5;
 }
 
 .modal-footer {

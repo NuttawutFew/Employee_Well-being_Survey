@@ -421,7 +421,7 @@ class AssessmentSessionService {
     };
   }
 
-  async submitAssessment(employeeId, customSnapshot = {}, submittedAnswers = null) {
+  async submitAssessment(employeeId, customSnapshot = {}, submittedAnswers = null, feedback = null) {
     await this._syncFromCollection();
     let attempt = this.memoryAttempts.get(employeeId);
     if (!attempt && this.attemptsCollection) {
@@ -531,6 +531,10 @@ class AssessmentSessionService {
       employeeId: encryptPII(attempt.employeeId)
     };
 
+    if (feedback || customSnapshot.feedback) {
+      attempt.feedback = String(feedback || customSnapshot.feedback).trim().slice(0, 500);
+    }
+
     this.memoryAttempts.set(employeeId, attempt);
     this.allAttempts.set(attempt.attemptId, attempt);
 
@@ -548,7 +552,8 @@ class AssessmentSessionService {
       status: ATTEMPT_STATUS.SUBMITTED,
       submittedAt: attempt.submittedAt,
       result: attempt.result,
-      snapshot: attempt.snapshot
+      snapshot: attempt.snapshot,
+      feedback: attempt.feedback || null
     };
   }
 
@@ -574,7 +579,41 @@ class AssessmentSessionService {
       status: attempt.status,
       submittedAt: attempt.submittedAt,
       result: attempt.result,
-      snapshot: attempt.snapshot
+      snapshot: attempt.snapshot,
+      feedback: attempt.feedback || null
+    };
+  }
+
+  async saveFeedback(employeeId, feedbackText) {
+    await this._syncFromCollection();
+    let attempt = this.memoryAttempts.get(employeeId);
+    if (!attempt && this.attemptsCollection) {
+      attempt = await this.attemptsCollection.findOne({ employeeId });
+      if (attempt) {
+        this.memoryAttempts.set(employeeId, attempt);
+        this.allAttempts.set(attempt.attemptId, attempt);
+      }
+    }
+    if (!attempt) {
+      const err = new Error('ไม่พบข้อมูลแบบประเมิน');
+      err.status = 404;
+      err.code = ERROR_CODES.NOT_FOUND;
+      throw err;
+    }
+
+    attempt.feedback = feedbackText ? String(feedbackText).trim().slice(0, 500) : null;
+    attempt.updatedAt = new Date().toISOString();
+
+    if (this.attemptsCollection) {
+      await this.attemptsCollection.updateOne(
+        { employeeId },
+        { $set: { feedback: attempt.feedback, updatedAt: attempt.updatedAt } }
+      );
+    }
+
+    return {
+      success: true,
+      feedback: attempt.feedback
     };
   }
 
@@ -768,7 +807,8 @@ class AssessmentSessionService {
       cancelledReason: a.cancelledReason || null,
       createdAt: a.createdAt,
       snapshot: a.snapshot || null,
-      result: a.result || null
+      result: a.result || null,
+      feedback: a.feedback || null
     }));
 
     return {

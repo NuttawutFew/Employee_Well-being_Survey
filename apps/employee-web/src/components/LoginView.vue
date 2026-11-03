@@ -4,14 +4,14 @@
     <div class="mh-login-header">
       <div class="mh-login-nav">
         <button type="button" class="mh-btn-back-portal" @click="$emit('back-to-portal')">
-          <span>←</span> <span>กลับหน้าหลัก Portal</span>
+          <span>←</span> <span>กลับหน้าหลัก Portal พนักงาน</span>
         </button>
         <button type="button" class="mh-btn-login-contact-hr" @click="$emit('open-contact-hr')" title="เบอร์ติดต่อ HR กรณีฉุกเฉิน">
           <span>📞</span> <span>ติดต่อฝ่ายบุคคล (HR)</span>
         </button>
       </div>
       <div class="mh-login-header-content">
-        <h2>ระบบประเมินสุขภาพใจสำหรับบุคลากร</h2>
+        <h2>Employee Well-being Survey สำหรับบุคลากร</h2>
         <div class="mh-login-scope-pill">
           <span>👤</span>
           <span>บัญชีพนักงานองค์กร</span>

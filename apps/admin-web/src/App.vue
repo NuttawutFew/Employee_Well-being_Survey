@@ -31,7 +31,7 @@
         <div class="brand">
           <div class="brand-title-wrap">
             <img src="/logo.jpeg" alt="INET Logo" class="admin-brand-logo" />
-            <h2>สุขภาพใจ Admin</h2>
+            <h2>Well-being Survey Admin</h2>
           </div>
           <button
             class="btn-close-sidebar"
@@ -56,7 +56,7 @@
             @click="selectTab('portal')"
           >
             <span class="nav-icon">🏠</span>
-            <span>Portal ตรวจสอบสุขภาพใจ</span>
+            <span>Portal Employee Well-being</span>
           </button>
 
           <!-- Step 9 & 17: Dashboard -->
@@ -88,6 +88,17 @@
           >
             <span class="nav-icon">🔐</span>
             <span>กำหนดสิทธิ Admin</span>
+          </button>
+
+          <!-- Super Admin Audit Logs Menu (Only for Super Admin) -->
+          <button
+            v-if="isSuperAdmin"
+            class="nav-item"
+            :class="{ active: currentTab === 'audit-logs' }"
+            @click="selectTab('audit-logs')"
+          >
+            <span class="nav-icon">📜</span>
+            <span>ประวัติการใช้งาน (Audit Logs)</span>
           </button>
 
           <!-- MongoDB Overview -->
@@ -130,10 +141,11 @@
             </button>
             <span class="breadcrumb-title">
               {{ 
-                currentTab === 'portal' ? 'Portal ตรวจสอบสุขภาพใจ (Super Admin)' :
-                currentTab === 'permissions' ? 'กำหนดสิทธิการเข้าถึงของ Admin' :
-                currentTab === 'results' ? 'ตารางผลการประเมินรายบุคคล' : 
-                currentTab === 'dashboard' ? 'Dashboard สถิติภาพรวมองค์กร' : 
+                currentTab === 'portal' ? 'Portal Employee Well-being Survey (Super Admin)' :
+                currentTab === 'permissions' ? 'กำหนดสิทธิการเข้าถึงของ Admin (Admin Permission Management)' :
+                currentTab === 'results' ? 'ตารางผลการประเมินรายบุคคล (Individual Results Table)' : 
+                currentTab === 'dashboard' ? 'Dashboard Employee Well-being Survey (ผลการประเมินภาพรวม)' : 
+                currentTab === 'audit-logs' ? 'บันทึกประวัติการตรวจสอบกิจกรรมระบบ (System Audit & Activity Logs)' :
                 'โครงสร้างฐานข้อมูล MongoDB (Document Store)' 
               }}
             </span>
@@ -175,7 +187,12 @@
             <AdminPermissionManagement />
           </div>
 
-          <!-- View 4: MongoDB Database Overview & Inspector -->
+          <!-- View 4: Super Admin Audit Logs -->
+          <div v-else-if="currentTab === 'audit-logs' && isSuperAdmin" class="tab-view view-audit-logs">
+            <AuditLogs :admin="admin" />
+          </div>
+
+          <!-- View 5: MongoDB Database Overview & Inspector -->
           <div v-else-if="currentTab === 'database'" class="tab-view view-database">
             <DatabaseOverview />
           </div>
@@ -193,6 +210,7 @@ import AdminPermissionManagement from './components/AdminPermissionManagement.vu
 import IndividualResultsTable from './components/IndividualResultsTable.vue';
 import AggregateDashboard from './components/AggregateDashboard.vue';
 import DatabaseOverview from './components/DatabaseOverview.vue';
+import AuditLogs from './components/AuditLogs.vue';
 
 export default {
   name: 'AdminApp',
@@ -203,7 +221,8 @@ export default {
     AdminPermissionManagement,
     IndividualResultsTable,
     AggregateDashboard,
-    DatabaseOverview
+    DatabaseOverview,
+    AuditLogs
   },
   data() {
     return {

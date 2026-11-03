@@ -72,12 +72,13 @@
 
       <div class="actions">
         <button 
+          id="mh-btn-consent"
           class="btn-acknowledge" 
           :disabled="loading" 
           @click="acknowledge"
         >
           <span v-if="loading">กำลังบันทึก...</span>
-          <span v-else>ยอมรับและเริ่มทำแบบประเมิน →</span>
+          <span v-else>รับทราบ</span>
         </button>
       </div>
     </div>

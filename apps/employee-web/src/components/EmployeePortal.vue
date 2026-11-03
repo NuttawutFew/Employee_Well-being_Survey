@@ -39,7 +39,7 @@
       <!-- Left: Headline & CTAs -->
       <div class="mh-hero-text-col">
         <h1 class="mh-hero-main-title">
-          ประเมินสุขภาพใจ<br>
+          Employee Well-being Survey<br>
           <span style="color:#1e293b;">สำหรับบุคลากรในองค์กร</span>
         </h1>
 
@@ -56,8 +56,19 @@
         </div>
 
         <!-- Assessment Scope Summary (3 เครื่องมือ รวม 51 ข้อ) -->
-        <div class="mh-assessment-scope-note">
-          📋 <strong>แบบประเมิน 3 ชุดมาตรฐาน (51 ข้อ):</strong> ภาวะหมดไฟ (Burnout 22 ข้อ) • ความเครียด (20 ข้อ) • สภาวะทางอารมณ์ (9 ข้อ)
+        <div class="mh-scope-summary-card">
+          <div class="mh-scope-header">
+            <span>📋 ขอบเขตแบบประเมินสุขภาวะ (3 ชุดมาตรฐาน รวม 51 ข้อ)</span>
+            <span class="mh-scope-time">⏱️ ใช้เวลาประมาณ 8–10 นาที</span>
+          </div>
+          <div class="mh-scope-badges-row">
+            <span class="mh-scope-badge"><span class="badge-dot dot-burnout"></span> 1. ภาวะหมดไฟ (Burnout 22 ข้อ)</span>
+            <span class="mh-scope-badge"><span class="badge-dot dot-stress"></span> 2. ความเครียด (20 ข้อ)</span>
+            <span class="mh-scope-badge"><span class="badge-dot dot-9q"></span> 3. สภาวะทางอารมณ์ (9 ข้อ)</span>
+          </div>
+          <div class="mh-scope-footer-note">
+            <span>🔒 ผลการประเมินเป็นความลับเฉพาะบุคคลตามมาตรฐาน PDPA • ไม่เปิดเผยผลรายบุคคลต่อผู้อื่น</span>
+          </div>
         </div>
       </div>
 
@@ -86,8 +97,8 @@
 
             <!-- Text Block -->
             <div class="mh-emblem-text-block">
-              <span class="mh-emblem-title">MENTAL HEALTH</span>
-              <span class="mh-emblem-sub">ASSESSMENT</span>
+              <span class="mh-emblem-title">EMPLOYEE WELL-BEING</span>
+              <span class="mh-emblem-sub">SURVEY</span>
             </div>
           </div>
         </div>
@@ -361,6 +372,71 @@ export default {
   color: #0284c7;
   border-color: #7dd3fc;
   transform: translateY(-1px);
+}
+
+.mh-scope-summary-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.9rem 1.15rem;
+  margin-top: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  text-align: left;
+  width: 100%;
+}
+.mh-scope-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.mh-scope-time {
+  font-size: 0.76rem;
+  color: #0284c7;
+  background: #f0f9ff;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #bae6fd;
+  font-weight: 600;
+}
+.mh-scope-badges-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+.mh-scope-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  color: #334155;
+  font-weight: 600;
+}
+.badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot-burnout { background: #f97316; }
+.dot-stress { background: #eab308; }
+.dot-9q { background: #10b981; }
+.mh-scope-footer-note {
+  font-size: 0.74rem;
+  color: #64748b;
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 0.4rem;
+  margin-top: 0.2rem;
 }
 
 .mh-assessment-scope-note {

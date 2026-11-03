@@ -76,7 +76,9 @@
           :assessment-index="currentStepIndex"
           :total-assessments="totalAssessments"
           :initial-answers="draftAnswers"
+          :initial-feedback="userFeedback"
           @answers-updated="onAnswersUpdated"
+          @feedback-updated="onFeedbackUpdated"
           @next="onNextAssessment"
           @prev="onPrevAssessment"
         />
@@ -87,6 +89,7 @@
         v-else-if="currentScreen === 'submitted'"
         :initial-result="session.result"
         :initial-submitted-at="session.submittedAt"
+        :initial-feedback="session.feedback || userFeedback"
         @open-contact-hr="showContactModal = true"
       />
     </main>
@@ -95,6 +98,7 @@
     <SubmissionModal
       v-if="showSubmitModal"
       :answers="draftAnswers"
+      :feedback="userFeedback"
       :employee="employeeProfile"
       @cancel="showSubmitModal = false"
       @submitted="onSubmitted"
@@ -152,6 +156,7 @@ export default {
       catalog: [],
       currentStepIndex: 0,
       draftAnswers: {},
+      userFeedback: '',
       error: null,
       session: {
         noticeAcknowledged: false,
@@ -330,6 +335,7 @@ export default {
         // ignore
       }
       this.draftAnswers = {};
+      this.userFeedback = '';
       this.currentStepIndex = 0;
       this.isTakingAssessment = false;
       this.session.noticeAcknowledged = false;
@@ -341,10 +347,19 @@ export default {
       } else if (payload) {
         this.draftAnswers = { ...payload };
       }
+      if (payload && payload.feedback !== undefined) {
+        this.userFeedback = payload.feedback;
+      }
+    },
+    onFeedbackUpdated(val) {
+      this.userFeedback = val || '';
     },
     async onNextAssessment(payload) {
       if (payload?.answers) {
         this.draftAnswers = { ...this.draftAnswers, ...payload.answers };
+      }
+      if (payload?.feedback !== undefined) {
+        this.userFeedback = payload.feedback;
       }
 
       // If at final step: open confirmation modal
@@ -383,6 +398,7 @@ export default {
       this.session.status = submitData.status;
       this.session.submittedAt = submitData.submittedAt;
       this.session.result = submitData.result;
+      this.session.feedback = submitData.feedback || this.userFeedback;
       this.currentScreen = 'submitted';
     },
     async clearDraft() {
@@ -421,6 +437,7 @@ export default {
       } finally {
         // Always reset client-side answers and set step index back to Step 1 (index 0)
         this.draftAnswers = {};
+        this.userFeedback = '';
         this.currentStepIndex = 0;
         this.isTakingAssessment = true;
         this.currentScreen = 'assessment';

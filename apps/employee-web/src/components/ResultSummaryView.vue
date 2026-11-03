@@ -109,7 +109,56 @@
         </div>
       </div>
 
-      <!-- 4. Privacy & Completion Footer -->
+      <!-- 4. Feedback Section on Result Screen -->
+      <div class="result-feedback-card">
+        <div class="result-feedback-header">
+          <div class="result-feedback-icon">💬</div>
+          <div>
+            <h3 class="result-feedback-title">คำแนะนำและข้อเสนอแนะหากต้องการปรับปรุง</h3>
+            <p class="result-feedback-sub">“เรายินดีรับฟังทุกข้อเสนอแนะ เพื่อนำไปปรับปรุงและพัฒนาให้ดียิ่งขึ้น”</p>
+          </div>
+        </div>
+        <div class="result-feedback-body">
+          <div v-if="feedback && feedback.trim()">
+            <div class="feedback-submitted-box">
+              <div class="feedback-submitted-label">ข้อเสนอแนะที่ท่านระบุไว้:</div>
+              <div class="feedback-submitted-quote">“{{ feedback.trim() }}”</div>
+            </div>
+            <div class="feedback-success-note">
+              <span>✓</span> บันทึกข้อเสนอแนะเรียบร้อยแล้ว ขอบพระคุณสำหรับทุกความคิดเห็นเพื่อการพัฒนา
+            </div>
+          </div>
+          <div v-else>
+            <p class="feedback-form-prompt">
+              หากท่านมีข้อเสนอแนะเพิ่มเติมเกี่ยวกับการใช้งานระบบ หรือข้อแนะนำเพื่อสุขภาวะที่ดีในองค์กร สามารถพิมพ์ส่งได้ที่นี่:
+            </p>
+            <div class="feedback-form-row">
+              <input
+                v-model="newFeedback"
+                type="text"
+                placeholder="พิมพ์ข้อความสั้นๆ หรือข้อเสนอแนะ (ไม่บังคับตอบ)..."
+                class="result-feedback-input"
+                :disabled="submittingFeedback"
+                @keyup.enter="submitFeedback"
+              />
+              <button
+                type="button"
+                class="btn-submit-feedback"
+                :disabled="!newFeedback.trim() || submittingFeedback"
+                @click="submitFeedback"
+              >
+                <span v-if="submittingFeedback">กำลังส่ง...</span>
+                <span v-else>ส่งข้อเสนอแนะ</span>
+              </button>
+            </div>
+            <div v-if="feedbackSaved" class="feedback-success-note" style="margin-top: 10px;">
+              ✓ บันทึกข้อเสนอแนะเรียบร้อยแล้ว ขอบพระคุณสำหรับความคิดเห็นเพื่อการปรับปรุงครับ
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Privacy & Completion Footer -->
       <div class="completion-footer">
         <p>🔒 ข้อมูลการประเมินของท่านได้รับการจัดเก็บอย่างปลอดภัยตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล (PDPA)</p>
       </div>
@@ -129,6 +178,10 @@ export default {
     initialSubmittedAt: {
       type: String,
       default: null
+    },
+    initialFeedback: {
+      type: String,
+      default: null
     }
   },
   data() {
@@ -136,7 +189,11 @@ export default {
       loading: false,
       error: null,
       result: this.initialResult,
-      submittedAt: this.initialSubmittedAt
+      submittedAt: this.initialSubmittedAt,
+      feedback: this.initialFeedback,
+      newFeedback: '',
+      submittingFeedback: false,
+      feedbackSaved: false
     };
   },
   async mounted() {
@@ -162,10 +219,37 @@ export default {
         const data = await res.json();
         this.result = data.result;
         this.submittedAt = data.submittedAt;
+        if (data.feedback) {
+          this.feedback = data.feedback;
+        }
       } catch (err) {
         this.error = err.message;
       } finally {
         this.loading = false;
+      }
+    },
+    async submitFeedback() {
+      if (!this.newFeedback.trim()) return;
+      this.submittingFeedback = true;
+      try {
+        const token = localStorage.getItem('emp_token') || 'EMP-DEV-001';
+        const res = await fetch('/api/assessment/feedback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+            'x-employee-id': token
+          },
+          body: JSON.stringify({ feedback: this.newFeedback.trim() })
+        });
+        if (res.ok) {
+          this.feedback = this.newFeedback.trim();
+          this.feedbackSaved = true;
+        }
+      } catch (e) {
+        console.error('Failed to submit feedback:', e);
+      } finally {
+        this.submittingFeedback = false;
       }
     },
     formatTime(isoString) {
@@ -610,6 +694,121 @@ export default {
     width: 100%;
     text-align: center;
   }
+}
+
+.result-feedback-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.4rem 1.6rem;
+  margin-top: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+}
+.result-feedback-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 0.85rem;
+}
+.result-feedback-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #0284c7;
+  flex-shrink: 0;
+}
+.result-feedback-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+}
+.result-feedback-sub {
+  font-size: 0.84rem;
+  color: #0284c7;
+  margin: 0.2rem 0 0 0;
+  font-weight: 500;
+}
+.feedback-submitted-box {
+  background: #f0f9ff;
+  border-left: 3.5px solid #0284c7;
+  border-radius: 0 10px 10px 0;
+  padding: 12px 16px;
+  font-size: 0.92rem;
+  color: #0f172a;
+  margin-bottom: 10px;
+}
+.feedback-submitted-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0369a1;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.feedback-submitted-quote {
+  color: #0c4a6e;
+  font-style: italic;
+  line-height: 1.5;
+}
+.feedback-success-note {
+  font-size: 0.82rem;
+  color: #16a34a;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.feedback-form-prompt {
+  font-size: 0.86rem;
+  color: #64748b;
+  margin-top: 0;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.feedback-form-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.result-feedback-input {
+  flex: 1;
+  min-width: 240px;
+  padding: 9px 14px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+.result-feedback-input:focus {
+  border-color: #0284c7;
+}
+.btn-submit-feedback {
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+.btn-submit-feedback:hover:not(:disabled) {
+  background: #0369a1;
+}
+.btn-submit-feedback:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .completion-footer {

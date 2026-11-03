@@ -11,6 +11,11 @@
           ✓ ท่านได้ตอบแบบประเมินครบทั้ง 3 ชุด (จำนวน <strong>51 ข้อ</strong>) เรียบร้อยแล้ว
         </p>
 
+        <div v-if="feedback && feedback.trim()" class="modal-feedback-box">
+          <strong>💬 ข้อเสนอแนะของคุณ:</strong>
+          <div class="modal-feedback-text">“{{ feedback.trim() }}”</div>
+        </div>
+
         <div class="warning-box">
           <strong>⚠️ ข้อควรทราบก่อนยืนยัน:</strong>
           <ul>
@@ -57,6 +62,10 @@ export default {
       type: Object,
       default: () => ({})
     },
+    feedback: {
+      type: String,
+      default: ''
+    },
     employee: {
       type: Object,
       default: () => ({})
@@ -99,6 +108,7 @@ export default {
           headers,
           body: JSON.stringify({
             answers: this.answers,
+            feedback: this.feedback?.trim() || null,
             snapshot
           })
         });
@@ -109,7 +119,7 @@ export default {
         }
 
         const data = await res.json();
-        this.$emit('submitted', data);
+        this.$emit('submitted', { ...data, feedback: this.feedback });
       } catch (err) {
         this.error = err.message;
       } finally {
@@ -162,6 +172,20 @@ export default {
   font-weight: 500;
   font-size: 0.95rem;
   margin-bottom: 1rem;
+}
+.modal-feedback-box {
+  margin: 0.75rem 0;
+  padding: 0.75rem 1rem;
+  background: #f0f9ff;
+  border: 1px dashed #7dd3fc;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  color: #0369a1;
+}
+.modal-feedback-text {
+  color: #0f172a;
+  margin-top: 0.25rem;
+  font-style: italic;
 }
 .warning-box {
   background: #f8fafc;
