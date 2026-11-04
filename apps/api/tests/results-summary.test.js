@@ -36,19 +36,30 @@ test('Employee Results Summary Calculation & API', async (t) => {
       body: JSON.stringify({ answers: allAnswers })
     });
 
-    // 3. Submit
+    // 3. Submit with feedback
     await fetch(`${baseUrl}/api/assessment/submit`, {
       method: 'POST',
-      headers: empHeaders
+      headers: empHeaders,
+      body: JSON.stringify({ feedback: 'อยากให้เพิ่มเวลาพักกลางวัน' })
     });
 
-    // 4. Fetch result
+    // 4. Verify session returns feedback upon refresh
+    const resSession = await fetch(`${baseUrl}/api/assessment/session`, {
+      headers: empHeaders
+    });
+    assert.strictEqual(resSession.status, 200);
+    const sessionBody = await resSession.json();
+    assert.strictEqual(sessionBody.status, 'SUBMITTED');
+    assert.strictEqual(sessionBody.feedback, 'อยากให้เพิ่มเวลาพักกลางวัน');
+
+    // 5. Fetch result
     const resResult = await fetch(`${baseUrl}/api/assessment/result`, {
       headers: empHeaders
     });
     assert.strictEqual(resResult.status, 200);
     const body = await resResult.json();
     assert.strictEqual(body.status, 'SUBMITTED');
+    assert.strictEqual(body.feedback, 'อยากให้เพิ่มเวลาพักกลางวัน');
     assert.ok(body.result);
     assert.ok(body.result.burnout);
     assert.ok(body.result.stress);

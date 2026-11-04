@@ -263,7 +263,8 @@ class AssessmentSessionService {
       draftExpiresAt,
       remainingMs,
       draftTtlMinutes: this.draftTtlMinutes,
-      savedCount: Object.keys(attempt.answers || {}).length
+      savedCount: Object.keys(attempt.answers || {}).length,
+      feedback: attempt.feedback || null
     };
   }
 

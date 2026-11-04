@@ -196,8 +196,20 @@ export default {
       feedbackSaved: false
     };
   },
+  watch: {
+    initialFeedback(newVal) {
+      if (newVal) {
+        this.feedback = newVal;
+      }
+    },
+    initialResult(newVal) {
+      if (newVal) {
+        this.result = newVal;
+      }
+    }
+  },
   async mounted() {
-    if (!this.result) {
+    if (!this.result || !this.feedback) {
       await this.fetchResult();
     }
   },

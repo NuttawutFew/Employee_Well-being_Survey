@@ -289,6 +289,9 @@ export default {
 
         if (data.status === 'SUBMITTED') {
           this.isTakingAssessment = false;
+          if (data.feedback) {
+            this.userFeedback = data.feedback;
+          }
         } else {
           this.draftAnswers = {};
           this.userFeedback = '';
