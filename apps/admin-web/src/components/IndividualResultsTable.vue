@@ -112,11 +112,16 @@
             </td>
             <td class="cell-dept">{{ item.snapshot ? item.snapshot.department : '-' }}</td>
             <td class="cell-round">
-              <span class="round-badge" :class="item.round > 1 ? 'round-badge-multi' : ''">
-                รอบ {{ item.round || 1 }}
+              <span class="round-badge" :class="item.totalRounds > 1 ? 'round-badge-multi' : ''">
+                รอบ {{ item.round || 1 }}{{ item.totalRounds > 1 ? ' (ล่าสุด)' : '' }}
               </span>
-              <span v-if="item.totalRounds > 1" class="history-pill" :title="'มีประวัติประเมินสะสม ' + item.totalRounds + ' รอบ'">
-                📜 {{ item.totalRounds }} รอบ
+              <span 
+                v-if="item.totalRounds > 1" 
+                class="history-pill" 
+                :title="'มีประวัติประเมินสะสม ' + item.totalRounds + ' รอบ (คลิกเพื่อดูรายละเอียด)'"
+                @click.stop="viewDetail(item)"
+              >
+                📜 ประวัติ {{ item.totalRounds }} รอบ
               </span>
             </td>
             <td>
@@ -2403,6 +2408,15 @@ export default {
   font-size: 0.72rem;
   font-weight: 600;
   color: #b45309;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.history-pill:hover {
+  background: #fde68a;
+  border-color: #f59e0b;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
 }
 
 .status-cancelled {

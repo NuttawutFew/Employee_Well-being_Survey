@@ -835,6 +835,7 @@ class AssessmentSessionService {
     sortBy = 'submittedAt',
     sortOrder = 'desc',
     status = ATTEMPT_STATUS.SUBMITTED,
+    groupByEmployee = true,
     filters = {}
   } = {}) {
     await this._syncFromCollection();
@@ -850,6 +851,28 @@ class AssessmentSessionService {
       attempts = attempts.filter(
         (a) => a.status === ATTEMPT_STATUS.SUBMITTED || a.status === ATTEMPT_STATUS.CANCELLED
       );
+    }
+
+    // Option 2 (1 Row per Employee): Deduplicate by employeeId, keeping the latest attempt
+    if (groupByEmployee) {
+      const empLatestMap = new Map();
+      for (const a of attempts) {
+        const empId = a.employeeId;
+        if (!empId) continue;
+        const existing = empLatestMap.get(empId);
+        if (!existing) {
+          empLatestMap.set(empId, a);
+        } else {
+          const roundA = a.round || 0;
+          const roundExisting = existing.round || 0;
+          const timeA = new Date(a.submittedAt || a.createdAt || 0).getTime();
+          const timeExisting = new Date(existing.submittedAt || existing.createdAt || 0).getTime();
+          if (roundA > roundExisting || (roundA === roundExisting && timeA > timeExisting)) {
+            empLatestMap.set(empId, a);
+          }
+        }
+      }
+      attempts = Array.from(empLatestMap.values());
     }
 
     // Apply Multidimensional Filter Engine (OR within dimension, AND across dimensions)

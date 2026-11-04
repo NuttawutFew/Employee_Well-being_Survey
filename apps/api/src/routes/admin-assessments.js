@@ -75,7 +75,8 @@ function createAdminAssessmentsRouter({ adminService, sessionService, auditServi
         search = '',
         sortBy = 'submittedAt',
         sortOrder = 'desc',
-        status
+        status,
+        groupByEmployee
       } = req.query;
 
       const filters = {
@@ -105,6 +106,7 @@ function createAdminAssessmentsRouter({ adminService, sessionService, auditServi
         sortBy,
         sortOrder,
         status,
+        groupByEmployee: groupByEmployee !== undefined ? (groupByEmployee === 'true' || groupByEmployee === true) : true,
         filters
       });
 
