@@ -22,8 +22,14 @@ function createApp({ db = null, auditService = null, exportService = null, sessi
   const activeSessionService = sessionService || new AssessmentSessionService({ db, auditService: activeAuditService });
   if (seedMock) {
     activeSessionService.seedMockData();
+    if (typeof activeAuditService.seedMockData === 'function') {
+      activeAuditService.seedMockData();
+    }
   } else {
     activeSessionService.purgeMockData();
+    if (typeof activeAuditService.purgeMockData === 'function') {
+      activeAuditService.purgeMockData();
+    }
   }
   const adminService = new AdminIdentityService({ db, auditService: activeAuditService });
   const activeExportService = exportService || new ExportService({ auditService: activeAuditService });

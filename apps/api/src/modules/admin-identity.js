@@ -244,10 +244,13 @@ class AdminIdentityService {
     }
 
     if (this.auditService) {
-      const action = account.role === 'SUPER_ADMIN' ? 'super_admin_login' : 'admin_login';
+      const isSuper = (account.role || '').toLowerCase().includes('super');
+      const action = isSuper ? 'super_admin_login' : 'admin_login';
+      const actorRole = isSuper ? 'Super Admin' : 'Admin';
       await this.auditService.logEvent({
         actor: account.username,
-        actorRole: account.role || 'ADMIN',
+        actorName: account.fullName || account.username,
+        actorRole,
         action,
         target: account.adminId,
         status: 'SUCCESS',
@@ -292,10 +295,15 @@ class AdminIdentityService {
         await this.sessionsCollection.deleteOne({ sessionToken });
       }
       if (this.auditService && session) {
+        const isSuper = (session.role || '').toLowerCase().includes('super');
         await this.auditService.logEvent({
           actor: session.username,
+          actorName: session.fullName || session.username,
+          actorRole: isSuper ? 'Super Admin' : 'Admin',
           action: 'admin_logout',
-          target: session.adminId
+          target: session.adminId,
+          status: 'SUCCESS',
+          purpose: 'ออกจากระบบผู้ดูแล'
         });
       }
     }
