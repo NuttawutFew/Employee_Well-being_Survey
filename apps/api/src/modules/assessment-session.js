@@ -128,6 +128,27 @@ class AssessmentSessionService {
     return mockList;
   }
 
+  purgeMockData() {
+    const mockEmpIds = new Set(['EMP-00101', 'EMP-00102', 'EMP-00103', 'EMP-00104', 'EMP-00105', 'EMP-00106', 'EMP-00107', 'EMP-00108', 'EMP-00109', 'EMP-00110']);
+    if (this.attemptsCollection && Array.isArray(this.attemptsCollection._documents)) {
+      this.attemptsCollection._documents = this.attemptsCollection._documents.filter(
+        (d) => !mockEmpIds.has(d.employeeId)
+      );
+    }
+    for (const [id, a] of Array.from(this.allAttempts.entries())) {
+      if (mockEmpIds.has(a.employeeId)) {
+        this.allAttempts.delete(id);
+      }
+    }
+    for (const empId of mockEmpIds) {
+      this.memoryAttempts.delete(empId);
+    }
+    if (this.attemptsCollection?.database?._saveToFile) {
+      this.attemptsCollection.database._saveToFile();
+    }
+    return { success: true, count: mockEmpIds.size };
+  }
+
   _syncFromCollectionSync() {
     if (this.attemptsCollection && Array.isArray(this.attemptsCollection._documents)) {
       if (typeof this.attemptsCollection.database?._loadFromFile === 'function') {

@@ -22,6 +22,8 @@ function createApp({ db = null, auditService = null, exportService = null, sessi
   const activeSessionService = sessionService || new AssessmentSessionService({ db, auditService: activeAuditService });
   if (seedMock) {
     activeSessionService.seedMockData();
+  } else {
+    activeSessionService.purgeMockData();
   }
   const adminService = new AdminIdentityService({ db, auditService: activeAuditService });
   const activeExportService = exportService || new ExportService({ auditService: activeAuditService });
