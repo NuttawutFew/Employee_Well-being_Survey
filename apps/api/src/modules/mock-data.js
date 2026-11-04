@@ -215,6 +215,7 @@ function getMockEmployees() {
     return {
       attemptId,
       employeeId: emp.employeeId,
+      round: 1,
       noticeVersion: '2026-09-03',
       noticeAcknowledgedAt: new Date(new Date(emp.submittedAt).getTime() - 1800000).toISOString(),
       status: ATTEMPT_STATUS.SUBMITTED,

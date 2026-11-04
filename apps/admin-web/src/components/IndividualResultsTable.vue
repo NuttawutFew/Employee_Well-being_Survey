@@ -113,7 +113,7 @@
             <td class="cell-dept">{{ item.snapshot ? item.snapshot.department : '-' }}</td>
             <td class="cell-round">
               <span class="round-badge" :class="item.totalRounds > 1 ? 'round-badge-multi' : ''">
-                รอบ {{ item.round || 1 }}{{ item.totalRounds > 1 ? ' (ล่าสุด)' : '' }}
+                รอบ {{ item.round || 1 }}{{ (item.totalRounds > 1 && item.round === item.totalRounds) ? ' (ล่าสุด)' : '' }}
               </span>
               <span 
                 v-if="item.totalRounds > 1" 

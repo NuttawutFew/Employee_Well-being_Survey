@@ -93,7 +93,25 @@ class AssessmentSessionService {
   seedMockData() {
     const { getMockEmployees } = require('./mock-data');
     const mockList = getMockEmployees();
+    const mockEmpIds = new Set(mockList.map((m) => m.employeeId));
+
+    // Cleanly refresh previous mock records for these 10 mock employees
+    if (this.attemptsCollection && Array.isArray(this.attemptsCollection._documents)) {
+      this.attemptsCollection._documents = this.attemptsCollection._documents.filter(
+        (d) => !mockEmpIds.has(d.employeeId)
+      );
+    }
+    for (const [id, a] of Array.from(this.allAttempts.entries())) {
+      if (mockEmpIds.has(a.employeeId)) {
+        this.allAttempts.delete(id);
+      }
+    }
+    for (const empId of mockEmpIds) {
+      this.memoryAttempts.delete(empId);
+    }
+
     for (const item of mockList) {
+      item.round = 1;
       this.memoryAttempts.set(item.employeeId, item);
       this.allAttempts.set(item.attemptId, item);
       if (this.attemptsCollection) {
@@ -103,6 +121,9 @@ class AssessmentSessionService {
           { upsert: true }
         );
       }
+    }
+    if (this.attemptsCollection?.database?._saveToFile) {
+      this.attemptsCollection.database._saveToFile();
     }
     return mockList;
   }
@@ -855,6 +876,7 @@ class AssessmentSessionService {
 
     // Option 2 (1 Row per Employee): Deduplicate by employeeId, keeping the latest attempt
     if (groupByEmployee) {
+      const allAttemptsList = this._getAllAttempts();
       const empLatestMap = new Map();
       for (const a of attempts) {
         const empId = a.employeeId;
@@ -863,11 +885,11 @@ class AssessmentSessionService {
         if (!existing) {
           empLatestMap.set(empId, a);
         } else {
-          const roundA = a.round || 0;
-          const roundExisting = existing.round || 0;
-          const timeA = new Date(a.submittedAt || a.createdAt || 0).getTime();
-          const timeExisting = new Date(existing.submittedAt || existing.createdAt || 0).getTime();
-          if (roundA > roundExisting || (roundA === roundExisting && timeA > timeExisting)) {
+          const empAll = (allAttemptsList.filter((x) => x.employeeId === empId))
+            .sort((x, y) => (x.round || 0) - (y.round || 0) || new Date(x.createdAt || 0) - new Date(y.createdAt || 0));
+          const idxA = empAll.findIndex((x) => x.attemptId === a.attemptId);
+          const idxExisting = empAll.findIndex((x) => x.attemptId === existing.attemptId);
+          if (idxA > idxExisting) {
             empLatestMap.set(empId, a);
           }
         }
