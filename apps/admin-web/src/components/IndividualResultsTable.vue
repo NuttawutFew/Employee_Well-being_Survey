@@ -1,13 +1,14 @@
 <template>
   <div class="results-table-container">
-    <!-- Multidimensional Filter Panel -->
-    <FilterPanel @filters-changed="onFiltersChanged" />
+    <!-- Multidimensional Filter Panel (Collapsible via toggle) -->
+    <FilterPanel v-if="showFilterPanel" @filters-changed="onFiltersChanged" />
 
-    <!-- Toolbar: Search & Summary -->
+    <!-- Toolbar: Search, Round Filter & Summary (Matching Prototype) -->
     <div class="table-toolbar">
       <div class="search-box">
         <span class="search-icon">🔍</span>
         <input
+          id="mh-table-search-input"
           v-model="searchQuery"
           type="text"
           placeholder="ค้นหาด้วยรหัสพนักงาน หรือชื่อ-นามสกุล..."
@@ -17,13 +18,39 @@
         <button v-if="searchQuery" class="btn-clear-search" @click="clearSearch">✕</button>
       </div>
 
+      <!-- Prototype Round Filter Dropdown (#mh-table-filter-round) -->
+      <select
+        id="mh-table-filter-round"
+        v-model="roundFilter"
+        class="filter-select-round"
+        @change="onRoundFilterChange"
+      >
+        <option value="">ทุกรอบประเมิน (แสดงรอบล่าสุด)</option>
+        <option value="multi">เฉพาะพนักงานที่มีประวัติหลายรอบ (≥ 2 รอบขึ้นไป)</option>
+        <option value="multi3">เฉพาะพนักงานที่มีการติดตามผลต่อเนื่อง (≥ 3 รอบขึ้นไป)</option>
+        <option value="round4">เฉพาะรอบที่ 4 (Long-term Monitoring)</option>
+        <option value="round3">เฉพาะรอบที่ 3 (Care Program Check)</option>
+        <option value="round2">เฉพาะรอบที่ 2 (Follow-up)</option>
+        <option value="round1">เฉพาะรอบที่ 1 (Initial / Baseline)</option>
+      </select>
+
       <div class="toolbar-actions">
+        <button
+          type="button"
+          class="btn-toggle-filter"
+          :class="{ active: showFilterPanel }"
+          @click="showFilterPanel = !showFilterPanel"
+          title="เปิด/ปิด แถบตัวกรองข้อมูลหลายมิติ"
+        >
+          {{ showFilterPanel ? '▲ ซ่อนตัวกรองหลายมิติ' : '⚙️ ตัวกรองหลายมิติ' }}
+        </button>
+
         <span class="total-badge">
           พบข้อมูลทั้งหมด: <strong>{{ pagination.totalCount }}</strong> รายการ
         </span>
         <!-- Step 12 & 20: กด Export เอกสาร / Step 21: Hide ปุ่ม Export -->
         <div v-if="canExport" class="export-container">
-          <button class="btn-export" :disabled="loading || exporting" @click="openExportModal">
+          <button class="btn-export" id="mh-btn-trigger-export" :disabled="loading || exporting" @click="openExportModal">
             <span v-if="exporting">กำลังส่งออก...</span>
             <span v-else>📥 กด Export เอกสาร</span>
           </button>
@@ -33,7 +60,7 @@
           <span v-if="seedingMock">กำลังสร้างข้อมูล...</span>
           <span v-else>⚡ สร้างข้อมูลจำลอง (Mock 10 คน)</span>
         </button>
-        <button class="btn-refresh" :disabled="loading" @click="fetchData">
+        <button class="btn-refresh" id="mh-btn-table-refresh" :disabled="loading" @click="fetchData">
           <span v-if="loading">กำลังโหลด...</span>
           <span v-else>🔄 รีเฟรช</span>
         </button>
@@ -922,6 +949,8 @@ export default {
       exportModalError: null,
       searchQuery: '',
       searchDebounceTimer: null,
+      roundFilter: '',
+      showFilterPanel: false,
       sortBy: 'submittedAt',
       sortOrder: 'desc',
       filters: {},
@@ -1117,6 +1146,10 @@ export default {
       this.pagination.page = 1;
       this.fetchData();
     },
+    onRoundFilterChange() {
+      this.pagination.page = 1;
+      this.fetchData();
+    },
     async fetchData() {
       this.loading = true;
       this.error = null;
@@ -1129,6 +1162,10 @@ export default {
           sortOrder: this.sortOrder,
           search: this.searchQuery.trim()
         });
+
+        if (this.roundFilter) {
+          queryParams.set('roundFilter', this.roundFilter);
+        }
 
         // Append multidimensional filters
         Object.entries(this.filters).forEach(([key, val]) => {
@@ -1517,6 +1554,52 @@ export default {
   cursor: pointer;
   color: #166534;
   font-weight: bold;
+}
+
+.filter-select-round {
+  padding: 0.45rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #1e293b;
+  background: #ffffff;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s ease;
+}
+
+.filter-select-round:focus {
+  outline: none;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+}
+
+.btn-toggle-filter {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.15s ease;
+}
+
+.btn-toggle-filter:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.btn-toggle-filter.active {
+  background: #eff6ff;
+  border-color: #93c5fd;
+  color: #1d4ed8;
+  font-weight: 600;
 }
 
 .total-badge {

@@ -878,6 +878,7 @@ class AssessmentSessionService {
     sortOrder = 'desc',
     status = ATTEMPT_STATUS.SUBMITTED,
     groupByEmployee = true,
+    roundFilter = null,
     filters = {}
   } = {}) {
     await this._syncFromCollection();
@@ -916,6 +917,24 @@ class AssessmentSessionService {
         }
       }
       attempts = Array.from(empLatestMap.values());
+    }
+
+    // Filter by round / multi-round history (Matching Prototype specification)
+    if (roundFilter) {
+      const allAttemptsList = this._getAllAttempts();
+      attempts = attempts.filter((a) => {
+        const empAll = allAttemptsList.filter((x) => x.employeeId === a.employeeId);
+        const attCount = empAll.length;
+        const curRound = a.round || 1;
+
+        if (roundFilter === 'multi') return attCount >= 2;
+        if (roundFilter === 'multi3') return attCount >= 3;
+        if (roundFilter === 'round4') return curRound >= 4;
+        if (roundFilter === 'round3') return curRound === 3;
+        if (roundFilter === 'round2') return curRound === 2;
+        if (roundFilter === 'round1') return curRound === 1;
+        return true;
+      });
     }
 
     // Apply Multidimensional Filter Engine (OR within dimension, AND across dimensions)
