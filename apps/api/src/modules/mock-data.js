@@ -18,8 +18,8 @@ function createAnswers({
     bVal = 5;
     paVal = 1;
   } else if (burnoutLevel === 'MODERATE') {
-    bVal = 3;
-    paVal = 3;
+    bVal = 2;
+    paVal = 2;
   }
   for (let i = 1; i <= 22; i++) {
     const isPA = [4, 7, 9, 12, 17, 18, 19, 21].includes(i);
@@ -50,6 +50,10 @@ function createAnswers({
     for (let i = 1; i <= 8; i++) answers[`Q${String(i).padStart(2, '0')}`] = 1; // 8
   }
 
+  if (suicideRisk) {
+    answers['Q09'] = 3;
+  }
+
   return answers;
 }
 
@@ -67,8 +71,33 @@ function getMockEmployees() {
       position: 'วิศวกรซอฟต์แวร์อาวุโส',
       workArea: 'อาคาร A ชั้น 4',
       startDate: '2023-03-15',
-      submittedAt: '2026-09-01T09:15:00.000Z',
-      answersOptions: { burnoutLevel: 'LOW', stressLevel: 'NORMAL', rqLevel: 'NORMAL', q9Level: 'NONE' }
+      // Multi-round: 4 rounds showing clinical recovery trajectory across 4 quarters
+      rounds: [
+        {
+          round: 1,
+          submittedAt: '2025-11-15T09:15:00.000Z',
+          answersOptions: { burnoutLevel: 'HIGH', stressLevel: 'SEVERE', rqLevel: 'BELOW_NORMAL', q9Level: 'MODERATE', depressionRisk: true },
+          feedback: 'ช่วงปิดโปรเจกต์งานหนักและทำงานล่วงเวลาติดต่อกันหลายสัปดาห์ รู้สึกหมดไฟและล้าสะสม อยากได้คำปรึกษาในการจัดสรรเวลา'
+        },
+        {
+          round: 2,
+          submittedAt: '2026-02-20T10:30:00.000Z',
+          answersOptions: { burnoutLevel: 'MODERATE', stressLevel: 'MODERATE', rqLevel: 'NORMAL', q9Level: 'MILD' },
+          feedback: 'เข้าร่วมโปรแกรมปรึกษาของ HR และเริ่มปรับตารางงาน มีเวลาพักผ่อนมากขึ้น อาการดีขึ้นพอสมควร'
+        },
+        {
+          round: 3,
+          submittedAt: '2026-05-25T14:00:00.000Z',
+          answersOptions: { burnoutLevel: 'LOW', stressLevel: 'MILD', rqLevel: 'NORMAL', q9Level: 'NONE' },
+          feedback: 'ความเครียดลดลงมาก บรรยากาศในทีมดีขึ้น สามารถรับมือกับงานประจำวันได้ตามเป้าหมาย'
+        },
+        {
+          round: 4,
+          submittedAt: '2026-09-01T09:15:00.000Z',
+          answersOptions: { burnoutLevel: 'LOW', stressLevel: 'NORMAL', rqLevel: 'ABOVE_NORMAL', q9Level: 'NONE' },
+          feedback: 'สุขภาพจิตกลับมาอยู่ในเกณฑ์ดีเยี่ยม มีพลังในการทำงาน ขอบคุณทีมงานและระบบติดตามผลครับ'
+        }
+      ]
     },
     {
       employeeId: 'EMP-00102',
@@ -82,8 +111,21 @@ function getMockEmployees() {
       position: 'ผู้เชี่ยวชาญด้านคอนเทนต์',
       workArea: 'อาคาร A ชั้น 2',
       startDate: '2025-06-10',
-      submittedAt: '2026-09-01T11:30:00.000Z',
-      answersOptions: { burnoutLevel: 'MODERATE', stressLevel: 'MILD', rqLevel: 'NORMAL', q9Level: 'MILD', depressionRisk: true }
+      // Multi-round: 2 rounds (Baseline & Follow-up)
+      rounds: [
+        {
+          round: 1,
+          submittedAt: '2026-04-12T11:30:00.000Z',
+          answersOptions: { burnoutLevel: 'HIGH', stressLevel: 'MODERATE', rqLevel: 'BELOW_NORMAL', q9Level: 'MODERATE', depressionRisk: true },
+          feedback: 'ต้องคิดแคมเปญใหม่ตลอดเวลา รู้สึกไอเดียตันและเหนื่อยล้า'
+        },
+        {
+          round: 2,
+          submittedAt: '2026-09-01T11:30:00.000Z',
+          answersOptions: { burnoutLevel: 'MODERATE', stressLevel: 'MILD', rqLevel: 'NORMAL', q9Level: 'MILD', depressionRisk: true },
+          feedback: 'แบบประเมินใช้งานง่าย สะดวกดีครับ อยากให้เพิ่มคำแนะนำด้านการจัด work-life balance ในหน้าผลลัพธ์ด้วยครับ'
+        }
+      ]
     },
     {
       employeeId: 'EMP-00103',
@@ -127,8 +169,27 @@ function getMockEmployees() {
       position: 'นักวิเคราะห์การเงินอาวุโส',
       workArea: 'สำนักงานใหญ่ ชั้น 18',
       startDate: '2022-05-18',
-      submittedAt: '2026-09-03T10:10:00.000Z',
-      answersOptions: { burnoutLevel: 'HIGH', stressLevel: 'SEVERE', rqLevel: 'BELOW_NORMAL', q9Level: 'MODERATE', depressionRisk: true }
+      // Multi-round: 3 rounds showing continuous financial stress monitoring
+      rounds: [
+        {
+          round: 1,
+          submittedAt: '2026-03-05T10:10:00.000Z',
+          answersOptions: { burnoutLevel: 'MODERATE', stressLevel: 'MODERATE', rqLevel: 'NORMAL', q9Level: 'MILD' },
+          feedback: 'ช่วงปิดงบประจำปีมีความเครียดสะสมระดับปานกลาง'
+        },
+        {
+          round: 2,
+          submittedAt: '2026-06-10T11:20:00.000Z',
+          answersOptions: { burnoutLevel: 'HIGH', stressLevel: 'MODERATE', rqLevel: 'BELOW_NORMAL', q9Level: 'MODERATE', depressionRisk: true },
+          feedback: 'ปริมาณงานตรวจสอบงบเพิ่มขึ้นอย่างมาก นอนไม่ค่อยหลับ'
+        },
+        {
+          round: 3,
+          submittedAt: '2026-09-03T10:10:00.000Z',
+          answersOptions: { burnoutLevel: 'HIGH', stressLevel: 'SEVERE', rqLevel: 'BELOW_NORMAL', q9Level: 'MODERATE', depressionRisk: true },
+          feedback: 'อยากให้มีกิจกรรมผ่อนคลายกล้ามเนื้อช่วงบ่ายครับ และต้องการคำแนะนำจากผู้เชี่ยวชาญเพิ่มเติม'
+        }
+      ]
     },
     {
       employeeId: 'EMP-00106',
@@ -157,8 +218,21 @@ function getMockEmployees() {
       position: 'หัวหน้าทีมบริการลูกค้า',
       workArea: 'ศูนย์ลาดกระบัง',
       startDate: '2025-02-14',
-      submittedAt: '2026-09-04T09:50:00.000Z',
-      answersOptions: { burnoutLevel: 'MODERATE', stressLevel: 'MODERATE', rqLevel: 'BELOW_NORMAL', q9Level: 'MODERATE', depressionRisk: true, suicideRisk: true }
+      // Multi-round: 2 rounds showing critical risk intervention and progress
+      rounds: [
+        {
+          round: 1,
+          submittedAt: '2026-05-10T09:50:00.000Z',
+          answersOptions: { burnoutLevel: 'MODERATE', stressLevel: 'SEVERE', rqLevel: 'BELOW_NORMAL', q9Level: 'MODERATE', depressionRisk: true, suicideRisk: true },
+          feedback: 'เจอลูกค้าต่อว่าและแรงกดดันจากยอดจัดส่ง รู้สึกเครียดและวิตกกังวลมาก'
+        },
+        {
+          round: 2,
+          submittedAt: '2026-09-04T09:50:00.000Z',
+          answersOptions: { burnoutLevel: 'MODERATE', stressLevel: 'MODERATE', rqLevel: 'NORMAL', q9Level: 'MILD', depressionRisk: true, suicideRisk: false },
+          feedback: 'ได้รับการดูแลและพูดคุยจากนักจิตวิทยาที่บริษัทส่งมา ความคิดวิตกกังวลลดลง ยังคงต้องดูแลตัวเองต่อเนื่อง'
+        }
+      ]
     },
     {
       employeeId: 'EMP-00108',
@@ -207,41 +281,64 @@ function getMockEmployees() {
     }
   ];
 
-  return employees.map((emp) => {
-    const answers = createAnswers(emp.answersOptions);
-    const result = calculateScores(answers);
-    const attemptId = crypto.randomUUID();
+  const allAttempts = [];
 
-    return {
-      attemptId,
-      employeeId: emp.employeeId,
-      round: 1,
-      noticeVersion: '2026-09-03',
-      noticeAcknowledgedAt: new Date(new Date(emp.submittedAt).getTime() - 1800000).toISOString(),
-      status: ATTEMPT_STATUS.SUBMITTED,
-      definitionBundleVersion: '1.0.0',
-      currentStepIndex: 4,
-      answers,
-      createdAt: new Date(new Date(emp.submittedAt).getTime() - 1800000).toISOString(),
-      updatedAt: emp.submittedAt,
-      submittedAt: emp.submittedAt,
-      result,
-      feedback: emp.feedback || (emp.employeeId === 'EMP-00102' ? 'แบบประเมินใช้งานง่าย สะดวกดีครับ อยากให้เพิ่มคำแนะนำด้านการจัด work-life balance ในหน้าผลลัพธ์ด้วยครับ' : (emp.employeeId === 'EMP-00105' ? 'อยากให้มีกิจกรรมผ่อนคลายกล้ามเนื้อช่วงบ่ายครับ' : null)),
-      snapshot: {
-        employeeId: emp.employeeId,
-        firstName: emp.firstName,
-        lastName: emp.lastName,
-        gender: emp.gender,
-        age: emp.age,
-        telephone: emp.telephone,
-        company: emp.company,
-        department: emp.department,
-        position: emp.position,
-        workArea: emp.workArea,
-        startDate: emp.startDate
+  for (const emp of employees) {
+    const roundsList = emp.rounds && emp.rounds.length > 0
+      ? emp.rounds
+      : [
+          {
+            round: 1,
+            submittedAt: emp.submittedAt,
+            answersOptions: emp.answersOptions,
+            feedback: emp.feedback || null
+          }
+        ];
+
+    // Ensure rounds are ordered ascending by round number
+    roundsList.sort((a, b) => a.round - b.round);
+
+    for (const r of roundsList) {
+      const answers = createAnswers(r.answersOptions);
+      const result = calculateScores(answers);
+      if (r.answersOptions && r.answersOptions.suicideRisk) {
+        result.overall.hasSuicideRisk = true;
       }
-    };
-  });
+      const attemptId = `ATT-${emp.employeeId}-R${r.round}`;
+
+      allAttempts.push({
+        attemptId,
+        employeeId: emp.employeeId,
+        round: r.round,
+        noticeVersion: '2026-09-03',
+        noticeAcknowledgedAt: new Date(new Date(r.submittedAt).getTime() - 1800000).toISOString(),
+        status: ATTEMPT_STATUS.SUBMITTED,
+        definitionBundleVersion: '1.0.0',
+        currentStepIndex: 4,
+        answers,
+        createdAt: new Date(new Date(r.submittedAt).getTime() - 1800000).toISOString(),
+        updatedAt: r.submittedAt,
+        submittedAt: r.submittedAt,
+        result,
+        feedback: r.feedback || null,
+        snapshot: {
+          employeeId: emp.employeeId,
+          firstName: emp.firstName,
+          lastName: emp.lastName,
+          gender: emp.gender,
+          age: emp.age,
+          telephone: emp.telephone,
+          company: emp.company,
+          department: emp.department,
+          position: emp.position,
+          workArea: emp.workArea,
+          startDate: emp.startDate
+        }
+      });
+    }
+  }
+
+  return allAttempts;
 }
 
 module.exports = { getMockEmployees, createAnswers };

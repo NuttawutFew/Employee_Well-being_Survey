@@ -16,7 +16,7 @@ function createAdminAssessmentsRouter({ adminService, sessionService, auditServi
 
   router.use(adminAuth);
 
-  // POST /api/admin/assessments/seed-mock - Seed 10 mock employee assessments
+  // POST /api/admin/assessments/seed-mock - Seed mock employee assessments
   router.post('/seed-mock', async (req, res, next) => {
     try {
       const list = sessionService.seedMockData();
@@ -24,10 +24,12 @@ function createAdminAssessmentsRouter({ adminService, sessionService, auditServi
       if (audit && typeof audit.seedMockData === 'function') {
         audit.seedMockData();
       }
+      const employeeCount = new Set(list.map((m) => m.employeeId)).size;
       res.json({
         success: true,
-        message: `สร้างข้อมูลจำลองสำเร็จ ${list.length} รายการ`,
-        count: list.length
+        message: `สร้างข้อมูลจำลองสำเร็จ ${employeeCount} คน (${list.length} รายการประเมิน)`,
+        count: employeeCount,
+        attemptsCount: list.length
       });
     } catch (err) {
       next(err);

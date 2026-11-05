@@ -41,8 +41,8 @@ test('MongoDB Architecture & Document Store Simulation Integration', async (t) =
     assert.ok(overview.collections.admin_users);
     assert.ok(overview.collections.admin_sessions);
     assert.ok(overview.collections.audit_logs);
-    // Seeded mock data: 10 employee attempts in collection
-    assert.strictEqual(overview.collections.assessment_attempts.documentCount, 10);
+    // Seeded mock data: 17 employee assessment attempts in collection across 10 employees (multi-round simulations)
+    assert.strictEqual(overview.collections.assessment_attempts.documentCount, 17);
     // At least 1 admin user in collection
     assert.ok(overview.collections.admin_users.documentCount >= 1);
     // At least 1 active session in collection
@@ -56,7 +56,7 @@ test('MongoDB Architecture & Document Store Simulation Integration', async (t) =
     const colData = await colRes.json();
     assert.strictEqual(colData.collection, 'assessment_attempts');
     assert.strictEqual(colData.items.length, 5);
-    assert.strictEqual(colData.pagination.totalCount, 10);
+    assert.strictEqual(colData.pagination.totalCount, 17);
 
     // Critical PDPA compliance: verify raw survey answers are NOT leaked in collection inspector!
     const sampleDoc = colData.items[0];

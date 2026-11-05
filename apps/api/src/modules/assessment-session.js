@@ -111,8 +111,11 @@ class AssessmentSessionService {
     }
 
     for (const item of mockList) {
-      item.round = 1;
-      this.memoryAttempts.set(item.employeeId, item);
+      item.round = item.round || 1;
+      const existingMem = this.memoryAttempts.get(item.employeeId);
+      if (!existingMem || (item.round || 1) >= (existingMem.round || 1)) {
+        this.memoryAttempts.set(item.employeeId, item);
+      }
       this.allAttempts.set(item.attemptId, item);
       if (this.attemptsCollection) {
         this.attemptsCollection.updateOne(

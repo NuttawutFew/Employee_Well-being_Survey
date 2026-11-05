@@ -1030,7 +1030,7 @@ export default {
           throw new Error(errData.message || `ไม่สามารถสร้างข้อมูลจำลองได้ (HTTP ${res.status})`);
         }
         const data = await res.json();
-        this.exportNotice = `⚡ สร้างข้อมูลจำลองพนักงานสำเร็จ ${data.count} รายการเรียบร้อยแล้ว`;
+        this.exportNotice = data.message || `⚡ สร้างข้อมูลจำลองพนักงานสำเร็จ ${data.count} คนเรียบร้อยแล้ว`;
         this.pagination.page = 1;
         await this.fetchData();
       } catch (err) {
