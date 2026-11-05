@@ -20,6 +20,10 @@ function createAdminAssessmentsRouter({ adminService, sessionService, auditServi
   router.post('/seed-mock', async (req, res, next) => {
     try {
       const list = sessionService.seedMockData();
+      const audit = auditService || sessionService.auditService;
+      if (audit && typeof audit.seedMockData === 'function') {
+        audit.seedMockData();
+      }
       res.json({
         success: true,
         message: `สร้างข้อมูลจำลองสำเร็จ ${list.length} รายการ`,

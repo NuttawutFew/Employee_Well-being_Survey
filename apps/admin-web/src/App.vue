@@ -45,6 +45,7 @@
           <span :class="['badge', isSuperAdmin ? 'badge-super' : 'badge-admin']">
             {{ isSuperAdmin ? '👑 Super Admin Shell' : '👤 Admin Shell' }}
           </span>
+          <span class="badge badge-prototype">🧪 Prototype Edition</span>
         </div>
 
         <nav class="nav-links" role="navigation" aria-label="แถบเมนูหลัก">
@@ -164,6 +165,20 @@
             </button>
           </div>
         </header>
+
+        <!-- Prototype Notification Banner -->
+        <div class="prototype-banner">
+          <div class="prototype-banner-left">
+            <span class="prototype-pill">🧪 PROTOTYPE</span>
+            <span class="prototype-text">
+              <strong>โหมดทดสอบและนำเสนอ (Demo Prototype Edition):</strong>
+              ระบบทำงานด้วยข้อมูลจำลอง (Mock Data) ครอบคลุมภาพรวม Dashboard สถิติ, ตารางรายบุคคล และประวัติระบบ (Audit Logs) พร้อมสำหรับทดสอบ
+            </span>
+          </div>
+          <div class="prototype-banner-right">
+            <span class="prototype-status-badge">● พร้อมพรีเซนต์</span>
+          </div>
+        </div>
 
         <!-- Main Content Area -->
         <main class="content">
@@ -391,6 +406,14 @@ export default {
   color: #94a3b8;
 }
 
+.badge-prototype {
+  background: #2563eb;
+  color: #ffffff;
+  border: 1px solid #1d4ed8;
+  font-weight: 600;
+  margin-left: 0.35rem;
+}
+
 .role-chip {
   display: inline-block;
   padding: 0.15rem 0.5rem;
@@ -494,6 +517,56 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.prototype-banner {
+  background: linear-gradient(90deg, #eff6ff 0%, #f0fdf4 100%);
+  border-bottom: 1px solid #bfdbfe;
+  padding: 0.6rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.85rem;
+}
+
+.prototype-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.prototype-pill {
+  background: #1d4ed8;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 1px 2px rgba(29, 78, 216, 0.2);
+}
+
+.prototype-text {
+  color: #1e3a8a;
+  line-height: 1.4;
+}
+
+.prototype-banner-right {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.prototype-status-badge {
+  background: #dcfce7;
+  color: #15803d;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid #86efac;
 }
 
 .breadcrumb-title {
@@ -733,6 +806,18 @@ export default {
 
   .content {
     padding: 0.75rem 0.5rem;
+  }
+
+  .prototype-banner {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .prototype-banner-right {
+    display: none;
   }
 }
 
