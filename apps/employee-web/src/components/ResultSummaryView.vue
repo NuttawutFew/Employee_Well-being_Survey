@@ -305,16 +305,24 @@ export default {
 </script>
 
 <style scoped>
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 .result-summary-container {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .result-content {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .loading-state, .error-state {
@@ -323,6 +331,8 @@ export default {
   background: white;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .btn-retry {
@@ -339,19 +349,15 @@ export default {
 .overall-card {
   background: white;
   border-radius: 16px;
-  padding: 1.25rem 1.5rem;
+  padding: 1.35rem 1.5rem;
   border: 1.5px solid #e2e8f0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1.25rem;
-}
-
-@media (min-width: 640px) {
-  .overall-card {
-    padding: 1.5rem 1.75rem;
-  }
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 640px) {
@@ -448,16 +454,21 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .burnout-card {
   width: 100%;
+  box-sizing: border-box;
 }
 
 .secondary-cards-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.25rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media (min-width: 640px) {
@@ -469,6 +480,7 @@ export default {
 .secondary-cards-grid .assessment-card {
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
 
 .secondary-cards-grid .card-note {
@@ -482,6 +494,7 @@ export default {
   border-radius: 16px;
   padding: 1.35rem 1.5rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+  box-sizing: border-box;
 }
 
 .card-title-row {
@@ -625,6 +638,8 @@ export default {
   border-radius: 16px;
   padding: 1.35rem 1.5rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .result-feedback-title {

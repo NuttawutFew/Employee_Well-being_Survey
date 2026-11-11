@@ -467,6 +467,13 @@ export default {
 };
 </script>
 
+<style>
+/* Global CSS reset ensuring consistent layout and box-sizing across all components */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+</style>
+
 <style scoped>
 .app-container {
   font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
