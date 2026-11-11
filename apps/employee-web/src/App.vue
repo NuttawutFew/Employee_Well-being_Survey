@@ -477,19 +477,19 @@ export default {
 .app-container.is-standard-view {
   max-width: 920px;
   margin: 0 auto;
-  padding: 0.75rem;
+  padding: 0.75rem 0.75rem 2.5rem 0.75rem;
   box-sizing: border-box;
 }
 
 @media (min-width: 640px) {
   .app-container.is-standard-view {
-    padding: 1.5rem 1.75rem;
+    padding: 1.5rem 1.75rem 3rem 1.75rem;
   }
 }
 
 @media (min-width: 1024px) {
   .app-container.is-standard-view {
-    padding: 2rem 2.5rem;
+    padding: 2rem 2.5rem 3.5rem 2.5rem;
   }
 }
 

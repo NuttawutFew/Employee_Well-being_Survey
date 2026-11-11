@@ -308,7 +308,13 @@ export default {
 .result-summary-container {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem;
+}
+
+.result-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .loading-state, .error-state {
@@ -458,6 +464,16 @@ export default {
   .secondary-cards-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+.secondary-cards-grid .assessment-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.secondary-cards-grid .card-note {
+  margin-top: auto;
+  padding-top: 0.5rem;
 }
 
 .assessment-card {
