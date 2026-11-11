@@ -524,14 +524,11 @@ export default {
 *, *::before, *::after {
   box-sizing: border-box;
 }
-body, button, input, select, textarea {
-  font-family: 'IBM Plex Sans Thai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
 </style>
 
 <style scoped>
 .app-container {
-  font-family: 'IBM Plex Sans Thai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--app-font-family, inherit);
   color: #1e293b;
   min-height: 100vh;
 }

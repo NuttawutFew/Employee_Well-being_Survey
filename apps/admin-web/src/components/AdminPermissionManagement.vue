@@ -462,7 +462,7 @@ export default {
   max-width: 100%;
   margin: 0;
   padding: 0;
-  font-family: 'IBM Plex Sans Thai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--app-font-family, inherit);
 }
 
 .mgmt-header {
