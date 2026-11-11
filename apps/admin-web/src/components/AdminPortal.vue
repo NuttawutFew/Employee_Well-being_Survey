@@ -122,7 +122,7 @@ export default {
   max-width: 1240px;
   margin: 0 auto;
   padding: 2.5rem 1.5rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'IBM Plex Sans Thai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .portal-hero {

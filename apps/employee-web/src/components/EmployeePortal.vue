@@ -139,7 +139,7 @@ export default {
 
 <style scoped>
 .mh-portal-page {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Prompt', sans-serif;
+  font-family: 'IBM Plex Sans Thai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: #1e293b;
   min-height: 100vh;
   background: #f8fafc;
