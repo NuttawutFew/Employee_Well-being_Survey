@@ -1,8 +1,5 @@
 <template>
   <div class="results-table-container">
-    <!-- Multidimensional Filter Panel (Collapsible via toggle) -->
-    <FilterPanel v-if="showFilterPanel" @filters-changed="onFiltersChanged" />
-
     <!-- Toolbar: Search, Round Filter & Summary (Matching Prototype) -->
     <div class="table-toolbar">
       <div class="search-box">
@@ -35,16 +32,6 @@
       </select>
 
       <div class="toolbar-actions">
-        <button
-          type="button"
-          class="btn-toggle-filter"
-          :class="{ active: showFilterPanel }"
-          @click="showFilterPanel = !showFilterPanel"
-          title="เปิด/ปิด แถบตัวกรองข้อมูลหลายมิติ"
-        >
-          {{ showFilterPanel ? '▲ ซ่อนตัวกรองหลายมิติ' : '⚙️ ตัวกรองหลายมิติ' }}
-        </button>
-
         <span class="total-badge">
           พบข้อมูลทั้งหมด: <strong>{{ pagination.totalCount }}</strong> รายการ
         </span>
@@ -743,13 +730,8 @@
 </template>
 
 <script>
-import FilterPanel from './FilterPanel.vue';
-
 export default {
   name: 'IndividualResultsTable',
-  components: {
-    FilterPanel
-  },
   props: {
     admin: {
       type: Object,
@@ -1572,34 +1554,6 @@ export default {
   outline: none;
   border-color: #0284c7;
   box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
-}
-
-.btn-toggle-filter {
-  background: #f8fafc;
-  border: 1px solid #cbd5e1;
-  color: #475569;
-  padding: 0.4rem 0.85rem;
-  border-radius: 6px;
-  font-size: 0.82rem;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  transition: all 0.15s ease;
-}
-
-.btn-toggle-filter:hover {
-  background: #f1f5f9;
-  border-color: #94a3b8;
-  color: #0f172a;
-}
-
-.btn-toggle-filter.active {
-  background: #eff6ff;
-  border-color: #93c5fd;
-  color: #1d4ed8;
-  font-weight: 600;
 }
 
 .total-badge {
