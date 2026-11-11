@@ -318,7 +318,7 @@ export default {
       handler() {
         this.validationError = false;
         this.missingQuestions = [];
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.scrollFormToTop();
       }
     },
     initialAnswers: {
@@ -338,7 +338,39 @@ export default {
       this.$emit('feedback-updated', newVal);
     }
   },
+  mounted() {
+    this.scrollFormToTop();
+  },
   methods: {
+    scrollFormToTop() {
+      // 1. Immediate scroll (instant for mobile/iPad browser engines)
+      window.scrollTo(0, 0);
+      if (document.documentElement) document.documentElement.scrollTop = 0;
+      if (document.body) document.body.scrollTop = 0;
+
+      // 2. Next tick scroll after Vue re-renders the new DOM
+      this.$nextTick(() => {
+        window.scrollTo(0, 0);
+        if (document.documentElement) document.documentElement.scrollTop = 0;
+        if (document.body) document.body.scrollTop = 0;
+
+        const topEl = this.$el || document.querySelector('.assessment-container');
+        if (topEl && typeof topEl.scrollIntoView === 'function') {
+          topEl.scrollIntoView({ behavior: 'auto', block: 'start' });
+        }
+
+        // 3. Timed fallbacks for iOS/iPad Safari touch momentum & virtual keyboard adjustment
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          if (document.documentElement) document.documentElement.scrollTop = 0;
+          if (document.body) document.body.scrollTop = 0;
+        }, 50);
+
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+        }, 150);
+      });
+    },
     isMissing(code) {
       return this.missingQuestions.includes(code);
     },

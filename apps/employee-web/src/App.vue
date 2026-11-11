@@ -376,6 +376,7 @@ export default {
       this.userFeedback = '';
       this.isTakingAssessment = true;
       this.currentScreen = 'assessment';
+      this.scrollToTop();
     },
     startAssessment() {
       this.isTakingAssessment = true;
@@ -383,6 +384,7 @@ export default {
       this.draftAnswers = {};
       this.userFeedback = '';
       this.currentScreen = 'assessment';
+      this.scrollToTop();
     },
     async exitAssessment() {
       const confirmed = confirm(
@@ -419,6 +421,38 @@ export default {
     onFeedbackUpdated(val) {
       this.userFeedback = val || '';
     },
+    scrollToTop() {
+      // 1. Immediate scroll (instant for mobile/iPad)
+      window.scrollTo(0, 0);
+      if (document.documentElement) document.documentElement.scrollTop = 0;
+      if (document.body) document.body.scrollTop = 0;
+
+      // 2. Next tick scroll
+      this.$nextTick(() => {
+        window.scrollTo(0, 0);
+        if (document.documentElement) document.documentElement.scrollTop = 0;
+        if (document.body) document.body.scrollTop = 0;
+
+        const topEl = document.querySelector('.assessment-container') ||
+                      document.querySelector('.form-navigation-top') ||
+                      document.querySelector('.assessment-header') ||
+                      document.querySelector('.app-container');
+        if (topEl && typeof topEl.scrollIntoView === 'function') {
+          topEl.scrollIntoView({ behavior: 'auto', block: 'start' });
+        }
+
+        // 3. Timed fallbacks for mobile/iPad Safari touch inertia
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          if (document.documentElement) document.documentElement.scrollTop = 0;
+          if (document.body) document.body.scrollTop = 0;
+        }, 50);
+
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+        }, 150);
+      });
+    },
     async onNextAssessment(payload) {
       if (payload?.answers) {
         this.draftAnswers = { ...this.draftAnswers, ...payload.answers };
@@ -435,7 +469,7 @@ export default {
 
       // Advance to next step directly on client
       this.currentStepIndex++;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.scrollToTop();
 
       // Non-blocking sync to backend if session is active
       fetch('/api/assessment/draft/step/next', {
@@ -450,7 +484,7 @@ export default {
     async onPrevAssessment() {
       if (this.currentStepIndex <= 0) return;
       this.currentStepIndex--;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.scrollToTop();
 
       fetch('/api/assessment/draft/step/prev', {
         method: 'POST',
@@ -466,6 +500,7 @@ export default {
       this.session.feedback = submitData.feedback || null;
       this.userFeedback = '';
       this.currentScreen = 'submitted';
+      this.scrollToTop();
     },
     async clearDraft() {
       const confirmed = confirm('คุณต้องการล้างคำตอบทั้งหมดและเริ่มต้นทำแบบประเมินใหม่ใช่หรือไม่?');
