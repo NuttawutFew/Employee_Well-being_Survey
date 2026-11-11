@@ -11,6 +11,20 @@
           </div>
         </div>
         <div class="header-right-group">
+          <div class="header-emp-pill" :title="employeeProfile.company || 'องค์กร'">
+            <span class="emp-pill-icon">👤</span>
+            <span class="emp-pill-name">{{ (employeeProfile && employeeProfile.fullName) || employeeId }}</span>
+            <span class="emp-pill-id">({{ employeeId }})</span>
+          </div>
+          <button 
+            type="button" 
+            class="btn-switch-account-header" 
+            @click="logout" 
+            title="สลับบัญชีผู้ใช้งานเพื่อทดสอบ"
+          >
+            <span>🔄</span>
+            <span>สลับบัญชี</span>
+          </button>
           <button type="button" class="btn-contact-hr-header" @click="showContactModal = true" title="เบอร์ติดต่อ HR กรณีฉุกเฉิน">
             <span class="btn-contact-icon">📞</span>
             <span class="btn-contact-text">ติดต่อฝ่ายบุคคล (HR)</span>
@@ -264,6 +278,30 @@ export default {
           this.currentScreen = 'notice';
         }
       }
+    },
+    logout() {
+      localStorage.removeItem('emp_token');
+      document.cookie = 'emp_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      document.cookie = '__Host-emp-session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      this.currentScreen = 'login';
+      this.employeeId = 'EMP-DEV-001';
+      this.employeeProfile = {
+        employeeId: 'EMP-DEV-001',
+        fullName: 'คุณณิชา วัฒนกิจ',
+        company: 'บมจ. ไอเน็ตเวิร์ก',
+        department: 'ฝ่ายเทคโนโลยี',
+        position: 'Software Engineer'
+      };
+      this.session = {
+        noticeAcknowledged: false,
+        status: null,
+        attemptId: null,
+        noticeAcknowledgedAt: null,
+        submittedAt: null,
+        result: null
+      };
+      this.draftAnswers = {};
+      this.userFeedback = '';
     },
     async fetchCatalog() {
       try {
@@ -572,9 +610,52 @@ export default {
 .header-right-group {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.6rem;
   margin-left: auto;
   flex-wrap: wrap;
+}
+
+.header-emp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  color: #334155;
+}
+.badge-emp-icon {
+  font-size: 0.85rem;
+}
+.badge-emp-name {
+  color: #0f172a;
+  font-weight: 600;
+}
+.badge-emp-id {
+  color: #64748b;
+  font-size: 0.75rem;
+}
+
+.btn-switch-account-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  padding: 0.38rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-switch-account-header:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #1e293b;
 }
 
 .btn-contact-hr-header {

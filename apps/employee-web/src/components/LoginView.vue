@@ -75,10 +75,27 @@
 
           <!-- Quick Persona Selector Helper -->
           <div class="mh-login-persona-helper">
-            <span class="helper-title">⚡ บัญชีทดสอบสำหรับพนักงาน:</span>
+            <span class="helper-title">⚡ บัญชีทดสอบสำหรับพนักงาน (Persona Mock Users):</span>
             <div class="helper-buttons">
-              <button type="button" class="btn-persona" @click="selectPersona('employee')">
-                👤 คุณณิชา วัฒนกิจ (EMP-DEV-001)
+              <button 
+                type="button" 
+                class="btn-persona" 
+                :class="{ active: selectedEmployeeId === 'EMP-DEV-001' }"
+                @click="selectPersona('EMP-DEV-001')"
+                title="พนักงานที่ยังไม่ได้ทำแบบประเมิน - เข้าสู่หน้าคำชี้แจงเพื่อเริ่มทำ"
+              >
+                <span>👤 คุณณิชา วัฒนกิจ (EMP-DEV-001)</span>
+                <span class="persona-tag tag-new">ยังไม่ได้ทำ</span>
+              </button>
+              <button 
+                type="button" 
+                class="btn-persona" 
+                :class="{ active: selectedEmployeeId === 'EMP-00108' }"
+                @click="selectPersona('EMP-00108')"
+                title="พนักงานที่ทำแบบประเมินเสร็จแล้ว - เข้าหน้าสรุปผลทันที (สถานะ: ปกติ)"
+              >
+                <span>🟢 คุณปิยะนุช สดใส (EMP-00108)</span>
+                <span class="persona-tag tag-done">ทำแล้ว • ผลปกติ</span>
               </button>
             </div>
           </div>
@@ -102,6 +119,7 @@ export default {
   emits: ['login-success', 'back-to-portal', 'open-contact-hr'],
   data() {
     return {
+      selectedEmployeeId: 'EMP-DEV-001',
       username: 'nichaw@inet.co.th',
       password: 'Employee@1234!',
       loading: false,
@@ -110,11 +128,18 @@ export default {
     };
   },
   methods: {
-    selectPersona(role) {
+    selectPersona(id) {
       this.error = null;
       this.successMessage = null;
-      this.username = 'nichaw@inet.co.th';
-      this.password = 'Employee@1234!';
+      this.selectedEmployeeId = id;
+      if (id === 'EMP-00108') {
+        this.username = 'piyanuch@inet.co.th';
+        this.password = 'Employee@1234!';
+      } else {
+        this.selectedEmployeeId = 'EMP-DEV-001';
+        this.username = 'nichaw@inet.co.th';
+        this.password = 'Employee@1234!';
+      }
     },
     async handleSubmit() {
       this.loading = true;
@@ -122,11 +147,12 @@ export default {
       this.successMessage = null;
 
       try {
+        const targetEmpId = this.selectedEmployeeId || 'EMP-DEV-001';
         const res = await fetch('/api/assessment/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            employeeId: 'EMP-DEV-001',
+            employeeId: targetEmpId,
             username: this.username,
             password: this.password
           })
@@ -138,13 +164,22 @@ export default {
         }
 
         const data = await res.json();
-        const empToken = data.token || data.employee?.employeeId || 'EMP-DEV-001';
+        const empToken = data.token || data.employee?.employeeId || targetEmpId;
         localStorage.setItem('emp_token', empToken);
-        this.successMessage = '🔒 เข้าสู่ระบบพนักงานสำเร็จ กำลังเข้าสู่หน้าคำชี้แจง...';
+        
+        if (empToken === 'EMP-00108') {
+          this.successMessage = '🔒 เข้าสู่ระบบสำเร็จ (คุณปิยะนุช สดใส) กำลังนำสู่หน้าสรุปผลประเมิน...';
+        } else {
+          this.successMessage = '🔒 เข้าสู่ระบบพนักงานสำเร็จ กำลังเข้าสู่หน้าคำชี้แจง...';
+        }
+
         setTimeout(() => {
           this.$emit('login-success', {
             mode: 'employee',
-            employee: data.employee || { employeeId: 'EMP-DEV-001', fullName: 'คุณณิชา วัฒนกิจ' }
+            employee: data.employee || {
+              employeeId: empToken,
+              fullName: empToken === 'EMP-00108' ? 'คุณปิยะนุช สดใส' : 'คุณณิชา วัฒนกิจ'
+            }
           });
         }, 400);
       } catch (err) {
@@ -471,22 +506,48 @@ export default {
 }
 .helper-buttons {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 .btn-persona {
-  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
   border: 1px solid #cbd5e1;
   color: #334155;
-  font-size: 0.75rem;
-  padding: 0.35rem 0.65rem;
-  border-radius: 6px;
+  font-size: 0.8rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.15s ease;
+  text-align: left;
 }
 .btn-persona:hover {
-  background: #e2e8f0;
+  background: #f1f5f9;
   border-color: #94a3b8;
+}
+.btn-persona.active {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+  font-weight: 600;
+  box-shadow: 0 0 0 1.5px #3b82f6;
+}
+.persona-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+}
+.tag-new {
+  background: #e2e8f0;
+  color: #475569;
+}
+.tag-done {
+  background: #dcfce7;
+  color: #166534;
 }
 
 .mh-login-feedback {

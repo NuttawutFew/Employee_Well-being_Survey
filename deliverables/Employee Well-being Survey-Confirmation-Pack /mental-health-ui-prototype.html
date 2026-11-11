@@ -4619,9 +4619,10 @@
 
                 <!-- Persona Helper for Employee -->
                 <div class="mh-login-persona-helper" id="mh-proto-persona-helper" style="margin-top:16px;">
-                  <span class="helper-title">⚡ บัญชีทดสอบสำหรับพนักงาน:</span>
-                  <div class="helper-buttons">
-                    <button type="button" class="btn-persona" id="mh-btn-emp-persona">👤 คุณณิชา วัฒนกิจ (EMP-DEV-001)</button>
+                  <span class="helper-title">⚡ บัญชีทดสอบสำหรับพนักงาน (Persona Mock Users):</span>
+                  <div class="helper-buttons" style="display:flex; flex-direction:column; gap:8px;">
+                    <button type="button" class="btn-persona" id="mh-btn-emp-persona">👤 คุณณิชา วัฒนกิจ (EMP-DEV-001) • เริ่มทำแบบประเมิน</button>
+                    <button type="button" class="btn-persona" id="mh-btn-emp-persona-00108">🟢 คุณปิยะนุช สดใส (EMP-00108) • ทำแล้ว (สรุปผล: ปกติ)</button>
                   </div>
                 </div>
               </form>
@@ -7101,12 +7102,23 @@
       const loginMsg = root.querySelector('#mh-proto-login-msg');
       const protoUsername = root.querySelector('#mh-proto-username');
       const protoPassword = root.querySelector('#mh-proto-password');
+      let currentLoggedInEmpId = 'EMP-DEV-001';
       const empPersonaBtn = root.querySelector('#mh-btn-emp-persona');
+      const empPersona00108Btn = root.querySelector('#mh-btn-emp-persona-00108');
       const forgotLink = root.querySelector('#mh-proto-forgot');
 
       if (empPersonaBtn) {
         empPersonaBtn.addEventListener('click', () => {
+          currentLoggedInEmpId = 'EMP-DEV-001';
           if (protoUsername) protoUsername.value = 'nichaw@inet.co.th';
+          if (protoPassword) protoPassword.value = 'Employee@1234!';
+        });
+      }
+
+      if (empPersona00108Btn) {
+        empPersona00108Btn.addEventListener('click', () => {
+          currentLoggedInEmpId = 'EMP-00108';
+          if (protoUsername) protoUsername.value = 'piyanuch@inet.co.th';
           if (protoPassword) protoPassword.value = 'Employee@1234!';
         });
       }
@@ -7118,12 +7130,19 @@
       }
 
       const executeLoginFlow = () => {
+        const u = (protoUsername ? protoUsername.value : '').toLowerCase();
+        const is00108 = currentLoggedInEmpId === 'EMP-00108' || u.includes('00108') || u.includes('piyanuch');
+
         if (loginBtn) loginBtn.disabled = true;
         if (loginText) loginText.style.display = 'none';
         if (loginSpinner) loginSpinner.style.display = 'inline-block';
         if (loginMsg) {
           loginMsg.style.display = 'block';
-          loginMsg.innerHTML = `✅ เข้าสู่ระบบพนักงานสำเร็จ! (บันทึก Log: employee_login) กำลังนำเข้าสู่ <strong>หน้าคำชี้แจง</strong>...`;
+          if (is00108) {
+            loginMsg.innerHTML = `✅ เข้าสู่ระบบพนักงานสำเร็จ! (คุณปิยะนุช สดใส) กำลังนำสู่ <strong>หน้าสรุปผลประเมิน (ผลปกติ)</strong>...`;
+          } else {
+            loginMsg.innerHTML = `✅ เข้าสู่ระบบพนักงานสำเร็จ! (บันทึก Log: employee_login) กำลังนำเข้าสู่ <strong>หน้าคำชี้แจง</strong>...`;
+          }
         }
 
         setTimeout(() => {
@@ -7133,7 +7152,19 @@
           if (loginMsg) loginMsg.style.display = 'none';
 
           applyRole('employee');
-          showScreen('notice'); // ข้อ 2.1: Login พนักงาน สำเร็จ นำสู่หน้าคำชี้แจง
+          if (is00108) {
+            currentLoggedInEmpId = 'EMP-00108';
+            root.querySelectorAll('.mh-user-id').forEach(el => {
+              el.innerHTML = 'พนักงาน: <strong>EMP-00108</strong>';
+            });
+            showScreen('result');
+          } else {
+            currentLoggedInEmpId = 'EMP-DEV-001';
+            root.querySelectorAll('.mh-user-id').forEach(el => {
+              el.innerHTML = 'พนักงาน: <strong>EMP-DEV-001</strong>';
+            });
+            showScreen('notice'); // ข้อ 2.1: Login พนักงาน สำเร็จ นำสู่หน้าคำชี้แจง
+          }
         }, 700);
       };
 
@@ -7665,6 +7696,32 @@
       };
 
       const calculateScoresFromAnswers = () => {
+        if (currentLoggedInEmpId === 'EMP-00108') {
+          return {
+            burnout: {
+              level: 'LOW',
+              dimensions: {
+                EE: { score: 0, level: 'LOW' },
+                DP: { score: 0, level: 'LOW' },
+                PA: { score: 48, level: 'LOW' }
+              }
+            },
+            stress: {
+              totalScore: 0,
+              level: 'LOW',
+              label: 'ต่ำกว่าเกณฑ์ปกติ'
+            },
+            q9: {
+              totalScore: 0,
+              level: 'NONE',
+              label: 'ไม่มีอาการหรือมีน้อยมาก'
+            },
+            overall: {
+              status: 'NORMAL',
+              label: 'ปกติ'
+            }
+          };
+        }
         const hasAnswers = Object.keys(answers).length > 0;
         if (!hasAnswers) {
           return {

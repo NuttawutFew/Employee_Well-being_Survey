@@ -21,16 +21,50 @@ function createAssessmentRouter({ sessionService }) {
     res.json(item);
   });
 
-  // 1. Employee Auth: Login via ONE ID
-  router.post('/auth/login', (req, res) => {
-    const { employeeId = 'EMP-DEV-001' } = req.body || {};
-    const profile = {
-      employeeId,
+  function resolveEmployeeProfile(empId) {
+    if (sessionService && sessionService.memoryAttempts) {
+      const att = sessionService.memoryAttempts.get(empId);
+      if (att && att.snapshot) {
+        return {
+          employeeId: empId,
+          fullName: `คุณ${att.snapshot.firstName} ${att.snapshot.lastName}`,
+          company: att.snapshot.company || 'บ. สยาม โลจิสติกส์ จำกัด',
+          department: att.snapshot.department || 'การเงิน',
+          position: att.snapshot.position || 'นักวิเคราะห์การเงิน'
+        };
+      }
+    }
+    if (empId === 'EMP-00108') {
+      return {
+        employeeId: 'EMP-00108',
+        fullName: 'คุณปิยะนุช สดใส',
+        company: 'บ. สยาม โลจิสติกส์ จำกัด',
+        department: 'การเงิน',
+        position: 'นักวิเคราะห์การเงิน'
+      };
+    }
+    return {
+      employeeId: empId || 'EMP-DEV-001',
       fullName: 'คุณณิชา วัฒนกิจ',
       company: 'บมจ. ไอเน็ตเวิร์ก',
       department: 'ฝ่ายเทคโนโลยี',
       position: 'Software Engineer'
     };
+  }
+
+  // 1. Employee Auth: Login via ONE ID
+  router.post('/auth/login', (req, res) => {
+    let { employeeId, username } = req.body || {};
+    if (!employeeId && username) {
+      const u = username.toLowerCase();
+      if (u.includes('00108') || u.includes('piyanuch')) {
+        employeeId = 'EMP-00108';
+      } else {
+        employeeId = 'EMP-DEV-001';
+      }
+    }
+    employeeId = employeeId || 'EMP-DEV-001';
+    const profile = resolveEmployeeProfile(employeeId);
     const isProd = process.env.NODE_ENV === 'production';
     const cookieOptions = {
       httpOnly: true,
@@ -52,13 +86,10 @@ function createAssessmentRouter({ sessionService }) {
 
   // 2. Employee Auth: OnePlatform SSO simulation
   router.post('/auth/sso', (req, res) => {
-    const { shareToken, employeeId = 'EMP-DEV-001' } = req.body || {};
+    let { shareToken, employeeId } = req.body || {};
+    employeeId = employeeId || 'EMP-DEV-001';
     const profile = {
-      employeeId,
-      fullName: 'คุณณิชา วัฒนกิจ',
-      company: 'บมจ. ไอเน็ตเวิร์ก',
-      department: 'ฝ่ายเทคโนโลยี',
-      position: 'Software Engineer',
+      ...resolveEmployeeProfile(employeeId),
       sso: true
     };
     const isProd = process.env.NODE_ENV === 'production';
@@ -105,13 +136,7 @@ function createAssessmentRouter({ sessionService }) {
 
     res.json({
       success: true,
-      employee: {
-        employeeId: empId,
-        fullName: 'คุณณิชา วัฒนกิจ',
-        company: 'บมจ. ไอเน็ตเวิร์ก',
-        department: 'ฝ่ายเทคโนโลยี',
-        position: 'Software Engineer'
-      }
+      employee: resolveEmployeeProfile(empId)
     });
   });
 
