@@ -92,8 +92,8 @@
             <span v-else>เข้าสู่ระบบผู้ดูแลระบบ →</span>
           </button>
 
-          <!-- Quick Persona Selector Helper -->
-          <div class="mh-login-persona-helper">
+          <!-- Quick Persona Selector Helper (Visible only when Mock is enabled) -->
+          <div v-if="isMockEnabled" class="mh-login-persona-helper">
             <span class="helper-title">⚡ เลือกบทบาทผู้ดูแลเพื่อทดสอบเข้าสู่ระบบ:</span>
             <div class="helper-buttons">
               <button type="button" class="btn-persona" @click="selectPersona('super_admin')">
@@ -121,16 +121,20 @@
 export default {
   name: 'AdminLogin',
   data() {
+    const isMock = import.meta.env.VITE_ENABLE_MOCK !== 'false' && import.meta.env.VITE_ENABLE_MOCK !== false;
     return {
-      username: 'admin',
-      password: 'Admin@123456!',
-      turnstilePassed: true,
+      username: isMock ? 'admin' : '',
+      password: isMock ? 'Admin@123456!' : '',
+      turnstilePassed: isMock ? true : false,
       loading: false,
       error: null,
       isLocked: false
     };
   },
   computed: {
+    isMockEnabled() {
+      return import.meta.env.VITE_ENABLE_MOCK !== 'false' && import.meta.env.VITE_ENABLE_MOCK !== false;
+    },
     canSubmit() {
       return this.username.length > 0 && this.password.length > 0;
     }

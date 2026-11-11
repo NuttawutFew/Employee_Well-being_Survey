@@ -43,7 +43,7 @@
           </button>
         </div>
 
-        <button class="btn-seed-mock" :disabled="loading || seedingMock" @click="triggerSeedMock" title="สร้างข้อมูลจำลอง 10 คนสำหรับทดสอบ Prototype">
+        <button v-if="isMockEnabled" class="btn-seed-mock" :disabled="loading || seedingMock" @click="triggerSeedMock" title="สร้างข้อมูลจำลอง 10 คนสำหรับทดสอบ Prototype">
           <span v-if="seedingMock">กำลังสร้างข้อมูล...</span>
           <span v-else>⚡ สร้างข้อมูลจำลอง (Mock 10 คน)</span>
         </button>
@@ -108,7 +108,7 @@
             <td colspan="10" class="empty-cell">
               <span class="empty-icon">📭</span>
               <p>ยังไม่มีข้อมูลการส่งแบบประเมิน หรือไม่พบรายการที่ตรงกับเงื่อนไขตัวกรอง</p>
-              <button class="btn-seed-mock-empty" :disabled="seedingMock" @click="triggerSeedMock">
+              <button v-if="isMockEnabled" class="btn-seed-mock-empty" :disabled="seedingMock" @click="triggerSeedMock">
                 <span v-if="seedingMock">กำลังสร้างข้อมูล...</span>
                 <span v-else>⚡ คลิกเพื่อสร้างข้อมูลจำลอง 10 คนสำหรับทดสอบ Prototype</span>
               </button>
@@ -739,6 +739,9 @@ export default {
     }
   },
   computed: {
+    isMockEnabled() {
+      return import.meta.env.VITE_ENABLE_MOCK !== 'false' && import.meta.env.VITE_ENABLE_MOCK !== false;
+    },
     canExport() {
       if (!this.admin) return true;
       const role = (this.admin.role || '').toLowerCase();

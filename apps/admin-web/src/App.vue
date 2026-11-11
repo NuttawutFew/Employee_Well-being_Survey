@@ -45,7 +45,7 @@
           <span :class="['badge', isSuperAdmin ? 'badge-super' : 'badge-admin']">
             {{ isSuperAdmin ? '👑 Super Admin Shell' : '👤 Admin Shell' }}
           </span>
-          <span class="badge badge-prototype">🧪 Prototype Edition</span>
+          <span v-if="isMockEnabled" class="badge badge-prototype">🧪 Prototype Edition</span>
         </div>
 
         <nav class="nav-links" role="navigation" aria-label="แถบเมนูหลัก">
@@ -166,8 +166,8 @@
           </div>
         </header>
 
-        <!-- Prototype Notification Banner -->
-        <div class="prototype-banner">
+        <!-- Prototype Notification Banner (Visible only when Mock is enabled) -->
+        <div v-if="isMockEnabled" class="prototype-banner">
           <div class="prototype-banner-left">
             <span class="prototype-pill">🧪 PROTOTYPE</span>
             <span class="prototype-text">
@@ -250,6 +250,9 @@ export default {
     };
   },
   computed: {
+    isMockEnabled() {
+      return import.meta.env.VITE_ENABLE_MOCK !== 'false' && import.meta.env.VITE_ENABLE_MOCK !== false;
+    },
     isSuperAdmin() {
       return (this.admin?.role || '').toLowerCase() === 'super_admin';
     }

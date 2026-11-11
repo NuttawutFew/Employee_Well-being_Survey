@@ -19,6 +19,12 @@ function createAdminAssessmentsRouter({ adminService, sessionService, auditServi
   // POST /api/admin/assessments/seed-mock - Seed mock employee assessments
   router.post('/seed-mock', async (req, res, next) => {
     try {
+      if (process.env.SEED_MOCK === 'false' || process.env.ENABLE_MOCK_DATA === 'false') {
+        return res.status(403).json({
+          code: 'MOCK_DISABLED',
+          message: 'การสร้างข้อมูลจำลองถูกปิดใช้งานในสภาพแวดล้อมนี้ (SEED_MOCK=false)'
+        });
+      }
       const list = sessionService.seedMockData();
       const audit = auditService || sessionService.auditService;
       if (audit && typeof audit.seedMockData === 'function') {
@@ -30,6 +36,24 @@ function createAdminAssessmentsRouter({ adminService, sessionService, auditServi
         message: `สร้างข้อมูลจำลองสำเร็จ ${employeeCount} คน (${list.length} รายการประเมิน)`,
         count: employeeCount,
         attemptsCount: list.length
+      });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // POST /api/admin/assessments/purge-mock - Purge all mock employee assessments
+  router.post('/purge-mock', async (req, res, next) => {
+    try {
+      const result = sessionService.purgeMockData();
+      const audit = auditService || sessionService.auditService;
+      if (audit && typeof audit.purgeMockData === 'function') {
+        audit.purgeMockData();
+      }
+      res.json({
+        success: true,
+        message: `ล้างข้อมูลจำลองพนักงานเรียบร้อยแล้ว (${result?.count || 0} คน)`,
+        count: result?.count || 0
       });
     } catch (err) {
       next(err);

@@ -24,8 +24,8 @@
       </div>
     </header>
 
-    <!-- Channel Simulation Bar -->
-    <div class="mh-entry-banner">
+    <!-- Channel Simulation Bar (Visible only when Mock is enabled) -->
+    <div v-if="isMockEnabled" class="mh-entry-banner">
       <div class="mh-entry-banner-text">
         <strong>🌐 ทางเข้าพนักงาน (Employee Portal)</strong> — กำลังแสดงหน้าหลักสำหรับพนักงาน เพื่อเข้าสู่ระบบทำแบบประเมิน (เข้าสู่ระบบ ➔ หน้าคำชี้แจง ➔ ทำแบบประเมิน)
       </div>
@@ -117,6 +117,11 @@ export default {
     return {
       inetLogo
     };
+  },
+  computed: {
+    isMockEnabled() {
+      return import.meta.env.VITE_ENABLE_MOCK !== 'false' && import.meta.env.VITE_ENABLE_MOCK !== false;
+    }
   }
 };
 </script>

@@ -20,16 +20,16 @@
             type="button" 
             class="btn-switch-account-header" 
             @click="logout" 
-            title="สลับบัญชีผู้ใช้งานเพื่อทดสอบ"
+            :title="isMockEnabled ? 'สลับบัญชีผู้ใช้งานเพื่อทดสอบ' : 'ออกจากระบบ'"
           >
-            <span>🔄</span>
-            <span>สลับบัญชี</span>
+            <span>{{ isMockEnabled ? '🔄' : '🚪' }}</span>
+            <span>{{ isMockEnabled ? 'สลับบัญชี' : 'ออกจากระบบ' }}</span>
           </button>
           <button type="button" class="btn-contact-hr-header" @click="showContactModal = true" title="เบอร์ติดต่อ HR กรณีฉุกเฉิน">
             <span class="btn-contact-icon">📞</span>
             <span class="btn-contact-text">ติดต่อฝ่ายบุคคล (HR)</span>
           </button>
-          <a href="http://localhost:3001" class="btn-admin-header" title="ไปยังหน้าสำหรับผู้ดูแลระบบ">
+          <a v-if="adminPortalUrl" :href="adminPortalUrl" class="btn-admin-header" title="ไปยังหน้าสำหรับผู้ดูแลระบบ">
             <span class="btn-admin-icon">🛡️</span>
             <span class="btn-admin-text">สำหรับผู้ดูแลระบบ ↗</span>
           </a>
@@ -184,6 +184,12 @@ export default {
     };
   },
   computed: {
+    isMockEnabled() {
+      return import.meta.env.VITE_ENABLE_MOCK !== 'false' && import.meta.env.VITE_ENABLE_MOCK !== false;
+    },
+    adminPortalUrl() {
+      return import.meta.env.VITE_ADMIN_URL || (this.isMockEnabled ? 'http://localhost:3001' : '');
+    },
     isAuthenticatedScreen() {
       return ['notice', 'assessment', 'submitted'].includes(this.currentScreen);
     },

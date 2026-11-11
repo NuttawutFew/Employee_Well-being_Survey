@@ -73,8 +73,8 @@
             <a href="javascript:void(0)" @click="alertRegister">ติดต่อฝ่ายทรัพยากรบุคคล (HR)</a>
           </div>
 
-          <!-- Quick Persona Selector Helper -->
-          <div class="mh-login-persona-helper">
+          <!-- Quick Persona Selector Helper (Visible only when Mock is enabled) -->
+          <div v-if="isMockEnabled" class="mh-login-persona-helper">
             <span class="helper-title">⚡ บัญชีทดสอบสำหรับพนักงาน (Persona Mock Users):</span>
             <div class="helper-buttons">
               <button 
@@ -118,14 +118,20 @@ export default {
   name: 'LoginView',
   emits: ['login-success', 'back-to-portal', 'open-contact-hr'],
   data() {
+    const isMock = import.meta.env.VITE_ENABLE_MOCK !== 'false' && import.meta.env.VITE_ENABLE_MOCK !== false;
     return {
-      selectedEmployeeId: 'EMP-DEV-001',
-      username: 'nichaw@inet.co.th',
-      password: 'Employee@1234!',
+      selectedEmployeeId: isMock ? 'EMP-DEV-001' : '',
+      username: isMock ? 'nichaw@inet.co.th' : '',
+      password: isMock ? 'Employee@1234!' : '',
       loading: false,
       error: null,
       successMessage: null
     };
+  },
+  computed: {
+    isMockEnabled() {
+      return import.meta.env.VITE_ENABLE_MOCK !== 'false' && import.meta.env.VITE_ENABLE_MOCK !== false;
+    }
   },
   methods: {
     selectPersona(id) {
