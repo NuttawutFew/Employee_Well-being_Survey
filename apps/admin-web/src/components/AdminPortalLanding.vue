@@ -11,9 +11,9 @@
           </div>
         </div>
         <div class="mh-admin-nav-actions">
-          <a href="http://localhost:3000" class="mh-btn-nav-employee" title="สลับไปยังหน้าหลักของพนักงาน">
+          <a :href="employeePortalUrl" class="mh-btn-nav-employee" title="สลับไปยังหน้าหลักของพนักงาน">
             <span>👤</span>
-            <span>ไปยังหน้าพนักงาน (Employee Portal) ↗</span>
+            <span>ไปยังหน้าพนักงาน (Employee) ↗</span>
           </a>
         </div>
       </div>
@@ -83,7 +83,12 @@
 
 <script>
 export default {
-  name: 'AdminPortalLanding'
+  name: 'AdminPortalLanding',
+  computed: {
+    employeePortalUrl() {
+      return import.meta.env.VITE_EMPLOYEE_URL || 'http://localhost:3000';
+    }
+  }
 };
 </script>
 

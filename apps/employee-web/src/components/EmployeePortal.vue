@@ -18,7 +18,7 @@
           </button>
           <a :href="adminPortalUrl" class="mh-btn-nav-admin" title="ไปยังหน้าสำหรับผู้ดูแลระบบ">
             <span>🛡️</span>
-            <span>สำหรับผู้ดูแลระบบ (Admin Portal) ↗</span>
+            <span>สำหรับผู้ดูแลระบบ (Admin) ↗</span>
           </a>
         </div>
       </div>
