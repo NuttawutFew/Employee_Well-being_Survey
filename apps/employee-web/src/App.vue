@@ -559,6 +559,15 @@ export default {
 *, *::before, *::after {
   box-sizing: border-box;
 }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
 </style>
 
 <style scoped>
@@ -566,6 +575,9 @@ export default {
   font-family: var(--app-font-family, inherit);
   color: #1e293b;
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .app-container.is-standard-view {
@@ -573,6 +585,13 @@ export default {
   margin: 0 auto;
   padding: 0.75rem 0.75rem 2.5rem 0.75rem;
   box-sizing: border-box;
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .app-container.is-standard-view {
+    padding: 0.5rem 0.5rem 2rem 0.5rem;
+  }
 }
 
 @media (min-width: 640px) {
@@ -592,6 +611,56 @@ export default {
   border-bottom: 1px solid #e2e8f0;
   padding-bottom: 1rem;
   margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+  .brand-wrap {
+    justify-content: flex-start;
+  }
+  .brand-logo-img {
+    width: 38px;
+    height: 38px;
+  }
+  .brand-title {
+    font-size: 1.05rem;
+    white-space: nowrap;
+  }
+  .header-right-group {
+    width: 100%;
+    margin-left: 0;
+    gap: 0.4rem;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .header-emp-pill {
+    max-width: 100%;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+  .btn-switch-account-header,
+  .btn-contact-hr-header,
+  .btn-admin-header {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.65rem;
+  }
+  .form-navigation-top {
+    gap: 0.5rem;
+  }
+  .btn-back-overview,
+  .btn-clear-in-form {
+    flex: 1;
+    justify-content: center;
+    text-align: center;
+    padding: 0.45rem 0.5rem;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
 }
 
 .header-content {

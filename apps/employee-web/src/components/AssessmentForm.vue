@@ -416,7 +416,7 @@ export default {
       if (!text) return '';
       const line = (t, extraClass = '') => `<span class="scale-line ${extraClass}">${t}</span>`;
       if (text === 'ไม่เคยรู้สึกเช่นนั้นเลย') {
-        return line('ไม่เคย') + line('รู้สึก') + line('เช่นนั้นเลย');
+        return line('ไม่เคย') + line('รู้สึก') + line('เช่นนั้น') + line('เลย');
       }
       if (text.includes('ไม่เคยรู้สึก')) {
         const sub = text.replace('ไม่เคยรู้สึก', '').trim();
@@ -432,7 +432,7 @@ export default {
       }
       if (text.startsWith('สัปดาห์ละ ')) {
         const num = text.replace('สัปดาห์ละ ', '').replace(' ครั้ง', '').trim();
-        return line('สัปดาห์ละ') + line(num) + line('ครั้ง');
+        return line('สัปดาห์') + line('ละ ' + num) + line('ครั้ง');
       }
       if (text === 'ทุกวัน') {
         return line('&nbsp;') + line('ทุกวัน') + line('&nbsp;');
@@ -1254,58 +1254,90 @@ export default {
   font-family: monospace;
 }
 
+.assessment-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  padding-bottom: 5rem;
+}
+
+.question-card {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.scale-rating-wrapper {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 @media (max-width: 640px) {
   .question-card {
-    padding: 0.95rem 0.45rem;
+    padding: 0.85rem 0.35rem;
+  }
+  .scale-rating-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .scale-track {
-    gap: 3px;
+    gap: 2px;
     padding: 4px 0;
     margin: 0.25rem 0;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
   .scale-track-line {
-    left: 14px;
-    right: 14px;
-    bottom: 19px;
-    height: 3.5px;
+    left: 10px;
+    right: 10px;
+    bottom: 18px;
+    height: 3px;
   }
   .scale-item {
-    padding: 4px 1px 6px 1px;
-    border-radius: 8px;
+    padding: 2px 0 4px 0;
+    border-radius: 6px;
     background: transparent !important;
     border: none !important;
+    min-width: 0;
+    flex: 1 1 0;
   }
   .scale-label-wrap {
-    min-height: 2.75rem;
-    margin-bottom: 4px;
+    min-height: 2.5rem;
+    margin-bottom: 3px;
+    width: 100%;
   }
   .scale-label {
-    font-size: 0.65rem;
+    font-size: 0.58rem;
     line-height: 1.15;
+    width: 100%;
   }
   ::v-deep .scale-line {
-    font-size: 0.65rem;
+    font-size: 0.58rem;
     line-height: 1.15;
+    white-space: nowrap;
   }
   ::v-deep .scale-line.single-line {
-    line-height: 1.8;
+    line-height: 1.6;
   }
   .scale-circle-wrap {
-    height: 22px;
+    height: 20px;
   }
   .scale-circle {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     border-width: 2px;
   }
   .scale-circle-dot {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
   }
   .scale-live-feedback {
-    font-size: 0.82rem;
-    padding: 6px 10px;
-    min-height: 34px;
+    font-size: 0.78rem;
+    padding: 5px 8px;
+    min-height: 30px;
   }
 }
 
