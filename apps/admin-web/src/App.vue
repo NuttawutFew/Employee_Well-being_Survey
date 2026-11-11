@@ -102,8 +102,9 @@
             <span>ประวัติการใช้งาน (Audit Logs)</span>
           </button>
 
-          <!-- MongoDB Overview -->
+          <!-- MongoDB Overview (Visible only when Mock is enabled) -->
           <button
+            v-if="isMockEnabled"
             class="nav-item"
             :class="{ active: currentTab === 'database' }"
             @click="selectTab('database')"
@@ -208,7 +209,7 @@
           </div>
 
           <!-- View 5: MongoDB Database Overview & Inspector -->
-          <div v-else-if="currentTab === 'database'" class="tab-view view-database">
+          <div v-else-if="currentTab === 'database' && isMockEnabled" class="tab-view view-database">
             <DatabaseOverview />
           </div>
         </main>
@@ -276,7 +277,11 @@ export default {
       this.mobileMenuOpen = false;
     },
     selectTab(tab) {
-      this.currentTab = tab;
+      if (tab === 'database' && !this.isMockEnabled) {
+        this.currentTab = 'dashboard';
+      } else {
+        this.currentTab = tab;
+      }
       this.closeMobileMenu();
     },
     async checkSession() {
