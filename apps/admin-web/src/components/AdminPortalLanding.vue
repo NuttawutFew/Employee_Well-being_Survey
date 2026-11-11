@@ -134,12 +134,14 @@ export default {
   font-size: 1.05rem;
   font-weight: 700;
   color: #1b3574;
+  white-space: nowrap;
 }
 .mh-admin-title-en {
   font-size: 0.75rem;
   color: #64748b;
   font-weight: 500;
   letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 .mh-btn-nav-employee {
   display: inline-flex;
@@ -158,6 +160,36 @@ export default {
 .mh-btn-nav-employee:hover {
   background: #dbeafe;
   color: #1d4ed8;
+}
+
+@media (max-width: 640px) {
+  .mh-admin-nav {
+    padding: 0.65rem 1rem;
+  }
+  .mh-admin-nav-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+  .mh-admin-brand {
+    justify-content: flex-start;
+  }
+  .mh-admin-logo-img {
+    width: 36px;
+    height: 36px;
+  }
+  .mh-admin-title-th {
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+  .mh-btn-nav-employee {
+    justify-content: center;
+    width: 100%;
+    padding: 0.45rem 0.5rem;
+    font-size: 0.78rem;
+    white-space: nowrap;
+    text-align: center;
+  }
 }
 
 /* Hero Container */

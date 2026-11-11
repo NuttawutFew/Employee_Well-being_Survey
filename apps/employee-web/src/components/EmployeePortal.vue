@@ -179,12 +179,14 @@ export default {
   font-size: 1.05rem;
   font-weight: 700;
   color: #1b3574;
+  white-space: nowrap;
 }
 .mh-nav-title-en {
   font-size: 0.75rem;
   color: #64748b;
   font-weight: 500;
   letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 .mh-portal-nav-actions {
   display: flex;
@@ -230,6 +232,54 @@ export default {
   background: #e2e8f0;
   color: #0f172a;
   text-decoration: none;
+}
+
+@media (max-width: 640px) {
+  .mh-portal-nav {
+    padding: 0.65rem 1rem;
+  }
+  .mh-portal-nav-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+  .mh-portal-brand {
+    justify-content: flex-start;
+  }
+  .mh-brand-logo-img {
+    width: 36px;
+    height: 36px;
+  }
+  .mh-nav-title-th {
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+  .mh-portal-nav-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+  }
+  .mh-btn-nav-contact-hr,
+  .mh-btn-nav-admin {
+    flex: 1;
+    justify-content: center;
+    padding: 0.45rem 0.4rem;
+    font-size: 0.76rem;
+    white-space: nowrap;
+    text-align: center;
+  }
+}
+
+@media (max-width: 360px) {
+  .mh-btn-nav-contact-hr,
+  .mh-btn-nav-admin {
+    font-size: 0.72rem;
+    padding: 0.4rem 0.3rem;
+    gap: 0.25rem;
+  }
 }
 
 /* Channel Banner */
