@@ -740,6 +740,14 @@ export default {
   },
   computed: {
     isMockEnabled() {
+      if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('mock')) {
+          const val = params.get('mock');
+          if (val === 'false' || val === '0') return false;
+          if (val === 'true' || val === '1') return true;
+        }
+      }
       return import.meta.env.VITE_ENABLE_MOCK !== 'false' && import.meta.env.VITE_ENABLE_MOCK !== false;
     },
     canExport() {
