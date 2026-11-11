@@ -234,7 +234,13 @@
             ล้างคำตอบชุดนี้
           </button>
 
-          <button type="button" class="btn-dev-fill" title="เติมคำตอบชุดนี้เพื่อความสะดวกในการทดสอบ" @click="autoFillDev">
+          <button 
+            v-if="isMockEnabled" 
+            type="button" 
+            class="btn-dev-fill" 
+            title="เติมคำตอบชุดนี้เพื่อความสะดวกในการทดสอบ" 
+            @click="autoFillDev"
+          >
             ⚡ เติมคำตอบอัตโนมัติ (สำหรับทดสอบ)
           </button>
         </div>
@@ -282,6 +288,9 @@ export default {
     };
   },
   computed: {
+    isMockEnabled() {
+      return import.meta.env.VITE_ENABLE_MOCK !== 'false' && import.meta.env.VITE_ENABLE_MOCK !== false;
+    },
     answeredCount() {
       return this.assessment.questions.filter(
         (q) => this.localAnswers[q.code] !== undefined && this.localAnswers[q.code] !== null
