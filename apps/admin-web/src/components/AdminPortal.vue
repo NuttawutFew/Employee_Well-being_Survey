@@ -38,7 +38,7 @@
 
       <!-- Card 2: กำหนดสิทธิการเข้าถึงของ Admin (Step 10) -->
       <div class="portal-card card-permissions" @click="$emit('select-view', 'permissions')">
-        <div class="card-icon-wrap">
+        <div class="card-icon-wrap purple">
           <span class="card-icon">🔐</span>
         </div>
         <div class="card-body">
@@ -119,7 +119,7 @@ export default {
 
 <style scoped>
 .portal-container {
-  max-width: 1120px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 2.5rem 1.5rem;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -162,143 +162,168 @@ export default {
 
 .portal-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
   margin-bottom: 2.5rem;
+}
+
+@media (max-width: 1024px) {
+  .portal-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .portal-card {
   background: #ffffff;
   border-radius: 16px;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  justify-content: space-between;
+  padding: 1.85rem;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
 
 .portal-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-  border-color: #3b82f6;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.08), 0 4px 8px -4px rgba(0, 0, 0, 0.04);
+}
+
+.card-dashboard:hover {
+  border-color: #0284c7;
 }
 
 .card-dashboard:hover .btn-enter-card {
-  background: #1d4ed8;
+  background: #0369a1;
 }
 
-.card-permissions:hover .btn-enter-card {
-  background: #0f172a;
-  color: #ffffff;
+.card-permissions:hover {
+  border-color: #7c3aed;
 }
 
-.card-audit-logs:hover .btn-enter-card {
+.card-permissions:hover .btn-secondary {
+  background: #5b21b6;
+}
+
+.card-audit-logs:hover {
+  border-color: #059669;
+}
+
+.card-audit-logs:hover .btn-green {
   background: #047857;
 }
 
 .card-icon-wrap {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  background: #f1f5f9;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #eff6ff;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .card-dashboard .card-icon-wrap {
   background: #eff6ff;
 }
 
-.card-permissions .card-icon-wrap {
-  background: #faf5ff;
+.card-permissions .card-icon-wrap,
+.card-icon-wrap.purple {
+  background: #f5f3ff;
 }
 
 .card-audit-logs .card-icon-wrap,
 .card-icon-wrap.green {
   background: #ecfdf5;
-  color: #059669;
+}
+
+.card-icon {
+  font-size: 1.5rem;
+}
+
+.card-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #475569;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.5rem;
 }
 
 .card-tag.tag-green {
   color: #059669;
 }
 
-.btn-enter-card.btn-green {
-  background: #059669;
-}
-.btn-enter-card.btn-green:hover {
-  background: #047857;
-}
-
-.card-icon {
-  font-size: 1.8rem;
-}
-
-.card-tag {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #3b82f6;
-  margin-bottom: 0.5rem;
-}
-
-.card-permissions .card-tag {
-  color: #8b5cf6;
-}
-
 .card-body h2 {
-  font-size: 1.45rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #0f172a;
+  line-height: 1.35;
   margin: 0 0 0.75rem 0;
 }
 
 .card-body p {
   color: #475569;
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   line-height: 1.6;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 1.25rem 0;
 }
 
 .feature-bullets {
   list-style: none;
   padding: 0;
-  margin: 0 0 2rem 0;
+  margin: 0 0 1.5rem 0;
 }
 
 .feature-bullets li {
   font-size: 0.85rem;
-  color: #64748b;
+  color: #334155;
   margin-bottom: 0.4rem;
+  line-height: 1.45;
 }
 
 .card-footer {
   margin-top: auto;
+  padding-top: 0.5rem;
 }
 
 .btn-enter-card {
   width: 100%;
-  padding: 0.75rem 1.25rem;
-  background: #2563eb;
+  padding: 0.75rem 1rem;
+  background: #0284c7;
   color: #ffffff;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
+  font-family: inherit;
+}
+
+.btn-enter-card:hover {
+  background: #0369a1;
 }
 
 .btn-secondary {
-  background: #334155;
+  background: #6d28d9;
+}
+
+.btn-secondary:hover {
+  background: #5b21b6;
+}
+
+.btn-green {
+  background: #059669;
+}
+
+.btn-green:hover {
+  background: #047857;
 }
 
 .portal-shortcut-row {
