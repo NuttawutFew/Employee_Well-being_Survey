@@ -2219,103 +2219,115 @@
     #mh-prototype .overall-card {
       background: #ffffff;
       border-radius: 16px;
-      padding: 1.5rem;
+      padding: 1.25rem 1.5rem;
       border: 1.5px solid #e2e8f0;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
     }
     @media (min-width: 640px) {
-      #mh-prototype .overall-card { padding: 2rem; }
+      #mh-prototype .overall-card { padding: 1.5rem 1.75rem; }
+    }
+    @media (max-width: 640px) {
+      #mh-prototype .overall-card { flex-direction: column; align-items: flex-start; }
     }
     #mh-prototype .status-needs-care { border-left: 6px solid #f59e0b; }
     #mh-prototype .status-normal { border-left: 6px solid #10b981; }
+    #mh-prototype .overall-card-left { display: flex; flex-direction: column; gap: 0.35rem; }
+    #mh-prototype .overall-title { margin: 0; font-size: 1.25rem; font-weight: 700; color: #0f172a; }
+    #mh-prototype .overall-disclaimer { display: flex; align-items: center; gap: 0.45rem; font-size: 0.85rem; color: #64748b; line-height: 1.4; }
+    #mh-prototype .disclaimer-info-icon { width: 17px; height: 17px; color: #0284c7; flex-shrink: 0; }
+    #mh-prototype .overall-card-right { display: flex; align-items: center; flex-shrink: 0; }
     #mh-prototype .overall-badge {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 0.4rem 1rem;
+      gap: 0.45rem;
+      padding: 0.45rem 1.15rem;
       border-radius: 9999px;
       font-size: 0.88rem;
-      font-weight: 700;
-      margin-bottom: 0.85rem;
-      border: 1px solid transparent;
+      font-weight: 600;
+      white-space: nowrap;
     }
-    #mh-prototype .status-needs-care .overall-badge {
+    #mh-prototype .status-needs-care .overall-badge,
+    #mh-prototype .badge-needs-care {
       background-color: #fef3c7;
       color: #92400e;
-      border-color: #fde68a;
+      border: 1px solid #fde68a;
     }
-    #mh-prototype .status-normal .overall-badge {
+    #mh-prototype .status-normal .overall-badge,
+    #mh-prototype .badge-normal {
       background-color: #d1fae5;
       color: #065f46;
-      border-color: #a7f3d0;
+      border: 1px solid #a7f3d0;
     }
-    #mh-prototype .overall-card h2 { margin: 0 0 0.5rem 0; font-size: 1.35rem; color: #0f172a; }
-    #mh-prototype .overall-desc { color: #475569; line-height: 1.55; margin-bottom: 0.75rem; }
-    #mh-prototype .submission-timestamp { font-size: 0.85rem; color: #94a3b8; }
-    #mh-prototype .cards-grid {
+    #mh-prototype .submission-timestamp { font-size: 0.84rem; color: #64748b; margin-bottom: 0.2rem; }
+    #mh-prototype .assessment-section { display: flex; flex-direction: column; gap: 1.25rem; }
+    #mh-prototype .burnout-card { width: 100%; }
+    #mh-prototype .secondary-cards-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1rem;
+      gap: 1.25rem;
     }
     @media (min-width: 640px) {
-      #mh-prototype .cards-grid {
+      #mh-prototype .secondary-cards-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 1.25rem;
       }
     }
     #mh-prototype .assessment-card {
       background: #ffffff;
       border: 1.5px solid #e2e8f0;
       border-radius: 16px;
-      padding: 1.5rem;
+      padding: 1.35rem 1.5rem;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
     }
     #mh-prototype .card-title-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.85rem;
+      margin-bottom: 0.5rem;
       gap: 0.75rem;
       flex-wrap: wrap;
     }
-    #mh-prototype .card-title-row h3 { margin: 0; font-size: 1.05rem; color: #0f172a; flex: 1; min-width: 180px; }
-    #mh-prototype .card-instruction { font-size: 0.875rem; color: #64748b; margin: 0 0 0.85rem 0; }
-    #mh-prototype .score-display { margin-bottom: 0.65rem; }
-    #mh-prototype .score-large { font-size: 1.75rem; font-weight: 700; color: #0284c7; }
-    #mh-prototype .score-max { font-size: 0.9rem; color: #64748b; margin-left: 0.25rem; }
-    #mh-prototype .dimension-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    #mh-prototype .card-title-row h3 { margin: 0; font-size: 1.05rem; font-weight: 700; color: #0f172a; }
+    #mh-prototype .card-instruction { font-size: 0.85rem; color: #64748b; margin: 0 0 0.85rem 0; }
+    #mh-prototype .score-display { margin: 0.5rem 0 0.65rem 0; display: flex; align-items: baseline; gap: 0.35rem; }
+    #mh-prototype .score-large { font-size: 1.65rem; font-weight: 700; color: #0284c7; }
+    #mh-prototype .score-max { font-size: 0.875rem; color: #64748b; font-weight: 500; }
+    #mh-prototype .dimension-list { display: flex; flex-direction: column; gap: 0.55rem; }
     #mh-prototype .dimension-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.55rem 0.85rem;
+      padding: 0.55rem 0.95rem;
       background-color: #f8fafc;
       border-radius: 10px;
       border: 1px solid #f1f5f9;
-      font-size: 0.9rem;
-      gap: 0.65rem;
+      font-size: 0.88rem;
+      gap: 0.75rem;
     }
     #mh-prototype .dim-name { color: #334155; flex: 1; }
-    #mh-prototype .dim-score { font-weight: 600; color: #0f172a; white-space: nowrap; margin-right: 0.5rem; }
+    #mh-prototype .dim-row-right { display: flex; align-items: center; gap: 1.75rem; }
+    #mh-prototype .dim-score { font-weight: 600; color: #0f172a; white-space: nowrap; }
     #mh-prototype .dim-level {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 0.3rem 0.75rem;
+      padding: 0.25rem 0.85rem;
       border-radius: 9999px;
       font-size: 0.78rem;
       font-weight: 600;
-      line-height: 1.35;
+      line-height: 1.4;
       white-space: nowrap;
       flex-shrink: 0;
       border: 1px solid transparent;
-      min-width: 80px;
+      min-width: 60px;
     }
     #mh-prototype .card-note {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: #64748b;
       margin-top: 0.65rem;
       margin-bottom: 0;
@@ -2326,9 +2338,9 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 0.35rem 0.85rem;
+      padding: 0.25rem 0.85rem;
       border-radius: 9999px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 600;
       line-height: 1.4;
       white-space: nowrap;
@@ -4072,6 +4084,315 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
+    /* ========================================================= */
+    /* 6-Month Survey Cycle Management & Global Reset Styles     */
+    /* ========================================================= */
+    #mh-prototype .cycle-pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      display: inline-block;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: mh-pulse-cycle 2s infinite;
+    }
+    @keyframes mh-pulse-cycle {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    #mh-prototype .admin-topbar-center {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+    #mh-prototype .cycle-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.75rem;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      color: #166534;
+    }
+    #mh-prototype .cycle-pill strong {
+      color: #14532d;
+    }
+    #mh-prototype .cycle-cadence-badge {
+      background: #dcfce7;
+      color: #15803d;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border: 1px solid #86efac;
+    }
+    #mh-prototype .btn-topbar-cycle-reset {
+      appearance: none;
+      background: #0284c7;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.38rem 0.85rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+    #mh-prototype .btn-topbar-cycle-reset:hover {
+      background: #0369a1;
+      transform: translateY(-1px);
+    }
+
+    /* Portal Cycle Control Banner */
+    #mh-prototype .portal-cycle-banner {
+      background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+      border: 1px solid #86efac;
+      border-left: 6px solid #10b981;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.08);
+      flex-wrap: wrap;
+    }
+    #mh-prototype .cycle-banner-main {
+      flex: 1;
+      min-width: 300px;
+    }
+    #mh-prototype .cycle-banner-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+    #mh-prototype .cycle-status-tag {
+      background: #dcfce7;
+      color: #15803d;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+      border: 1px solid #86efac;
+    }
+    #mh-prototype .cycle-schedule-tag {
+      background: #e0f2fe;
+      color: #0369a1;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+      border: 1px solid #bae6fd;
+    }
+    #mh-prototype .cycle-banner-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 0.4rem 0;
+    }
+    #mh-prototype .cycle-banner-desc {
+      font-size: 0.88rem;
+      color: #475569;
+      margin: 0 0 0.85rem 0;
+      line-height: 1.5;
+    }
+    #mh-prototype .cycle-retention-pill {
+      background: #ecfdf5;
+      border: 1px dashed #34d399;
+      border-radius: 8px;
+      padding: 0.55rem 0.85rem;
+      font-size: 0.82rem;
+      color: #065f46;
+      line-height: 1.45;
+    }
+    #mh-prototype .cycle-banner-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: stretch;
+    }
+    #mh-prototype .btn-cycle-action-hero {
+      appearance: none;
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 0.85rem 1.4rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    #mh-prototype .btn-cycle-action-hero:hover {
+      background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(5, 150, 105, 0.35);
+    }
+    #mh-prototype .btn-cycle-rollback {
+      appearance: none;
+      background: transparent;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 0.35rem 0.65rem;
+      font-size: 0.75rem;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    #mh-prototype .btn-cycle-rollback:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    /* Calendar Date Input & Quick Presets */
+    #mh-prototype .calendar-date-input {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 0.5rem 0.65rem;
+      font-size: 0.88rem;
+      font-family: inherit;
+      color: #0f172a;
+      background: #ffffff;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-sizing: border-box;
+    }
+    #mh-prototype .calendar-date-input:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+    #mh-prototype .btn-period-preset {
+      appearance: none;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      border-radius: 9999px;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+    #mh-prototype .btn-period-preset:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+      border-color: #94a3b8;
+    }
+    #mh-prototype .btn-period-preset.is-active {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #0284c7;
+    }
+
+    /* Extend Button Styles */
+    #mh-prototype .btn-extend-preset {
+      appearance: none;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      border-radius: 9999px;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+    #mh-prototype .btn-extend-preset:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+      border-color: #94a3b8;
+    }
+    #mh-prototype .btn-extend-preset.is-active {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #0284c7;
+    }
+
+    /* Results Table Cycle Reset Button */
+    #mh-prototype .btn-cycle-reset-table {
+      appearance: none;
+      background: #ecfdf5;
+      color: #047857;
+      border: 1px solid #a7f3d0;
+      border-radius: 6px;
+      padding: 0.42rem 0.85rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    #mh-prototype .btn-cycle-reset-table:hover {
+      background: #059669;
+      color: #ffffff;
+      border-color: #059669;
+    }
+
+    /* Dashboard Cycle Strip */
+    #mh-prototype .dashboard-cycle-strip {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    #mh-prototype .dash-cycle-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.86rem;
+      color: #475569;
+    }
+    #mh-prototype .dash-cycle-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    /* Employee Portal Announcement */
+    #mh-prototype .mh-portal-cycle-announcement {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      border-radius: 10px;
+      padding: 0.85rem 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
     @media (max-width: 840px) {
       #mh-prototype .admin-app-shell { flex-direction: column; }
       #mh-prototype .admin-sidebar { width: 100%; }
@@ -4149,6 +4470,27 @@
             <button type="button" class="mh-entry-banner-btn" id="mh-portal-sim-oneplatform">
               <span>📱</span> สลับจำลองเข้าผ่าน OnePlatform (SSO ตรงสู่คำชี้แจง) →
             </button>
+          </div>
+
+          <!-- Active Survey Cycle Announcement Banner -->
+          <div class="mh-portal-cycle-announcement" id="mh-emp-cycle-announcement">
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <span style="font-size:1.35rem;">🌱</span>
+              <div>
+                <div style="font-size:0.75rem; font-weight:700; color:#047857; text-transform:uppercase; letter-spacing:0.04em;">
+                  รอบการสำรวจสุขภาวะทางใจประจำรอบ 6 เดือน (Bi-Annual Well-being Survey)
+                </div>
+                <div style="font-size:0.92rem; font-weight:700; color:#065f46;" id="mh-emp-cycle-title">
+                  รอบที่ 1/2569 (ม.ค. - มิ.ย. 2569) — เปิดให้บุคลากรเข้าทำแบบประเมินแล้ว
+                </div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span class="cycle-pulse-dot"></span>
+              <span style="font-size:0.8rem; color:#047857; font-weight:700;" id="mh-emp-cycle-badge">
+                เปิดรับการประเมิน
+              </span>
+            </div>
           </div>
 
           <!-- Hero Grid (2 Columns) -->
@@ -4582,92 +4924,99 @@
           </header>
 
           <div class="result-summary-container">
-            <!-- Top Screening Disclaimer -->
-            <div class="disclaimer-banner">
-              <span class="icon">ℹ️</span>
-              <span><strong>ข้อควรทราบ:</strong> ผลลัพธ์นี้เป็นการคัดกรองเบื้องต้นเพื่อส่งเสริมสุขภาวะ ไม่ใช่การวินิจฉัยทางการแพทย์</span>
-            </div>
-
-            <!-- Overall Status Card -->
+            <!-- 1. Overall Status Card (รวมข้อควรทราบไว้ในกล่องเดียวกับภาพรวมผลการประเมิน) -->
             <div id="mh-result-overall-card" class="overall-card status-needs-care">
-              <h2>ภาพรวมผลการประเมิน Employee Well-being Survey</h2>
-              <p id="mh-result-overall-desc" class="overall-desc">
-                ผลการประเมินเบื้องต้นพบว่า มีอย่างน้อยหนึ่งมิติที่ควรได้รับการดูแลเพิ่มเติม แนะนำให้ลองปรับพฤติกรรมการดูแลตนเอง หรือปรึกษาผู้เชี่ยวชาญ
-              </p>
-              <div class="submission-timestamp">
-                <span id="mh-result-timestamp">ส่งเมื่อ: 3 ก.ย. 2569 เวลา 10:42 น.</span>
+              <div class="overall-card-left">
+                <h2 class="overall-title">ภาพรวมผลการประเมิน</h2>
+                <div class="submission-timestamp">
+                  <span id="mh-result-timestamp">ส่งเมื่อ: 3 ก.ย. 2569 เวลา 10:42 น.</span>
+                </div>
+                <div class="overall-disclaimer">
+                  <svg class="disclaimer-info-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                  </svg>
+                  <span class="disclaimer-text">ข้อควรทราบ : ผลลัพธ์นี้เป็นการคัดกรองเบื้องต้นเพื่อส่งเสริมสุขภาวะ ไม่ใช่การวินิจฉัยทางการแพทย์</span>
+                </div>
+              </div>
+              <div class="overall-card-right">
+                <div id="mh-result-overall-badge" class="overall-badge badge-needs-care" title="เมื่อพบผลการประเมินอย่างน้อย 1 ด้านที่ไม่อยู่ในเกณฑ์ปกติ">
+                  <span>🟡</span>
+                  <span>ควรได้รับการดูแลเพิ่มเติม</span>
+                </div>
               </div>
             </div>
 
-            <!-- 3 Assessment Cards Grid (Burnout, Stress, 9Q) -->
-            <div class="cards-grid">
-              <!-- Card 1: Burnout -->
-              <div class="card assessment-card">
+            <!-- 2. Assessment Cards Section (Burnout เต็มความกว้าง + ความเครียด & ซึมเศร้า 2 คอลัมน์) -->
+            <div class="assessment-section">
+              <!-- Card 1: Burnout (Full Width) -->
+              <div class="card assessment-card burnout-card">
                 <div class="card-title-row">
                   <h3>1. ภาวะหมดไฟในการทำงาน (Burnout)</h3>
                   <span id="mh-burnout-badge" class="badge badge-warning">ปานกลาง</span>
                 </div>
-                <p class="card-instruction">ประเมินแยกตาม 3 มิติหลัก:</p>
+                <p class="card-instruction">ประเมินแยกตาม 3 มิติหลัก</p>
                 <div class="dimension-list">
                   <div class="dimension-row">
                     <span class="dim-name">ความอ่อนล้าทางอารมณ์ (EE):</span>
-                    <span id="mh-ee-score" class="dim-score">28 คะแนน</span>
-                    <span id="mh-ee-badge" class="dim-level badge-warning">ปานกลาง</span>
+                    <div class="dim-row-right">
+                      <span id="mh-ee-score" class="dim-score">28 คะแนน</span>
+                      <span id="mh-ee-badge" class="dim-level badge-warning">ปานกลาง</span>
+                    </div>
                   </div>
                   <div class="dimension-row">
                     <span class="dim-name">การลดความเป็นบุคคล (DP):</span>
-                    <span id="mh-dp-score" class="dim-score">7 คะแนน</span>
-                    <span id="mh-dp-badge" class="dim-level badge-warning">ปานกลาง</span>
+                    <div class="dim-row-right">
+                      <span id="mh-dp-score" class="dim-score">7 คะแนน</span>
+                      <span id="mh-dp-badge" class="dim-level badge-warning">ปานกลาง</span>
+                    </div>
                   </div>
                   <div class="dimension-row">
                     <span class="dim-name">ความสำเร็จส่วนบุคคล (PA):</span>
-                    <span id="mh-pa-score" class="dim-score">34 คะแนน</span>
-                    <span id="mh-pa-badge" class="dim-level badge-warning">ปานกลาง</span>
+                    <div class="dim-row-right">
+                      <span id="mh-pa-score" class="dim-score">34 คะแนน</span>
+                      <span id="mh-pa-badge" class="dim-level badge-warning">ปานกลาง</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <!-- Card 2: Stress -->
-              <div class="card assessment-card">
-                <div class="card-title-row">
-                  <h3>2. ความเครียด</h3>
-                  <span id="mh-stress-badge" class="badge badge-danger">สูงกว่าปกติปานกลาง</span>
+              <!-- 2 Columns Grid for Stress & 9Q -->
+              <div class="secondary-cards-grid">
+                <!-- Card 2: Stress -->
+                <div class="card assessment-card">
+                  <div class="card-title-row">
+                    <h3>2. ความเครียด (ST-20)</h3>
+                    <span id="mh-stress-badge" class="badge badge-danger">สูงกว่าปกติปานกลาง</span>
+                  </div>
+                  <div class="score-display">
+                    <span id="mh-stress-score" class="score-large">28</span>
+                    <span class="score-max">/ 60 คะแนน</span>
+                  </div>
+                  <p class="card-note">
+                    เกณฑ์: 0-5 ต่ำกว่าเกณฑ์ปกติ, 6-17 ปกติ, 18-25 สูงกว่าปกติเล็กน้อย, 26-29 สูงกว่าปกติปานกลาง, 30-60 สูงกว่าปกติมาก
+                  </p>
                 </div>
-                <div class="score-display">
-                  <span id="mh-stress-score" class="score-large">28</span>
-                  <span class="score-max">/ 60 คะแนน</span>
-                </div>
-                <p class="card-note">
-                  เกณฑ์: 0-5 ต่ำกว่าเกณฑ์ปกติ, 6-17 ปกติ, 18-25 สูงกว่าปกติเล็กน้อย, 26-29 สูงกว่าปกติปานกลาง, 30-60 สูงกว่าปกติมาก
-                </p>
-              </div>
 
-              <!-- Card 3: อารมณ์เศร้า -->
-              <div class="card assessment-card">
-                <div class="card-title-row">
-                  <h3>3. อารมณ์เศร้า</h3>
-                  <span id="mh-q9-badge" class="badge badge-warning">น้อย</span>
+                <!-- Card 3: 9Q -->
+                <div class="card assessment-card">
+                  <div class="card-title-row">
+                    <h3>3. โรคซึมเศร้า (9Q)</h3>
+                    <span id="mh-q9-badge" class="badge badge-warning">น้อย</span>
+                  </div>
+                  <div class="score-display">
+                    <span id="mh-q9-score" class="score-large">11</span>
+                    <span class="score-max">/ 27 คะแนน</span>
+                  </div>
+                  <p class="card-note">
+                    เกณฑ์: 0-6 ไม่มีอาการหรือมีน้อยมาก, 7-12 น้อย, 13-18 ปานกลาง, ≥19 รุนแรง
+                  </p>
                 </div>
-                <div class="score-display">
-                  <span id="mh-q9-score" class="score-large">11</span>
-                  <span class="score-max">/ 27 คะแนน</span>
-                </div>
-                <p class="card-note">
-                  เกณฑ์: 0-6 ไม่มีอาการหรือมีน้อยมาก, 7-12 น้อย, 13-18 ปานกลาง, ≥19 รุนแรง
-                </p>
               </div>
             </div>
 
-            <!-- Privacy & Completion Footer -->
             <!-- Feedback Section on Result Screen -->
             <div class="result-feedback-card" id="mh-result-feedback-card">
-              <div class="result-feedback-header">
-                <div class="result-feedback-icon">💬</div>
-                <div>
-                  <h3 class="result-feedback-title">คำแนะนำและข้อเสนอแนะหากต้องการปรับปรุง</h3>
-                  <p class="result-feedback-sub">“เรายินดีรับฟังทุกข้อเสนอแนะ เพื่อนำไปปรับปรุงและพัฒนาให้ดียิ่งขึ้น”</p>
-                </div>
-              </div>
+              <h3 class="result-feedback-title">คำแนะนำและข้อเสนอแนะหากต้องการปรับปรุง (ไม่บังคับ)</h3>
               <div class="result-feedback-body" id="mh-result-feedback-body">
               </div>
             </div>
@@ -4778,6 +5127,21 @@
                   Portal Employee Well-being Survey (Super Admin)
                 </span>
               </div>
+              <div class="admin-topbar-center">
+                <div class="cycle-pill" id="mh-topbar-cycle-pill">
+                  <span class="cycle-pulse-dot"></span>
+                  <span class="cycle-text-label">รอบปัจจุบัน:</span>
+                  <strong id="mh-topbar-cycle-name">รอบที่ 1/2569</strong>
+                  <span class="cycle-cadence-badge">ทุก 6 เดือน</span>
+                </div>
+                <button type="button" class="btn-topbar-cycle-reset" id="mh-btn-topbar-cycle-extend" style="background:#0369a1;" title="ขยายเวลาการทำแบบประเมินรอบปัจจุบัน">
+                  <span>⏱️</span> ขยายเวลา
+                </button>
+                <button type="button" class="btn-topbar-cycle-reset" id="mh-btn-topbar-cycle-reset" title="เปิดรอบการประเมินใหม่สำหรับทุกคนในองค์กร (ปรับเลือกรอบได้อิสระ)">
+                  <span>🔄</span> เปิดรอบประเมินใหม่
+                </button>
+              </div>
+
               <div class="admin-topbar-right">
                 <span class="admin-auth-status">
                   เข้าสู่ระบบในฐานะ: <strong id="mh-admin-auth-user">superadmin</strong>
@@ -4803,6 +5167,47 @@
                     <p class="portal-subtitle">
                       ยินดีต้อนรับ <strong id="mh-portal-admin-name">สรวิชญ์ เมธากุล</strong> สู่ศูนย์กลางการบริหารจัดการระบบ Employee Well-being Survey องค์กร (Super Admin สามารถดำเนินการได้ทุกส่วนของระบบ)
                     </p>
+                  </div>
+
+                  <!-- Survey Cycle Control Banner (ศูนย์ควบคุมรอบการประเมินประจำทุก 6 เดือน) -->
+                  <div class="portal-cycle-banner" id="mh-portal-cycle-banner">
+                    <div class="cycle-banner-main">
+                      <div class="cycle-banner-header">
+                        <span class="cycle-status-tag" id="mh-portal-cycle-tag">🟢 กำลังเปิดรับการประเมิน</span>
+                        <span class="cycle-schedule-tag" id="mh-portal-cycle-cadence-tag">⏱️ วงรอบแบบสำรวจ: ทุกๆ 6 เดือน (หรือปรับได้ตามความต้องการ)</span>
+                        <span style="font-size:0.75rem; color:#64748b;" id="mh-portal-cycle-period-text">📅 ช่วงเวลา: 01 ม.ค. 2569 - 30 มิ.ย. 2569</span>
+                      </div>
+                      <h2 class="cycle-banner-title" id="mh-portal-banner-title">
+                        รอบการประเมินปัจจุบัน: รอบที่ 1/2569 (ครึ่งปีแรก: ม.ค. - มิ.ย. 2569)
+                      </h2>
+                      <p class="cycle-banner-desc" id="mh-portal-banner-desc">
+                        สำรวจสุขภาวะทางใจบุคลากร 52 บริษัทในเครือ • ผู้มีสิทธิ์ทั้งหมด 1,248 คน • ทำแบบประเมินแล้ว <strong id="mh-portal-completed-count" style="color:#059669;">1,248</strong> คน (100%) • สถานะ: พร้อมสำหรับเปิดรอบการประเมินใหม่
+                      </p>
+                      <div class="cycle-retention-pill">
+                        🛡️ <strong>นโยบาย Data Retention &amp; Zero Data Loss:</strong> เมื่อฝ่าย HR ต้องการเริ่มรอบการสำรวจใหม่ (ไม่ว่าจะทุก 3 เดือน, 6 เดือน, 1 ปี หรือเปิดตามความต้องการ) ระบบจะรีเซ็ตสิทธิ์ให้ทุกคนทำใหม่ โดย <strong>จัดเก็บผลการประเมินเดิมทั้งหมดไว้ 100%</strong> ในฐานข้อมูลแบบ Historical Archive ไม่มีการลบหรือเขียนทับเด็ดขาด สามารถดูย้อนหลังและเปรียบเทียบแนวโน้ม (Longitudinal Trend) ได้ตลอดเวลา
+                      </div>
+                    </div>
+                    <div class="cycle-banner-actions">
+                      <button type="button" class="btn-cycle-action-extend" id="mh-portal-btn-cycle-extend" style="appearance:none; background:#ffffff; color:#0369a1; border:1px solid #7dd3fc; border-radius:10px; padding:0.65rem 1.1rem; cursor:pointer; display:flex; align-items:center; gap:0.65rem; font-weight:600; font-size:0.88rem; transition:all 0.15s ease; font-family:inherit; box-shadow:0 1px 3px rgba(0,0,0,0.04); margin-bottom:0.4rem;">
+                        <span style="font-size:1.3rem;">⏱️</span>
+                        <div style="text-align:left;">
+                          <div>ขยายเวลาประเมินรอบนี้ (Extend Deadline)</div>
+                          <div style="font-size:0.73rem; color:#64748b; font-weight:normal;">สำหรับกรณีผู้ใช้ยังทำไม่ครบตามเป้าหมาย</div>
+                        </div>
+                      </button>
+                      <button type="button" class="btn-cycle-action-hero" id="mh-portal-btn-cycle-reset">
+                        <span style="font-size:1.5rem;">🔄</span>
+                        <div style="text-align:left;">
+                          <div style="font-weight:700; font-size:0.95rem;">เปิดรอบการประเมินใหม่ (New Round)</div>
+                          <div style="font-size:0.75rem; opacity:0.9;">ปรับเลือกรอบได้อิสระ (3 เดือน / 6 เดือน / 1 ปี / กำหนดเอง) • เก็บข้อมูลเดิมถาวร</div>
+                        </div>
+                      </button>
+                      <div id="mh-cycle-rollback-wrap" style="display:none; margin-top:0.4rem; text-align:center;">
+                        <button type="button" class="btn-cycle-rollback" id="mh-portal-btn-cycle-rollback" title="สำหรับสาธิต: สลับกลับสู่รอบเริ่มต้น">
+                          ↩️ สลับกลับสู่รอบเริ่มต้น (Demo Rollback)
+                        </button>
+                      </div>
+                    </div>
                   </div>
 
                   <div class="portal-grid">
@@ -4895,6 +5300,21 @@
 
               <!-- Tab 2: Dashboard View -->
               <div class="admin-tab-view" data-admin-panel="dashboard">
+                <!-- Dashboard Active Cycle Strip -->
+                <div class="dashboard-cycle-strip">
+                  <div class="dash-cycle-info">
+                    <span class="cycle-pulse-dot"></span>
+                    <span>กำลังแสดงผลสถิติของ:</span>
+                    <strong id="mh-dash-active-cycle-name" style="color:#0f172a;">รอบที่ 1/2569 (ม.ค. - มิ.ย. 2569)</strong>
+                    <span class="dash-cycle-tag" style="background:#e0f2fe; color:#0369a1; padding:0.15rem 0.45rem; border-radius:4px; font-size:0.75rem; font-weight:600;">รอบ 6 เดือน</span>
+                  </div>
+                  <div class="dash-cycle-actions">
+                    <button type="button" class="btn-topbar-cycle-reset" id="mh-btn-dash-cycle-reset">
+                      <span>🔄</span> เปิดรอบประเมินใหม่
+                    </button>
+                  </div>
+                </div>
+
                 <!-- Multidimensional Filter Panel (FilterPanel.vue) -->
                 <div class="filter-panel-card">
                   <div class="filter-header">
@@ -5165,6 +5585,10 @@
                       </span>
 
                       <!-- Export Action (Controlled by Role: Shown for Super Admin & Admin Export, Hidden for Admin No Export per Step 21) -->
+                      <button type="button" class="btn-cycle-reset-table" id="mh-btn-table-cycle-reset" title="เปิดรอบการประเมินใหม่สำหรับทุกคนในองค์กร">
+                        <span>🔄</span> เปิดรอบประเมินใหม่
+                      </button>
+
                       <div id="mh-table-export-container">
                         <button type="button" class="btn-export" id="mh-btn-trigger-export">
                           📥 กด Export เอกสาร
@@ -5866,6 +6290,289 @@
             <button type="button" class="admin-btn-cancel" id="mh-reset-cancel">ยกเลิก</button>
             <button type="button" class="btn-export" id="mh-reset-confirm" style="background:#0284c7;">
               ✓ ยืนยันเปิดสิทธิ์ทำรอบใหม่ (เก็บข้อมูลเดิมไว้)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal: Global Survey Cycle Reset Modal (รอบการประเมินประจำ 6 เดือน) -->
+      <div id="mh-cycle-reset-modal" class="admin-modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="mh-cycle-reset-title">
+        <div class="admin-modal-dialog" style="max-width: 620px;">
+          <div class="admin-modal-header" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border-bottom: 1px solid #a7f3d0;">
+            <div>
+              <div style="font-size:0.75rem; font-weight:700; color:#047857; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:2px;">
+                Survey Cycle Management • ระบบบริหารรอบการประเมินยืดหยุ่น (Flexible Cadence)
+              </div>
+              <h3 id="mh-cycle-reset-title" style="color: #065f46; display: flex; align-items: center; gap: 8px; margin:0;">
+                <span>🔄</span> เปิดรอบการประเมินใหม่สำหรับบุคลากรทั้งองค์กร
+              </h3>
+            </div>
+            <button type="button" class="admin-btn-close-modal" id="mh-cycle-reset-modal-close" aria-label="ปิดหน้าต่าง">✕</button>
+          </div>
+
+          <div class="admin-modal-body" style="padding: 1.5rem; max-height: calc(85vh - 130px); overflow-y: auto;">
+            
+            <!-- 1. Comparison & Transition Card -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:1rem; margin-bottom:1.25rem;">
+              <div style="display:grid; grid-template-columns: 1fr auto 1fr; gap:0.75rem; align-items:center;">
+                <!-- Left: Current Cycle (Archiving) -->
+                <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:0.75rem;">
+                  <div style="font-size:0.72rem; font-weight:700; color:#64748b; margin-bottom:4px;">
+                    📁 รอบปัจจุบัน (จะจัดเก็บเป็นประวัติ)
+                  </div>
+                  <div id="mh-modal-cur-cycle-name" style="font-size:0.92rem; font-weight:700; color:#0f172a; margin-bottom:2px;">
+                    รอบที่ 1/2569
+                  </div>
+                  <div style="font-size:0.75rem; color:#64748b;">
+                    สถานะ: <span style="color:#059669; font-weight:600;">เสร็จสมบูรณ์ 100% (1,248 คน)</span>
+                  </div>
+                  <div style="font-size:0.72rem; color:#94a3b8; margin-top:4px;">
+                    🔒 ข้อมูลทั้งหมดจะถูกล็อกเป็น Historical Snapshot
+                  </div>
+                </div>
+
+                <!-- Arrow -->
+                <div style="text-align:center; color:#0284c7; font-size:1.4rem; font-weight:bold;">
+                  ➔
+                </div>
+
+                <!-- Right: New Cycle (To be Activated) -->
+                <div style="background:#eff6ff; border:1px solid #93c5fd; border-radius:8px; padding:0.75rem;">
+                  <div style="font-size:0.72rem; font-weight:700; color:#1d4ed8; margin-bottom:4px;">
+                    ✨ รอบใหม่ที่กำลังจะเปิด (Active)
+                  </div>
+                  <div id="mh-modal-next-cycle-name" style="font-size:0.92rem; font-weight:700; color:#1e40af; margin-bottom:2px;">
+                    รอบที่ 2/2569
+                  </div>
+                  <div style="font-size:0.75rem; color:#2563eb;">
+                    สิทธิ์: <span style="font-weight:600;">รีเซ็ตสิทธิ์ให้พนักงาน 1,248 คน</span>
+                  </div>
+                  <div style="font-size:0.72rem; color:#3b82f6; margin-top:4px;">
+                    🟢 เปิดรับการประเมินประจำครึ่งปีหลัง (6 เดือน)
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Data Retention & Zero-Loss Guarantee -->
+            <div class="pdpa-alert-box" style="margin-bottom:1.25rem; background:#ecfdf5; border-color:#86efac; color:#065f46; border-left-width:4px;">
+              <div style="display:flex; gap:0.6rem;">
+                <span style="font-size:1.3rem; line-height:1;">🛡️</span>
+                <div style="font-size:0.85rem; line-height:1.55;">
+                  <strong style="font-size:0.9rem; color:#047857;">นโยบายรักษาความปลอดภัยข้อมูล (Zero Data Loss &amp; Data Retention Guarantee):</strong>
+                  <ul style="margin:0.4rem 0 0.2rem 1.1rem; padding:0;">
+                    <li><strong>ข้อมูลเดิมไม่สูญหาย:</strong> ข้อมูลผลประเมินเดิมของทุกคน (1,248 รายการ) จะถูกจัดเก็บถาวรในฐานข้อมูลแบบ Historical Archive ไม่มีการลบหรือเขียนทับเด็ดขาด</li>
+                    <li><strong>ดูย้อนหลังและเปรียบเทียบได้ตลอดเวลา:</strong> ผู้ดูแลระบบและ HR ยังคงสามารถใช้ตัวกรองเลือกรอบเดิมเพื่อดูสถิติ, รายบุคคล, ส่งออกรายงาน (Export), และเปรียบเทียบแนวโน้มข้ามรอบ (Trend Analysis) ได้ตามปกติ</li>
+                    <li><strong>รีเซ็ตสิทธิ์เฉพาะสถานะการทำแบบประเมิน:</strong> พนักงานทุกคนจะเริ่มต้นสถานะ "รอทำแบบประเมินรอบใหม่" สำหรับรอบที่เปิดนี้</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Form Inputs: Cycle Configuration -->
+            <div style="display:flex; flex-direction:column; gap:0.9rem; margin-bottom:1.25rem;">
+              <div>
+                <label for="mh-cycle-name-input" style="display:block; font-size:0.83rem; font-weight:600; color:#334155; margin-bottom:4px;">
+                  ชื่อรอบการประเมินใหม่ (Cycle Title) *
+                </label>
+                <input
+                  type="text"
+                  id="mh-cycle-name-input"
+                  class="filter-input"
+                  style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.55rem 0.75rem; font-size:0.88rem;"
+                  value="รอบที่ 2/2569 (ครึ่งปีหลัง: ก.ค. - ธ.ค. 2569)"
+                >
+              </div>
+
+              <!-- Row: Cadence Selector -->
+              <div>
+                <label for="mh-cycle-interval-select" style="display:block; font-size:0.83rem; font-weight:600; color:#334155; margin-bottom:4px;">
+                  วงรอบความถี่ (Cadence) — ความถี่ภาพรวมองค์กร
+                </label>
+                <select
+                  id="mh-cycle-interval-select"
+                  class="filter-select"
+                  style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.55rem 0.75rem; font-size:0.88rem; font-weight:600; color:#0f172a;"
+                >
+                  <option value="6m" selected>ทุก 6 เดือน (Bi-annual / H1, H2) ⭐ แนะนำสำหรับองค์กร</option>
+                  <option value="3m">ทุก 3 เดือน (Quarterly / ไตรมาส Q1-Q4) ติดตามกลุ่มเสี่ยงเข้มข้น</option>
+                  <option value="12m">ทุก 1 ปี (Annual Cycle / ตรวจสุขภาพใจประจำปี)</option>
+                  <option value="ondemand">กำหนดเอง / เปิดตามความต้องการของ HR (On-Demand)</option>
+                </select>
+              </div>
+
+              <!-- Row: Calendar Date Pickers for Survey Period -->
+              <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:0.9rem;">
+                <label style="display:flex; justify-content:space-between; align-items:center; font-size:0.83rem; font-weight:700; color:#1e293b; margin-bottom:8px;">
+                  <span>📅 ช่วงเวลาการประเมิน (Survey Period) — เลือกจากปฏิทิน</span>
+                  <span id="mh-cycle-days-count" style="font-size:0.75rem; font-weight:600; color:#0284c7; background:#e0f2fe; padding:0.15rem 0.5rem; border-radius:4px;">
+                    31 วัน
+                  </span>
+                </label>
+                
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem;">
+                  <div>
+                    <span style="font-size:0.75rem; font-weight:600; color:#64748b; display:block; margin-bottom:3px;">
+                      วันเริ่มต้นเปิดรับ (Start Date):
+                    </span>
+                    <input
+                      type="date"
+                      id="mh-cycle-start-date"
+                      class="calendar-date-input"
+                      value="2026-07-01"
+                    >
+                  </div>
+                  <div>
+                    <span style="font-size:0.75rem; font-weight:600; color:#64748b; display:block; margin-bottom:3px;">
+                      วันสิ้นสุดปิดรับ (End Date):
+                    </span>
+                    <input
+                      type="date"
+                      id="mh-cycle-end-date"
+                      class="calendar-date-input"
+                      value="2026-07-31"
+                    >
+                  </div>
+                </div>
+
+                <!-- Hidden compatibility input to store formatted period string -->
+                <input type="hidden" id="mh-cycle-period-input" value="01 ก.ค. 2569 - 31 ก.ค. 2569">
+
+                <!-- Preset quick buttons and preview -->
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.65rem; flex-wrap:wrap; gap:0.4rem; padding-top:0.5rem; border-top:1px dashed #cbd5e1;">
+                  <div style="display:flex; align-items:center; gap:0.35rem; flex-wrap:wrap;">
+                    <span style="font-size:0.72rem; color:#64748b; font-weight:600;">ปุ่มลัดวันที่:</span>
+                    <button type="button" class="btn-period-preset is-active" data-preset="today30">🟢 เริ่มวันนี้ (30 วัน)</button>
+                    <button type="button" class="btn-period-preset" data-preset="today15">🟢 เริ่มวันนี้ (15 วัน)</button>
+                    <button type="button" class="btn-period-preset" data-preset="nextmonth">⏰ ต้นเดือนหน้า (01 ธ.ค.)</button>
+                    <button type="button" class="btn-period-preset" data-preset="newyear">⏰ ต้นปี 2570 (01 ม.ค. 2570)</button>
+                  </div>
+                  <div id="mh-cycle-period-thai-preview" style="font-size:0.78rem; font-weight:600; color:#047857;">
+                    🟢 01 ก.ค. 2569 – 31 ก.ค. 2569
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cadence Guidance Box -->
+              <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:0.75rem 1rem; font-size:0.8rem; color:#166534; line-height:1.5;">
+                💡 <strong>หากยังไม่แน่ใจว่าจะรีเซ็ตทุกกี่เดือน:</strong><br>
+                ระบบออกแบบให้ <strong>มีความยืดหยุ่นสูงสุด</strong> ท่านสามารถเลือกเปิดรอบแบบ <strong>On-Demand (กดเปิดเมื่อฝ่าย HR พร้อม)</strong> โดยไม่ผูกมัดเวลาตายตัว ไม่ว่าจะ 3 เดือน, 6 เดือน, 1 ปี หรือเปิดตามแคมเปญพิเศษ ข้อมูลของทุกรอบจะถูกบันทึกแยกประวัติไว้อย่างปลอดภัย 100% เสมอ
+              </div>
+
+              <div>
+                <label for="mh-cycle-reason-input" style="display:block; font-size:0.83rem; font-weight:600; color:#334155; margin-bottom:4px;">
+                  บันทึกวัตถุประสงค์และเหตุผลการเปิดรอบใหม่ (Audit Trail Log Purpose) *
+                </label>
+                <textarea
+                  id="mh-cycle-reason-input"
+                  class="reset-textarea"
+                  style="width:100%; min-height:64px; border:1px solid #cbd5e1; border-radius:6px; padding:0.55rem 0.75rem; font-size:0.85rem;"
+                  placeholder="เช่น เริ่มต้นรอบสำรวจสุขภาวะทางจิตใจบุคลากรประจำครึ่งปีหลัง 2569 (รอบ 6 เดือน) ตามแผนงาน HR Well-being Strategy"
+                >เริ่มต้นรอบสำรวจสุขภาวะทางจิตใจบุคลากรประจำครึ่งปีหลัง 2569 (รอบ 6 เดือน) ตามแผนงาน HR Well-being</textarea>
+              </div>
+            </div>
+
+            <!-- Dynamic Launch Mode Indicator (Instant vs Scheduled) -->
+            <div id="mh-cycle-mode-notice" style="margin-bottom:1rem; font-size:0.83rem; line-height:1.5;"></div>
+
+            <!-- 4. Confirmation Safeguard Checkbox -->
+            <div style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; padding:0.75rem 1rem;">
+              <label style="display:flex; align-items:flex-start; gap:0.6rem; cursor:pointer; font-size:0.83rem; color:#1e293b; user-select:none;">
+                <input type="checkbox" id="mh-cycle-confirm-checkbox" style="margin-top:2px; cursor:pointer; width:16px; height:16px; accent-color:#059669;">
+                <span>
+                  <strong>ข้าพเจ้ายืนยันการเปิดรอบการประเมินใหม่สำหรับบุคลากรทั้งองค์กร (1,248 คน)</strong><br>
+                  <span style="color:#64748b; font-size:0.78rem;">และรับทราบว่าข้อมูลประวัติรอบเดิมจะถูกเก็บรักษาไว้อย่างสมบูรณ์ 100% ไม่มีการลบหรือสูญหาย</span>
+                </span>
+              </label>
+            </div>
+
+          </div>
+
+          <div class="admin-modal-footer" style="padding: 1rem 1.5rem; background: #f8fafc; border-top: 1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+            <button type="button" class="admin-btn-cancel" id="mh-cycle-reset-modal-cancel">ยกเลิก</button>
+            <button type="button" class="btn-confirm" id="mh-cycle-reset-confirm-btn" style="background:#059669; padding:0.65rem 1.25rem; font-size:0.9rem; display:inline-flex; align-items:center; gap:6px;">
+              <span>🚀</span> ยืนยันเปิดรอบการประเมินใหม่
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal: Extend Survey Period Modal (ขยายเวลาการประเมินรอบปัจจุบัน) -->
+      <div id="mh-cycle-extend-modal" class="admin-modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="mh-cycle-extend-title">
+        <div class="admin-modal-dialog" style="max-width: 540px;">
+          <div class="admin-modal-header" style="background:#f0f9ff; border-bottom:1px solid #bae6fd;">
+            <div>
+              <div style="font-size:0.72rem; font-weight:700; color:#0369a1; text-transform:uppercase;">
+                Survey Cycle Management • ขยายเวลาประเมิน
+              </div>
+              <h3 id="mh-cycle-extend-title" style="color:#0369a1; margin:0; display:flex; align-items:center; gap:6px;">
+                <span>⏱️</span> ขยายเวลาทำแบบประเมินรอบปัจจุบัน
+              </h3>
+            </div>
+            <button type="button" class="admin-btn-close-modal" id="mh-cycle-extend-modal-close">✕</button>
+          </div>
+
+          <div class="admin-modal-body" style="padding:1.5rem;">
+            <!-- Current Status Summary Card -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:0.85rem 1rem; margin-bottom:1.25rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                <strong id="mh-extend-cur-name" style="font-size:0.92rem; color:#0f172a;">รอบที่ 1/2569</strong>
+                <span id="mh-extend-status-badge" style="font-size:0.75rem; background:#fee2e2; color:#991b1b; padding:0.15rem 0.5rem; border-radius:4px; font-weight:600;">ครบกำหนดเดิมแล้ว</span>
+              </div>
+              <div style="font-size:0.82rem; color:#475569; margin-bottom:0.4rem;">
+                เป้าหมายผู้เข้าร่วม: <strong>1,000 คน</strong> • ส่งผลแล้ว: <strong id="mh-extend-completed-count" style="color:#0284c7;">780 คน (78%)</strong> • ยังไม่ทำ: <strong id="mh-extend-pending-count" style="color:#d97706;">220 คน</strong>
+              </div>
+              <div style="font-size:0.78rem; color:#64748b;">
+                ช่วงเวลาเดิม: <span id="mh-extend-old-period">01 ม.ค. 2569 – 31 ม.ค. 2569</span>
+              </div>
+            </div>
+
+            <!-- Date picker for New End Date -->
+            <div style="margin-bottom:1.25rem;">
+              <label for="mh-extend-new-end-date" style="display:block; font-size:0.83rem; font-weight:700; color:#1e293b; margin-bottom:6px;">
+                📅 กำหนดวันสิ้นสุดใหม่ (New End Date)
+              </label>
+              <input
+                type="date"
+                id="mh-extend-new-end-date"
+                class="calendar-date-input"
+                style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.55rem 0.75rem; font-size:0.9rem;"
+              >
+              
+              <!-- Quick Preset Buttons for Extension -->
+              <div style="display:flex; align-items:center; gap:0.4rem; margin-top:0.5rem; flex-wrap:wrap;">
+                <span style="font-size:0.72rem; color:#64748b; font-weight:600;">ปุ่มลัดขยายเวลา:</span>
+                <button type="button" class="btn-extend-preset" data-add-days="7">+7 วัน (1 สัปดาห์)</button>
+                <button type="button" class="btn-extend-preset is-active" data-add-days="15">+15 วัน (ครึ่งเดือน)</button>
+                <button type="button" class="btn-extend-preset" data-add-days="28">+28 วัน (สิ้นเดือน ก.พ.)</button>
+              </div>
+              
+              <div id="mh-extend-preview-tag" style="margin-top:0.6rem; font-size:0.8rem; font-weight:600; color:#0369a1; background:#e0f2fe; padding:0.35rem 0.65rem; border-radius:6px; border:1px solid #bae6fd;">
+                ⏳ ขยายเวลาเพิ่ม: 15 วัน (สิ้นสุดใหม่: 15 ก.พ. 2569)
+              </div>
+            </div>
+
+            <!-- Extension Reason -->
+            <div style="margin-bottom:1rem;">
+              <label for="mh-extend-reason-input" style="display:block; font-size:0.83rem; font-weight:600; color:#334155; margin-bottom:4px;">
+                เหตุผลในการขยายเวลา (Audit Trail Note) *
+              </label>
+              <textarea
+                id="mh-extend-reason-input"
+                class="reset-textarea"
+                style="width:100%; min-height:55px; border:1px solid #cbd5e1; border-radius:6px; padding:0.5rem 0.65rem; font-size:0.85rem;"
+              >ขยายเวลาทำแบบประเมินเพิ่มอีก 15 วัน เนื่องจากยอดผู้ตอบยังไม่ครบตามเป้าหมาย 1,000 คน</textarea>
+            </div>
+
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:0.65rem 0.85rem; font-size:0.78rem; color:#166534; line-height:1.45;">
+              🛡️ <strong>ผลของการขยายเวลา:</strong> พนักงานที่ทำเสร็จแล้ว (780 คน) จะไม่ได้รับผลกระทบ ข้อมูลเดิมยังอยู่ครบถ้วน 100% ส่วนพนักงานที่ยังไม่ได้ทำ (220 คน) จะยังคงสามารถเข้าสู่ระบบเพื่อทำแบบประเมินต่อได้จนถึงวันสิ้นสุดใหม่
+            </div>
+          </div>
+
+          <div class="admin-modal-footer" style="padding:1rem 1.5rem; background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+            <button type="button" class="admin-btn-cancel" id="mh-cycle-extend-modal-cancel">ยกเลิก</button>
+            <button type="button" class="btn-confirm" id="mh-cycle-extend-confirm-btn" style="background:#0284c7; padding:0.65rem 1.25rem; font-size:0.9rem; display:inline-flex; align-items:center; gap:6px;">
+              <span>💾</span> ยืนยันบันทึกขยายเวลา
             </button>
           </div>
         </div>
@@ -6981,7 +7688,7 @@
             },
             overall: {
               status: 'NEEDS_ADDITIONAL_CARE',
-              label: 'ควรได้รับการดูแลสุขภาพใจเพิ่มเติม'
+              label: 'ควรได้รับการดูแลเพิ่มเติม'
             }
           };
         }
@@ -7094,7 +7801,7 @@
           },
           overall: {
             status: needsCare ? 'NEEDS_ADDITIONAL_CARE' : 'NORMAL',
-            label: needsCare ? 'ควรได้รับการดูแลเพิ่มเติม' : 'ระดับปกติ'
+            label: needsCare ? 'ควรได้รับการดูแลเพิ่มเติม' : 'ปกติ'
           }
         };
       };
@@ -7103,7 +7810,6 @@
         const res = calculateScoresFromAnswers();
         const overallCard = root.querySelector('#mh-result-overall-card');
         const overallBadge = root.querySelector('#mh-result-overall-badge');
-        const overallDesc = root.querySelector('#mh-result-overall-desc');
         const timestampEl = root.querySelector('#mh-result-timestamp');
 
         const isNeedsCare = res.overall.status === 'NEEDS_ADDITIONAL_CARE';
@@ -7112,12 +7818,9 @@
           overallCard.className = `overall-card ${isNeedsCare ? 'status-needs-care' : 'status-normal'}`;
         }
         if (overallBadge) {
-          overallBadge.textContent = isNeedsCare ? `⚠️ ${res.overall.label}` : `✅ ${res.overall.label}`;
-        }
-        if (overallDesc) {
-          overallDesc.textContent = isNeedsCare
-            ? 'ผลการประเมินเบื้องต้นพบว่า มีอย่างน้อยหนึ่งมิติที่ควรได้รับการดูแลเพิ่มเติม แนะนำให้ลองปรับพฤติกรรมการดูแลตนเอง หรือปรึกษาผู้เชี่ยวชาญ'
-            : 'ผลการประเมินเบื้องต้นอยู่ในเกณฑ์ปกติ ขอให้ท่านรักษาสมดุลในการใช้ชีวิตและการทำงานอย่างต่อเนื่อง';
+          overallBadge.className = `overall-badge ${isNeedsCare ? 'badge-needs-care' : 'badge-normal'}`;
+          overallBadge.innerHTML = `<span>${isNeedsCare ? '🟡' : '🟢'}</span><span>${res.overall.label}</span>`;
+          overallBadge.title = isNeedsCare ? 'เมื่อพบผลการประเมินอย่างน้อย 1 ด้านที่ไม่อยู่ในเกณฑ์ปกติ' : 'ผลการประเมินสุขภาพใจทุกด้านอยู่ในเกณฑ์ปกติ';
         }
         if (timestampEl) {
           const now = new Date();
@@ -7188,11 +7891,8 @@
             `;
           } else {
             resFbBody.innerHTML = `
-              <p style="font-size:0.86rem; color:#64748b; margin-top:0; margin-bottom:10px; line-height:1.5;">
-                หากท่านมีข้อเสนอแนะเพิ่มเติมเกี่ยวกับการใช้งานระบบ หรือข้อแนะนำเพื่อสุขภาวะที่ดีในองค์กร สามารถพิมพ์ส่งได้ที่นี่:
-              </p>
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <input type="text" id="mh-result-feedback-input" placeholder="พิมพ์ข้อความสั้นๆ หรือข้อเสนอแนะ (ไม่บังคับตอบ)..." style="flex:1; min-width:240px; padding:9px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:0.88rem; outline:none; font-family:inherit;">
+                <input type="text" id="mh-result-feedback-input" placeholder="เช่น ข้อเสนอแนะเกี่ยวกับการทำงาน หรือการดูแลสุขภาพใจในองค์กร" style="flex:1; min-width:240px; padding:9px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:0.88rem; outline:none; font-family:inherit; color:#1e293b;">
                 <button type="button" id="mh-result-feedback-submit" style="background:#0284c7; color:#fff; border:none; padding:9px 18px; border-radius:10px; font-size:0.88rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.15s ease;">ส่งข้อเสนอแนะ</button>
               </div>
               <div id="mh-result-feedback-thanks" style="display:none; font-size:0.82rem; color:#16a34a; font-weight:600; margin-top:10px;">
@@ -7226,9 +7926,9 @@
         const isNeedsCare = res.overall.status === 'NEEDS_ADDITIONAL_CARE';
 
         const existingEmp = sampleEmployees.find(e => e.empId === 'EMP-DEV-001');
-        const nextRound = (existingEmp && existingEmp.attempts && existingEmp.attempts.length > 0)
-          ? existingEmp.attempts.length + 1
-          : 2;
+        const nextRound = (currentCycle && currentCycle.cycleNumber > 1)
+          ? currentCycle.cycleNumber
+          : ((existingEmp && existingEmp.attempts && existingEmp.attempts.length > 0) ? existingEmp.attempts.length + 1 : 2);
 
         const newAttempt = {
           round: nextRound,
@@ -7268,6 +7968,11 @@
           existingEmp.burnout = newAttempt.burnout;
           existingEmp.stress = newAttempt.stress;
           existingEmp.q9 = newAttempt.q9;
+          existingEmp.isPendingNewCycle = false;
+          if (currentCycle) {
+            currentCycle.completedCount = (currentCycle.completedCount || 0) + 1;
+            if (typeof updateCycleUI === 'function') updateCycleUI();
+          }
         } else {
           sampleEmployees.unshift({
             empId: 'EMP-DEV-001',
@@ -7297,6 +8002,27 @@
       // ==========================================
       // Admin Web Interactive Features & Handlers
       // ==========================================
+
+      // 0. Survey Cycle Management State (รอบการประเมินประจำทุก 6 เดือน)
+      var initialBaselineEmployees = null;
+      var surveyCycles = [
+        {
+          cycleId: 'cycle_1',
+          cycleNumber: 1,
+          name: 'รอบที่ 1/2569 (ครึ่งปีแรก: ม.ค. - มิ.ย. 2569)',
+          shortName: 'รอบที่ 1/2569',
+          period: '01 ม.ค. 2569 - 30 มิ.ย. 2569',
+          interval: '6m',
+          status: 'ACTIVE',
+          totalEligible: 1248,
+          completedCount: 1248,
+          createdAt: '01 ม.ค. 2569 09:00',
+          closedAt: null,
+          resetBy: 'สรวิชญ์ เมธากุล (Super Admin)',
+          note: 'รอบสำรวจสุขภาวะทางจิตใจประจำครึ่งปีแรก 2569 (Baseline)'
+        }
+      ];
+      var currentCycle = surveyCycles[0];
 
       // 1. Sample Employees Dataset (Full Unmasked View for HR Authorized Admin)
       var sampleEmployees = [
@@ -7717,6 +8443,105 @@
       let compareRoundA = 1;
       let compareRoundB = 2;
 
+      // Cycle Management UI Synchronization Functions
+      function updateCycleUI() {
+        const topbarName = root.querySelector('#mh-topbar-cycle-name');
+        if (topbarName) topbarName.textContent = currentCycle.shortName || currentCycle.name;
+
+        const cadenceBadge = root.querySelector('#mh-topbar-cycle-pill .cycle-cadence-badge');
+        if (cadenceBadge) {
+          const cadenceMap = {
+            '6m': 'ทุก 6 เดือน',
+            '3m': 'ทุก 3 เดือน',
+            '12m': 'ทุก 1 ปี',
+            'ondemand': 'ตามกำหนดการ HR'
+          };
+          cadenceBadge.textContent = cadenceMap[currentCycle.interval] || 'รอบการประเมิน';
+        }
+
+        const portalTitle = root.querySelector('#mh-portal-banner-title');
+        const portalDesc = root.querySelector('#mh-portal-banner-desc');
+        const portalCompleted = root.querySelector('#mh-portal-completed-count');
+        const portalPeriod = root.querySelector('#mh-portal-cycle-period-text');
+        const rollbackWrap = root.querySelector('#mh-cycle-rollback-wrap');
+
+        if (portalTitle) portalTitle.textContent = `รอบการประเมินปัจจุบัน: ${currentCycle.name}`;
+        if (portalPeriod) portalPeriod.textContent = `📅 ช่วงเวลา: ${currentCycle.period}`;
+        if (portalCompleted) portalCompleted.textContent = currentCycle.completedCount;
+        
+        if (portalDesc) {
+          if (currentCycle.cycleNumber === 1) {
+            portalDesc.innerHTML = `สำรวจสุขภาวะทางใจบุคลากร 52 บริษัทในเครือ • ผู้มีสิทธิ์ทั้งหมด 1,248 คน • ทำแบบประเมินแล้ว <strong id="mh-portal-completed-count" style="color:#059669;">1,248</strong> คน (100%) • สถานะ: ครบกำหนดวงรอบ 6 เดือนแล้ว (พร้อมเปิดรอบใหม่)`;
+            if (rollbackWrap) rollbackWrap.style.display = 'none';
+          } else {
+            const pct = Math.round((currentCycle.completedCount / currentCycle.totalEligible) * 100);
+            portalDesc.innerHTML = `สำรวจสุขภาวะทางใจบุคลากร 52 บริษัทในเครือ • ผู้มีสิทธิ์ทั้งหมด 1,248 คน • ทำแบบประเมินในรอบนี้แล้ว <strong id="mh-portal-completed-count" style="color:#0284c7;">${currentCycle.completedCount}</strong> คน (${pct}%) • อยู่ระหว่างเปิดรับข้อมูลรอบใหม่`;
+            if (rollbackWrap) rollbackWrap.style.display = 'block';
+          }
+        }
+
+        const dashCycleName = root.querySelector('#mh-dash-active-cycle-name');
+        if (dashCycleName) dashCycleName.textContent = `${currentCycle.name}`;
+
+        const empCycleTitle = root.querySelector('#mh-emp-cycle-title');
+        const empCycleBadge = root.querySelector('#mh-emp-cycle-badge');
+        if (empCycleTitle) {
+          if (currentCycle.status === 'SCHEDULED') {
+            empCycleTitle.textContent = `⏰ ${currentCycle.name} — มีกำหนดเปิดรับคำตอบในวันที่ ${currentCycle.period.split('–')[0]?.trim() || currentCycle.period}`;
+            if (empCycleBadge) {
+              empCycleBadge.textContent = '⏰ รอเปิดตามกำหนดการ';
+              empCycleBadge.style.color = '#1e40af';
+              empCycleBadge.style.borderColor = '#93c5fd';
+            }
+          } else if (currentCycle.cycleNumber === 1) {
+            empCycleTitle.textContent = `รอบที่ 1/2569 (ม.ค. - มิ.ย. 2569) — เปิดให้บุคลากรเข้าทำแบบประเมินแล้ว`;
+            if (empCycleBadge) {
+              empCycleBadge.textContent = 'เปิดรับการประเมิน';
+              empCycleBadge.style.color = '#047857';
+              empCycleBadge.style.borderColor = '#bbf7d0';
+            }
+          } else {
+            empCycleTitle.textContent = `${currentCycle.name} — เปิดให้บุคลากรทุกคนทำแบบประเมินรอบใหม่แล้ว`;
+            if (empCycleBadge) {
+              empCycleBadge.textContent = 'เปิดรับการประเมิน';
+              empCycleBadge.style.color = '#047857';
+              empCycleBadge.style.borderColor = '#bbf7d0';
+            }
+          }
+        }
+
+        updateRoundFilterOptions();
+      }
+
+      function updateRoundFilterOptions() {
+        const roundFilterEl = root.querySelector('#mh-table-filter-round');
+        if (!roundFilterEl) return;
+        const curVal = roundFilterEl.value;
+
+        let optionsHtml = '';
+        if (currentCycle.cycleNumber > 1) {
+          optionsHtml += `<option value="current">🟢 รอบปัจจุบัน: ${currentCycle.shortName} (กำลังเปิดรับการประเมิน)</option>`;
+          optionsHtml += `<option value="cycle_1">📁 รอบที่ 1/2569 (รอบเดิมที่จัดเก็บถาวร 1,248 คน)</option>`;
+          optionsHtml += `<option value="all">🌐 ทุกรอบประเมินสะสม (ดูประวัติทั้งหมด)</option>`;
+        } else {
+          optionsHtml += `<option value="">ทุกรอบประเมิน (แสดงรอบล่าสุด)</option>`;
+        }
+        optionsHtml += `
+          <option value="multi">เฉพาะพนักงานที่มีประวัติหลายรอบ (≥ 2 รอบขึ้นไป)</option>
+          <option value="multi3">เฉพาะพนักงานที่มีการติดตามผลต่อเนื่อง (≥ 3 รอบขึ้นไป)</option>
+          <option value="round4">เฉพาะรอบที่ 4 (Long-term Monitoring)</option>
+          <option value="round3">เฉพาะรอบที่ 3 (Care Program Check)</option>
+          <option value="round2">เฉพาะรอบที่ 2 (Follow-up)</option>
+          <option value="round1">เฉพาะรอบที่ 1 (Initial / Baseline)</option>
+        `;
+        roundFilterEl.innerHTML = optionsHtml;
+        if (curVal && roundFilterEl.querySelector(`option[value="${curVal}"]`)) {
+          roundFilterEl.value = curVal;
+        } else if (currentCycle.cycleNumber > 1) {
+          roundFilterEl.value = 'current';
+        }
+      }
+
       // Render Individual Results Table
       function renderIndividualTable(query = '') {
         const tbody = root.querySelector('#mh-individual-tbody');
@@ -7730,7 +8555,13 @@
           const attCount = (emp.attempts && emp.attempts.length) || 1;
           const curRound = emp.currentRound || attCount;
 
-          if (roundFilter === 'multi') {
+          if (roundFilter === 'current') {
+            return true;
+          } else if (roundFilter === 'cycle_1') {
+            return true;
+          } else if (roundFilter === 'all') {
+            return true;
+          } else if (roundFilter === 'multi') {
             if (attCount < 2) return false;
           } else if (roundFilter === 'multi3') {
             if (attCount < 3) return false;
@@ -7751,6 +8582,11 @@
         });
 
         tbody.innerHTML = filtered.map(emp => {
+          const attCount = (emp.attempts && emp.attempts.length) || 1;
+          const curRound = emp.currentRound || attCount;
+          const isPending = emp.isPendingNewCycle && currentCycle.cycleNumber > 1 && roundFilter !== 'cycle_1';
+
+          let submittedText = emp.submittedAt;
           let statusPillClass = 'pill-normal';
           if (emp.overallStatus === 'DANGER') statusPillClass = 'pill-danger';
           else if (emp.overallStatus === 'ATTENTION') statusPillClass = 'pill-warning';
@@ -7767,8 +8603,11 @@
           if (emp.q9.level === 'SEVERE') q9PillClass = 'pill-danger';
           else if (emp.q9.level === 'MODERATE' || emp.q9.level === 'MILD') q9PillClass = 'pill-warning';
 
-          const attCount = (emp.attempts && emp.attempts.length) || 1;
-          const curRound = emp.currentRound || attCount;
+          let statusPill = `<span class="score-pill ${statusPillClass}">${emp.overallStatusLabel}</span>`;
+          let boPill = `<span class="score-pill ${boPillClass}">${emp.burnout.label}</span>`;
+          let stPill = `<span class="score-pill ${stPillClass}">${emp.stress.label} (${emp.stress.score})</span>`;
+          let q9Pill = `<span class="score-pill ${q9PillClass}">${emp.q9.label} (${emp.q9.score})</span>`;
+
           let roundBadgeHtml = `<span class="round-badge">รอบ 1</span>`;
           if (attCount >= 3) {
             roundBadgeHtml = `<span class="round-badge round-badge-multi" style="background:#fdf4ff; border-color:#e879f9; color:#86198f;">รอบ ${curRound} (ล่าสุด)</span> <span class="history-pill" title="มีประวัติการประเมินสะสม ${attCount} รอบ">📜 ประวัติ ${attCount} รอบ</span>`;
@@ -7776,17 +8615,39 @@
             roundBadgeHtml = `<span class="round-badge round-badge-multi">รอบ ${curRound} (ล่าสุด)</span> <span class="history-pill" title="มีประวัติรอบที่ 1 เก็บไว้">📜 ประวัติ 2 รอบ</span>`;
           }
 
+          if (isPending) {
+            submittedText = `<span style="color:#d97706; font-size:0.8rem; font-weight:600;">⏳ รอทำรอบที่ ${currentCycle.cycleNumber}</span>`;
+            statusPill = `<span class="score-pill" style="background:#fef3c7; color:#92400e; border:1px dashed #fde68a;">⏳ รอประเมินรอบใหม่</span>`;
+            boPill = `<span style="color:#94a3b8; font-size:0.8rem;">(มีผลรอบเดิม)</span>`;
+            stPill = `<span style="color:#94a3b8; font-size:0.8rem;">(มีผลรอบเดิม)</span>`;
+            q9Pill = `<span style="color:#94a3b8; font-size:0.8rem;">(มีผลรอบเดิม)</span>`;
+            roundBadgeHtml = `<span class="round-badge" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe;">รอบ ${currentCycle.cycleNumber} (เปิดใหม่)</span> <span class="history-pill" title="มีผลการประเมินรอบที่ 1 จัดเก็บถาวร">📜 มีผลรอบ 1 เดิม</span>`;
+          } else if (roundFilter === 'cycle_1' && emp.attempts && emp.attempts[0]) {
+            const att1 = emp.attempts[0];
+            submittedText = att1.submittedAt;
+            const att1BoClass = att1.burnout.level === 'HIGH' ? 'pill-danger' : (att1.burnout.level === 'MODERATE' ? 'pill-warning' : 'pill-normal');
+            const att1StClass = att1.stress.level === 'SEVERE' ? 'pill-danger' : (att1.stress.level === 'MODERATE' ? 'pill-warning' : 'pill-normal');
+            const att1Q9Class = att1.q9.level === 'SEVERE' ? 'pill-danger' : ((att1.q9.level === 'MODERATE' || att1.q9.level === 'MILD') ? 'pill-warning' : 'pill-normal');
+            const att1StatClass = att1.overallStatus === 'DANGER' ? 'pill-danger' : (att1.overallStatus === 'ATTENTION' ? 'pill-warning' : 'pill-normal');
+
+            statusPill = `<span class="score-pill ${att1StatClass}">${att1.overallStatusLabel}</span>`;
+            boPill = `<span class="score-pill ${att1BoClass}">${att1.burnout.label}</span>`;
+            stPill = `<span class="score-pill ${att1StClass}">${att1.stress.label} (${att1.stress.score})</span>`;
+            q9Pill = `<span class="score-pill ${att1Q9Class}">${att1.q9.label} (${att1.q9.score})</span>`;
+            roundBadgeHtml = `<span class="round-badge" style="background:#f1f5f9; color:#475569; border-color:#cbd5e1;">รอบ 1 (จัดเก็บแล้ว)</span>`;
+          }
+
           return `
             <tr>
-              <td style="color:#64748b; font-size:0.83rem;">${emp.submittedAt}</td>
+              <td style="color:#64748b; font-size:0.83rem;">${submittedText}</td>
               <td><code>${emp.empId}</code></td>
               <td><strong>${emp.name}</strong></td>
               <td style="font-size:0.85rem; color:#475569;">${emp.dept}</td>
               <td>${roundBadgeHtml}</td>
-              <td><span class="score-pill ${statusPillClass}">${emp.overallStatusLabel}</span></td>
-              <td><span class="score-pill ${boPillClass}">${emp.burnout.label}</span></td>
-              <td><span class="score-pill ${stPillClass}">${emp.stress.label} (${emp.stress.score})</span></td>
-              <td><span class="score-pill ${q9PillClass}">${emp.q9.label} (${emp.q9.score})</span></td>
+              <td>${statusPill}</td>
+              <td>${boPill}</td>
+              <td>${stPill}</td>
+              <td>${q9Pill}</td>
               <td style="text-align:center;">
                 <button type="button" class="btn-sm-view" data-view-emp="${emp.empId}">
                   ดูรายละเอียด 📄
@@ -7887,6 +8748,546 @@
 
       if (purposeCloseBtn) purposeCloseBtn.addEventListener('click', closePurposeModal);
       if (purposeCancelBtn) purposeCancelBtn.addEventListener('click', closePurposeModal);
+
+      // ========================================================
+      // 6-Month Survey Cycle Reset Handlers (Global Reset & Modal)
+      // ========================================================
+      const cycleResetModal = root.querySelector('#mh-cycle-reset-modal');
+      const cycleResetModalClose = root.querySelector('#mh-cycle-reset-modal-close');
+      const cycleResetModalCancel = root.querySelector('#mh-cycle-reset-modal-cancel');
+      const cycleResetConfirmBtn = root.querySelector('#mh-cycle-reset-confirm-btn');
+      const cycleNameInput = root.querySelector('#mh-cycle-name-input');
+      const cyclePeriodInput = root.querySelector('#mh-cycle-period-input');
+      const cycleIntervalSelect = root.querySelector('#mh-cycle-interval-select');
+      const cycleReasonInput = root.querySelector('#mh-cycle-reason-input');
+      const cycleConfirmCheckbox = root.querySelector('#mh-cycle-confirm-checkbox');
+
+      const openCycleResetModal = () => {
+        if (!cycleResetModal) return;
+        const nextNum = currentCycle.cycleNumber + 1;
+        const modalCurName = root.querySelector('#mh-modal-cur-cycle-name');
+        const modalNextName = root.querySelector('#mh-modal-next-cycle-name');
+
+        if (modalCurName) modalCurName.textContent = currentCycle.name;
+        
+        let suggestedTitle = '';
+        let suggestedPeriod = '';
+        if (nextNum === 2) {
+          suggestedTitle = 'รอบที่ 2/2569 (ครึ่งปีหลัง: ก.ค. - ธ.ค. 2569)';
+          suggestedPeriod = '01 ก.ค. 2569 - 31 ธ.ค. 2569';
+        } else if (nextNum === 3) {
+          suggestedTitle = 'รอบที่ 1/2570 (ครึ่งปีแรก: ม.ค. - มิ.ย. 2570)';
+          suggestedPeriod = '01 ม.ค. 2570 - 30 มิ.ย. 2570';
+        } else {
+          suggestedTitle = `รอบที่ ${nextNum}/2570`;
+          suggestedPeriod = 'ระยะเวลา 6 เดือนถัดไป';
+        }
+
+        if (modalNextName) modalNextName.textContent = suggestedTitle;
+        if (cycleNameInput) cycleNameInput.value = suggestedTitle;
+        if (cycleStartDateInput && cycleEndDateInput) {
+          const todayIso = getAppTodayIso();
+          // Forbid past dates via HTML5 min attribute
+          cycleStartDateInput.min = todayIso;
+          cycleEndDateInput.min = todayIso;
+
+          // Default start date = TODAY!
+          cycleStartDateInput.value = todayIso;
+          // Default end date = 30 days from today!
+          cycleEndDateInput.value = addDaysIso(todayIso, 30);
+
+          // Update active preset button styling
+          root.querySelectorAll('.btn-period-preset').forEach(b => {
+            b.classList.toggle('is-active', b.dataset.preset === 'today30');
+          });
+
+          if (typeof updateCalendarPeriodState === 'function') updateCalendarPeriodState();
+        }
+        if (cycleConfirmCheckbox) cycleConfirmCheckbox.checked = false;
+        if (cycleReasonInput) {
+          cycleReasonInput.value = `เริ่มต้นรอบสำรวจสุขภาวะทางจิตใจบุคลากรประจำ${suggestedTitle.split('(')[1]?.replace(')', '') || 'รอบ 6 เดือน'} ตามแผนงาน HR Well-being Strategy`;
+        }
+
+        cycleResetModal.style.display = 'flex';
+      };
+
+      const closeCycleResetModal = () => {
+        if (cycleResetModal) cycleResetModal.style.display = 'none';
+      };
+
+      // Calendar Date Picker Helpers & Sync (No Past Dates Allowed)
+      const cycleStartDateInput = root.querySelector('#mh-cycle-start-date');
+      const cycleEndDateInput = root.querySelector('#mh-cycle-end-date');
+      const cycleDaysCountBadge = root.querySelector('#mh-cycle-days-count');
+      const cyclePeriodThaiPreview = root.querySelector('#mh-cycle-period-thai-preview');
+
+      const thaiMonthNames = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+
+      const getAppTodayIso = () => {
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const realIso = `${y}-${m}-${day}`;
+        if (y >= 2026) return realIso;
+        return '2026-11-05';
+      };
+
+      const addDaysIso = (isoStr, days) => {
+        const d = new Date(isoStr);
+        d.setDate(d.getDate() + days);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      };
+
+      const formatIsoToThai = (isoDateStr) => {
+        if (!isoDateStr) return '';
+        const parts = isoDateStr.split('-');
+        if (parts.length !== 3) return isoDateStr;
+        const year = parseInt(parts[0], 10) + 543;
+        const month = thaiMonthNames[parseInt(parts[1], 10) - 1] || parts[1];
+        const day = String(parseInt(parts[2], 10)).padStart(2, '0');
+        return `${day} ${month} ${year}`;
+      };
+
+      const updateCalendarPeriodState = () => {
+        if (!cycleStartDateInput || !cycleEndDateInput) return;
+        const startVal = cycleStartDateInput.value;
+        const endVal = cycleEndDateInput.value;
+        if (!startVal || !endVal) return;
+
+        const todayIso = getAppTodayIso();
+
+        // 1. Guard against past start dates
+        if (startVal < todayIso) {
+          alert(`⚠️ วันเริ่มต้นการประเมินไม่สามารถเป็นวันที่ในอดีตได้ (${formatIsoToThai(startVal)} ผ่านมาแล้ว)\n\nระบบปรับวันเริ่มต้นเป็น วันนี้ (${formatIsoToThai(todayIso)}) ให้อัตโนมัติครับ`);
+          cycleStartDateInput.value = todayIso;
+          cycleStartDateInput.min = todayIso;
+          return updateCalendarPeriodState();
+        }
+
+        // 2. Guard against end date earlier than start date
+        if (endVal < startVal) {
+          cycleEndDateInput.value = startVal;
+          cycleEndDateInput.min = startVal;
+          return updateCalendarPeriodState();
+        }
+
+        cycleEndDateInput.min = startVal;
+
+        const dStart = new Date(startVal);
+        const dEnd = new Date(endVal);
+        const diffTime = Math.abs(dEnd - dStart);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // inclusive
+
+        if (cycleDaysCountBadge) {
+          cycleDaysCountBadge.textContent = `${diffDays} วัน`;
+        }
+
+        const thaiStart = formatIsoToThai(startVal);
+        const thaiEnd = formatIsoToThai(endVal);
+        const periodStr = `${thaiStart} – ${thaiEnd}`;
+
+        if (cyclePeriodInput) {
+          cyclePeriodInput.value = periodStr;
+        }
+
+        if (cyclePeriodThaiPreview) {
+          cyclePeriodThaiPreview.textContent = `🟢 ${periodStr} (${diffDays} วัน)`;
+        }
+
+        // Check if start date is in the future relative to today
+        const isScheduled = startVal > todayIso;
+        const modeNotice = root.querySelector('#mh-cycle-mode-notice');
+        const confirmBtn = root.querySelector('#mh-cycle-reset-confirm-btn');
+
+        if (modeNotice) {
+          if (isScheduled) {
+            modeNotice.innerHTML = `
+              <div style="background:#eff6ff; border:1px solid #93c5fd; border-left:4px solid #2563eb; color:#1e40af; border-radius:8px; padding:0.65rem 0.95rem;">
+                ⏰ <strong>โหมดตั้งเวลาเปิดล่วงหน้า (Scheduled Launch):</strong><br>
+                เนื่องจากวันเริ่มต้น (<strong>${thaiStart}</strong>) เป็นวันในอนาคต ระบบจะทำการ <strong>ตั้งเวลาเปิดรอบล่วงหน้า</strong> และเปิดรับคำตอบพร้อมรีเซ็ตสิทธิ์อัตโนมัติเมื่อถึงวันที่กำหนด (หรือแอดมินสามารถกดสั่งเปิดทันทีก่อนกำหนดได้ตลอดเวลา)
+              </div>
+            `;
+            if (confirmBtn) {
+              confirmBtn.style.background = '#2563eb';
+              confirmBtn.innerHTML = `<span>⏰</span> ยืนยันตั้งเวลาเปิดรอบล่วงหน้า (Scheduled)`;
+            }
+          } else {
+            modeNotice.innerHTML = `
+              <div style="background:#f0fdf4; border:1px solid #86efac; border-left:4px solid #059669; color:#065f46; border-radius:8px; padding:0.65rem 0.95rem;">
+                🟢 <strong>โหมดเปิดใช้งานทันที (Instant Launch):</strong><br>
+                ระบบจะทำการเปิดรับการประเมินตั้งแต่วันนี้ (<strong>${thaiStart}</strong>) และรีเซ็ตสิทธิ์ให้บุคลากร 1,248 คนเริ่มทำรอบใหม่ได้ทันทีที่กดยืนยัน
+              </div>
+            `;
+            if (confirmBtn) {
+              confirmBtn.style.background = '#059669';
+              confirmBtn.innerHTML = `<span>🚀</span> ยืนยันเปิดรอบการประเมินทันที`;
+            }
+          }
+        }
+      };
+
+      if (cycleStartDateInput) cycleStartDateInput.addEventListener('change', updateCalendarPeriodState);
+      if (cycleEndDateInput) cycleEndDateInput.addEventListener('change', updateCalendarPeriodState);
+
+      // Preset buttons (today30, today15, nextmonth, newyear)
+      root.querySelectorAll('.btn-period-preset').forEach(btn => {
+        btn.addEventListener('click', () => {
+          root.querySelectorAll('.btn-period-preset').forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+
+          const preset = btn.dataset.preset;
+          const todayIso = getAppTodayIso();
+
+          if (preset === 'today30') {
+            if (cycleStartDateInput) cycleStartDateInput.value = todayIso;
+            if (cycleEndDateInput) cycleEndDateInput.value = addDaysIso(todayIso, 30);
+          } else if (preset === 'today15') {
+            if (cycleStartDateInput) cycleStartDateInput.value = todayIso;
+            if (cycleEndDateInput) cycleEndDateInput.value = addDaysIso(todayIso, 15);
+          } else if (preset === 'nextmonth') {
+            if (cycleStartDateInput) cycleStartDateInput.value = '2026-12-01';
+            if (cycleEndDateInput) cycleEndDateInput.value = '2026-12-31';
+          } else if (preset === 'newyear') {
+            if (cycleStartDateInput) cycleStartDateInput.value = '2027-01-01';
+            if (cycleEndDateInput) cycleEndDateInput.value = '2027-01-31';
+          }
+          updateCalendarPeriodState();
+        });
+      });
+
+
+      // ========================================================
+      // Extend Survey Period Handlers (ขยายเวลาประเมินรอบปัจจุบัน)
+      // ========================================================
+      const cycleExtendModal = root.querySelector('#mh-cycle-extend-modal');
+      const cycleExtendModalClose = root.querySelector('#mh-cycle-extend-modal-close');
+      const cycleExtendModalCancel = root.querySelector('#mh-cycle-extend-modal-cancel');
+      const cycleExtendConfirmBtn = root.querySelector('#mh-cycle-extend-confirm-btn');
+      const extendNewEndDateInput = root.querySelector('#mh-extend-new-end-date');
+      const extendReasonInput = root.querySelector('#mh-extend-reason-input');
+      const extendPreviewTag = root.querySelector('#mh-extend-preview-tag');
+
+      const openCycleExtendModal = () => {
+        if (!cycleExtendModal) return;
+        const curNameEl = root.querySelector('#mh-extend-cur-name');
+        const oldPeriodEl = root.querySelector('#mh-extend-old-period');
+        const completedEl = root.querySelector('#mh-extend-completed-count');
+        const pendingEl = root.querySelector('#mh-extend-pending-count');
+
+        if (curNameEl) curNameEl.textContent = currentCycle.name;
+        if (oldPeriodEl) oldPeriodEl.textContent = '01 ต.ค. 2569 – 31 ต.ค. 2569 (ครบกำหนดเดิมเมื่อ 5 วันที่แล้ว)';
+        
+        // Mock 780 completed out of 1000 for realistic extension scenario
+        const targetTotal = 1000;
+        const comp = 780;
+        if (completedEl) completedEl.textContent = `${comp} คน (78%)`;
+        if (pendingEl) pendingEl.textContent = `${targetTotal - comp} คน`;
+
+        // Set default new end date = today + 15 days
+        const todayIso = getAppTodayIso();
+        const defaultExtDate = '2026-11-20'; // or today + 15 days
+        if (extendNewEndDateInput) {
+          extendNewEndDateInput.min = todayIso;
+          extendNewEndDateInput.value = addDaysIso(todayIso, 15);
+        }
+
+        updateExtendPreview();
+        cycleExtendModal.style.display = 'flex';
+      };
+
+      const closeCycleExtendModal = () => {
+        if (cycleExtendModal) cycleExtendModal.style.display = 'none';
+      };
+
+      const updateExtendPreview = () => {
+        if (!extendNewEndDateInput || !extendPreviewTag) return;
+        const endVal = extendNewEndDateInput.value;
+        const todayIso = getAppTodayIso();
+        const dEnd = new Date(endVal);
+        const dToday = new Date(todayIso);
+        const diffDays = Math.ceil(Math.abs(dEnd - dToday) / (1000 * 60 * 60 * 24));
+        const thaiEnd = formatIsoToThai(endVal);
+        extendPreviewTag.textContent = `⏳ ขยายเวลาเพิ่ม: ${diffDays} วัน (สิ้นสุดใหม่: ${thaiEnd})`;
+      };
+
+      if (extendNewEndDateInput) {
+        extendNewEndDateInput.addEventListener('change', updateExtendPreview);
+      }
+
+      root.querySelectorAll('.btn-extend-preset').forEach(btn => {
+        btn.addEventListener('click', () => {
+          root.querySelectorAll('.btn-extend-preset').forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+
+          const addDays = parseInt(btn.dataset.addDays, 10) || 15;
+          const todayIso = getAppTodayIso();
+          if (extendNewEndDateInput) {
+            extendNewEndDateInput.value = addDaysIso(todayIso, addDays);
+          }
+          updateExtendPreview();
+        });
+      });
+
+      if (cycleExtendModalClose) cycleExtendModalClose.addEventListener('click', closeCycleExtendModal);
+      if (cycleExtendModalCancel) cycleExtendModalCancel.addEventListener('click', closeCycleExtendModal);
+
+      const btnPortalCycleExtend = root.querySelector('#mh-portal-btn-cycle-extend');
+      if (btnPortalCycleExtend) btnPortalCycleExtend.addEventListener('click', openCycleExtendModal);
+
+      const btnTopbarCycleExtend = root.querySelector('#mh-btn-topbar-cycle-extend');
+      if (btnTopbarCycleExtend) btnTopbarCycleExtend.addEventListener('click', openCycleExtendModal);
+
+      if (cycleExtendConfirmBtn) {
+        cycleExtendConfirmBtn.addEventListener('click', () => {
+          const newEndVal = extendNewEndDateInput ? extendNewEndDateInput.value : '';
+          const reason = extendReasonInput ? extendReasonInput.value.trim() : '';
+
+          if (!newEndVal) {
+            alert('⚠️ กรุณาระบุกำหนดวันสิ้นสุดใหม่');
+            return;
+          }
+          if (!reason) {
+            alert('⚠️ กรุณาระบุเหตุผลในการขยายเวลาเพื่อบันทึก Audit Trail');
+            return;
+          }
+
+          const thaiNewEnd = formatIsoToThai(newEndVal);
+          const startPart = currentCycle.period.split('–')[0]?.trim() || currentCycle.period.split('-')[0]?.trim() || '01 ม.ค. 2569';
+          const newPeriodStr = `${startPart} – ${thaiNewEnd} (ขยายเวลา)`;
+
+          currentCycle.period = newPeriodStr;
+          currentCycle.status = 'ACTIVE';
+
+          // Record Audit Log
+          if (typeof addAuditLogEntry === 'function') {
+            addAuditLogEntry(
+              'extend_cycle',
+              `บุคลากรทั้งองค์กร (${currentCycle.name})`,
+              `ขยายเวลาทำแบบประเมินรอบปัจจุบันจนถึงวันที่ ${thaiNewEnd} เนื่องจากยอดผู้ตอบยังไม่ครบตามเป้าหมาย 1,000 คน: "${reason}"`,
+              'SUCCESS',
+              {
+                cycleId: currentCycle.cycleId,
+                newEndDate: newEndVal,
+                extendedUntil: thaiNewEnd,
+                reason: reason
+              }
+            );
+          }
+
+          closeCycleExtendModal();
+          updateCycleUI();
+
+          // Update portal banner to highlight extended status
+          const portalDesc = root.querySelector('#mh-portal-banner-desc');
+          if (portalDesc) {
+            portalDesc.innerHTML = `📢 <strong>ขยายเวลาทำแบบประเมินรอบที่ 1 แล้ว:</strong> เปิดรับต่อจนถึงวันที่ <strong>${thaiNewEnd}</strong> • ผู้ตอบแล้ว 780/1,000 คน (78%) • พนักงานที่ยังไม่ทำสามารถเข้าทำต่อได้ตามปกติ`;
+          }
+
+          const empCycleTitle = root.querySelector('#mh-emp-cycle-title');
+          if (empCycleTitle) {
+            empCycleTitle.textContent = `📢 ขยายเวลาทำแบบประเมิน: ${currentCycle.name} เปิดรับต่อจนถึงวันที่ ${thaiNewEnd} สำหรับบุคลากรที่ยังไม่ได้ทำ`;
+          }
+
+          alert(`✅ [บันทึกการขยายเวลาประเมินสำเร็จ!]
+
+• รอบการประเมิน: ${currentCycle.name}
+• วันสิ้นสุดใหม่: ${thaiNewEnd}
+• สถานะ: ขยายเวลาเปิดรับต่อ (พนักงานที่ยังไม่ได้ทำสามารถเข้าทำต่อได้)
+• ข้อมูลเดิม 780 คน: ปลอดภัยครบถ้วน 100%
+• บันทึก Audit Log: extend_cycle เรียบร้อยแล้ว`);
+        });
+      }
+      if (cycleResetModalClose) cycleResetModalClose.addEventListener('click', closeCycleResetModal);
+      if (cycleResetModalCancel) cycleResetModalCancel.addEventListener('click', closeCycleResetModal);
+
+      // Wire cycle reset triggers across Admin App
+      const btnTopbarCycleReset = root.querySelector('#mh-btn-topbar-cycle-reset');
+      if (btnTopbarCycleReset) btnTopbarCycleReset.addEventListener('click', openCycleResetModal);
+
+      const btnPortalCycleReset = root.querySelector('#mh-portal-btn-cycle-reset');
+      if (btnPortalCycleReset) btnPortalCycleReset.addEventListener('click', openCycleResetModal);
+
+      const btnTableCycleReset = root.querySelector('#mh-btn-table-cycle-reset');
+      if (btnTableCycleReset) btnTableCycleReset.addEventListener('click', openCycleResetModal);
+
+      const btnDashCycleReset = root.querySelector('#mh-btn-dash-cycle-reset');
+      if (btnDashCycleReset) btnDashCycleReset.addEventListener('click', openCycleResetModal);
+
+      // Reactively update suggested titles and dates when cadence dropdown changes
+      if (cycleIntervalSelect) {
+        cycleIntervalSelect.addEventListener('change', () => {
+          const val = cycleIntervalSelect.value;
+          const nextNum = currentCycle.cycleNumber + 1;
+          const modalNextName = root.querySelector('#mh-modal-next-cycle-name');
+          let suggestedTitle = '';
+          let suggestedPeriod = '';
+
+          if (val === '6m') {
+            suggestedTitle = (nextNum % 2 === 0)
+              ? `รอบที่ 2/2569 (ครึ่งปีหลัง: ก.ค. - ธ.ค. 2569)`
+              : `รอบที่ 1/2570 (ครึ่งปีแรก: ม.ค. - มิ.ย. 2570)`;
+            suggestedPeriod = (nextNum % 2 === 0)
+              ? '01 ก.ค. 2569 - 31 ธ.ค. 2569'
+              : '01 ม.ค. 2570 - 30 มิ.ย. 2570';
+          } else if (val === '3m') {
+            const qNum = ((nextNum - 1) % 4) + 1;
+            suggestedTitle = `รอบไตรมาสที่ ${qNum}/2569 (Q${qNum})`;
+            suggestedPeriod = 'ระยะเวลา 3 เดือน (ประจำไตรมาส)';
+          } else if (val === '12m') {
+            suggestedTitle = `รอบสำรวจประจำปี ${2569 + nextNum - 1}`;
+            suggestedPeriod = `01 ม.ค. ${2569 + nextNum - 1} - 31 ธ.ค. ${2569 + nextNum - 1}`;
+          } else {
+            suggestedTitle = `รอบสำรวจสุขภาวะทางจิตใจรอบที่ ${nextNum}`;
+            suggestedPeriod = 'ตามกำหนดการแผนงาน HR';
+          }
+
+          if (modalNextName) modalNextName.textContent = suggestedTitle;
+          if (cycleNameInput) cycleNameInput.value = suggestedTitle;
+          if (cyclePeriodInput) cyclePeriodInput.value = suggestedPeriod;
+          if (cycleReasonInput) {
+            cycleReasonInput.value = `เปิดรอบสำรวจสุขภาวะทางจิตใจ: ${suggestedTitle} ตามแผนงาน HR Well-being`;
+          }
+        });
+      }
+
+      if (cycleResetConfirmBtn) {
+        cycleResetConfirmBtn.addEventListener('click', () => {
+          if (!cycleConfirmCheckbox || !cycleConfirmCheckbox.checked) {
+            alert('⚠️ กรุณาทำเครื่องหมายถูกในช่อง "ข้าพเจ้ายืนยันการเปิดรอบการประเมินใหม่" เพื่อยืนยันความปลอดภัย');
+            return;
+          }
+          const reason = cycleReasonInput ? cycleReasonInput.value.trim() : '';
+          if (!reason) {
+            alert('⚠️ กรุณาระบุวัตถุประสงค์หรือเหตุผลในการเปิดรอบใหม่เพื่อบันทึกใน Audit Trail');
+            return;
+          }
+
+          const conf = roleNavConfig[currentRole] || {};
+          const now = new Date();
+          const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+          const formattedNow = `${String(now.getDate()).padStart(2, '0')} ${thaiMonths[now.getMonth()]} ${now.getFullYear() + 543} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+          // Save baseline snapshot for demo rollback if not yet saved
+          if (!initialBaselineEmployees) {
+            initialBaselineEmployees = JSON.parse(JSON.stringify(sampleEmployees));
+          }
+
+          const todayIso = '2026-11-05';
+          const startVal = cycleStartDateInput ? cycleStartDateInput.value : '';
+          const isScheduled = startVal > todayIso;
+
+          // 1. Close current cycle
+          currentCycle.status = 'CLOSED';
+          currentCycle.closedAt = formattedNow;
+
+          // 2. Create new cycle
+          const nextNum = currentCycle.cycleNumber + 1;
+          const cycleTitle = cycleNameInput ? cycleNameInput.value.trim() : `รอบที่ ${nextNum}/2569`;
+          const cyclePeriod = cyclePeriodInput ? cyclePeriodInput.value.trim() : '01 ก.ค. 2569 - 31 ธ.ค. 2569';
+          const newCycle = {
+            cycleId: `cycle_${nextNum}`,
+            cycleNumber: nextNum,
+            name: cycleTitle,
+            shortName: cycleTitle.split('(')[0].trim() || `รอบที่ ${nextNum}/2569`,
+            period: cyclePeriod,
+            startDate: startVal,
+            endDate: cycleEndDateInput ? cycleEndDateInput.value : '',
+            interval: cycleIntervalSelect ? cycleIntervalSelect.value : '6m',
+            status: isScheduled ? 'SCHEDULED' : 'ACTIVE',
+            totalEligible: 1248,
+            completedCount: 0,
+            createdAt: formattedNow,
+            closedAt: null,
+            resetBy: conf.userName || 'สรวิชญ์ เมธากุล (Super Admin)',
+            note: reason
+          };
+          surveyCycles.push(newCycle);
+          currentCycle = newCycle;
+
+          // 3. Reset employee eligibility if active now
+          sampleEmployees.forEach(emp => {
+            if (!emp.attempts || emp.attempts.length === 0) {
+              emp.attempts = [{
+                round: 1,
+                submittedAt: emp.submittedAt,
+                overallStatus: emp.overallStatus,
+                overallStatusLabel: emp.overallStatusLabel,
+                burnout: JSON.parse(JSON.stringify(emp.burnout)),
+                stress: JSON.parse(JSON.stringify(emp.stress)),
+                q9: JSON.parse(JSON.stringify(emp.q9)),
+                note: 'รอบที่ 1 (ประเมิน Baseline ประจำรอบ 6 เดือนแรก)'
+              }];
+            }
+            if (!isScheduled) {
+              emp.isPendingNewCycle = true;
+              emp.activeCycleNumber = newCycle.cycleNumber;
+            }
+          });
+
+          // 4. Record Audit Log
+          if (typeof addAuditLogEntry === 'function') {
+            const act = isScheduled ? 'schedule_cycle' : 'cycle_reset';
+            const actDesc = isScheduled
+              ? `ตั้งเวลาเปิดรอบการประเมินล่วงหน้า: ${newCycle.name} (กำหนดเปิด ${newCycle.period}) - ระบบจะเปิดรับอัตโนมัติเมื่อถึงกำหนด โดยคงผลการประเมินเดิมทั้งหมดไว้ในฐานข้อมูล 100%: "${reason}"`
+              : `เปิดรอบการประเมินใหม่ทันที: ${newCycle.name} - รีเซ็ตสิทธิ์ให้พนักงานทุกคนทำแบบประเมินใหม่ โดยคงผลการประเมินเดิมไว้ 100%: "${reason}"`;
+            
+            addAuditLogEntry(act, 'บุคลากรทั้งองค์กร (1,248 บัญชี)', actDesc, 'SUCCESS', {
+              cycleId: newCycle.cycleId,
+              cycleNumber: newCycle.cycleNumber,
+              isScheduled: isScheduled,
+              startDate: newCycle.startDate,
+              totalEligible: 1248,
+              retainedPastRecords: 1248
+            });
+          }
+
+          // 5. Update UI
+          closeCycleResetModal();
+          updateCycleUI();
+          renderIndividualTable('');
+
+          if (isScheduled) {
+            alert(`⏰ [ตั้งเวลาเปิดรอบการประเมินล่วงหน้าสำเร็จ!]
+
+• รอบที่ตั้งเวลา: ${newCycle.name}
+• กำหนดเปิดรับ: ${newCycle.period}
+• สถานะ: ตั้งเวลาล่วงหน้า (Scheduled)
+• ระบบจะเปิดรับและรีเซ็ตสิทธิ์เมื่อถึงกำหนด (หรือคุณสามารถกดปุ่มสั่งเปิดทันทีก่อนกำหนดได้เสมอ)
+• ข้อมูลรอบเดิม: จัดเก็บถาวรในฐานข้อมูล 100%
+• บันทึก Audit Log: schedule_cycle สำเร็จเรียบร้อย`);
+          } else {
+            alert(`🎉 [เปิดรอบการประเมินใหม่สำเร็จ!]
+
+• รอบปัจจุบัน: ${newCycle.name}
+• วงรอบความถี่: ทุกๆ 6 เดือน
+• จำนวนบุคลากรที่รีเซ็ตสิทธิ์: 1,248 คน (พร้อมเข้าทำรอบใหม่)
+• นโยบาย Data Retention: ข้อมูลรอบก่อนหน้าถูกจัดเก็บถาวรในฐานข้อมูล (Archived) 100%
+• บันทึก Audit Log: cycle_reset สำเร็จเรียบร้อย`);
+          }
+        });
+      }
+
+      // Rollback for demonstration testing
+      const btnCycleRollback = root.querySelector('#mh-portal-btn-cycle-rollback');
+      if (btnCycleRollback) {
+        btnCycleRollback.addEventListener('click', () => {
+          if (!confirm('↩️ คุณต้องการสลับกลับสู่รอบที่ 1 (Baseline เริ่มต้น) สำหรับการสาธิตหรือไม่?')) return;
+          if (initialBaselineEmployees) {
+            sampleEmployees = JSON.parse(JSON.stringify(initialBaselineEmployees));
+          }
+          surveyCycles = [surveyCycles[0]];
+          currentCycle = surveyCycles[0];
+          currentCycle.status = 'ACTIVE';
+          currentCycle.closedAt = null;
+          updateCycleUI();
+          renderIndividualTable('');
+          alert('↩️ สลับกลับสู่สถานะรอบที่ 1 เรียบร้อยแล้ว (พร้อมให้ทดสอบกดเปิดรอบใหม่อีกครั้ง)');
+        });
+      }
 
       // Detail Modal Render Functions
       function renderEmployeeDetailModal(emp, roundNum) {
@@ -9029,7 +10430,10 @@
         let actionLabel = action;
         let actionClass = 'act-auth';
 
-        if (action === 'view_sensitive_detail') {
+        if (action === 'cycle_reset') {
+          actionLabel = '🔄 เปิดรอบประเมินใหม่ (cycle_reset)';
+          actionClass = 'act-reset';
+        } else if (action === 'view_sensitive_detail') {
           actionLabel = '👁️ เข้าดูข้อมูลละเอียด (view_sensitive_detail)';
           actionClass = 'act-sensitive';
         } else if (action === 'export_results' || action === 'export_admins') {

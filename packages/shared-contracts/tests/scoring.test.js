@@ -91,6 +91,8 @@ test('Scoring Engine - Overall status calculation across 3 instruments', () => {
 
   const normalResult = calculateScores(normalAns);
   assert.strictEqual(normalResult.overall.status, 'NORMAL');
+  assert.strictEqual(normalResult.overall.label, 'ปกติ');
+  assert.strictEqual(normalResult.overall.description, 'ผลการประเมินสุขภาพใจทุกด้านอยู่ในเกณฑ์ปกติ');
 
   // Trigger care via 9Q score >= 7
   normalAns.Q01 = 3;
@@ -98,6 +100,8 @@ test('Scoring Engine - Overall status calculation across 3 instruments', () => {
   normalAns.Q03 = 1;
   const careResult = calculateScores(normalAns);
   assert.strictEqual(careResult.overall.status, 'NEEDS_ADDITIONAL_CARE');
+  assert.strictEqual(careResult.overall.label, 'ควรได้รับการดูแลเพิ่มเติม');
+  assert.strictEqual(careResult.overall.description, 'เมื่อพบผลการประเมินอย่างน้อย 1 ด้านที่ไม่อยู่ในเกณฑ์ปกติ');
   assert.strictEqual(careResult.q9.totalScore, 7);
   assert.strictEqual(careResult.q9.level, 'MILD');
 });

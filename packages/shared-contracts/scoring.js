@@ -125,7 +125,10 @@ function calculateScores(answers = {}) {
     },
     overall: {
       status: needsCare ? OVERALL_STATUS.NEEDS_ADDITIONAL_CARE : OVERALL_STATUS.NORMAL,
-      label: needsCare ? 'ควรได้รับการดูแลเพิ่มเติม' : 'ระดับปกติ',
+      label: needsCare ? 'ควรได้รับการดูแลเพิ่มเติม' : 'ปกติ',
+      description: needsCare
+        ? 'เมื่อพบผลการประเมินอย่างน้อย 1 ด้านที่ไม่อยู่ในเกณฑ์ปกติ'
+        : 'ผลการประเมินสุขภาพใจทุกด้านอยู่ในเกณฑ์ปกติ',
       hasSuicideRisk: false
     }
   };

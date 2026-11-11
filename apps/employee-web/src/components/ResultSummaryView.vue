@@ -1,11 +1,5 @@
 <template>
   <div class="result-summary-container">
-    <!-- Top Screening Disclaimer -->
-    <div class="disclaimer-banner">
-      <span class="icon">ℹ️</span>
-      <span><strong>ข้อควรทราบ:</strong> ผลลัพธ์นี้เป็นการคัดกรองเบื้องต้นเพื่อส่งเสริมสุขภาวะ ไม่ใช่การวินิจฉัยทางการแพทย์</span>
-    </div>
-
     <!-- Loading State -->
     <div v-if="loading" class="loading-state">
       <p>กำลังประมวลผลและโหลดผลการประเมิน...</p>
@@ -19,27 +13,44 @@
 
     <!-- Content State -->
     <div v-else-if="result" class="result-content">
-      <!-- 2. Overall Status Card -->
+      <!-- 1. Overall Status Card (Box 1: รวมข้อควรทราบไว้ในกล่องเดียวกับภาพรวมผลการประเมิน) -->
       <div 
         class="overall-card" 
-        :class="result.overall.status === 'NEEDS_ADDITIONAL_CARE' ? 'status-needs-care' : 'status-normal'"
+        :class="result.overall && result.overall.status === 'NEEDS_ADDITIONAL_CARE' ? 'status-needs-care' : 'status-normal'"
       >
-        <h2>ภาพรวมผลการประเมิน Employee Well-being Survey</h2>
-        <p v-if="result.overall.status === 'NEEDS_ADDITIONAL_CARE'" class="overall-desc">
-          ผลการประเมินเบื้องต้นพบว่า มีอย่างน้อยหนึ่งมิติที่ควรได้รับการดูแลเพิ่มเติม แนะนำให้ลองปรับพฤติกรรมการดูแลตนเอง หรือปรึกษาผู้เชี่ยวชาญ
-        </p>
-        <p v-else class="overall-desc">
-          ผลการประเมินเบื้องต้นอยู่ในเกณฑ์ปกติ ขอให้ท่านรักษาสมดุลในการใช้ชีวิตและการทำงานอย่างต่อเนื่อง
-        </p>
-        <div class="submission-timestamp">
-          <span>ส่งเมื่อ: {{ formatTime(submittedAt) }}</span>
+        <div class="overall-card-left">
+          <h2 class="overall-title">ภาพรวมผลการประเมิน</h2>
+          <div class="submission-timestamp">
+            ส่งเมื่อ: {{ formatTime(submittedAt) }}
+          </div>
+          <div class="overall-disclaimer">
+            <svg class="disclaimer-info-icon" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+            </svg>
+            <span class="disclaimer-text">ข้อควรทราบ : ผลลัพธ์นี้เป็นการคัดกรองเบื้องต้นเพื่อส่งเสริมสุขภาวะ ไม่ใช่การวินิจฉัยทางการแพทย์</span>
+          </div>
+        </div>
+        <div class="overall-card-right">
+          <div 
+            class="overall-badge" 
+            :class="result.overall && result.overall.status === 'NEEDS_ADDITIONAL_CARE' ? 'badge-needs-care' : 'badge-normal'"
+            :title="(result.overall && result.overall.description) || (result.overall && result.overall.status === 'NEEDS_ADDITIONAL_CARE' ? 'เมื่อพบผลการประเมินอย่างน้อย 1 ด้านที่ไม่อยู่ในเกณฑ์ปกติ' : 'ผลการประเมินสุขภาพใจทุกด้านอยู่ในเกณฑ์ปกติ')"
+          >
+            <svg v-if="result.overall && result.overall.status === 'NEEDS_ADDITIONAL_CARE'" class="badge-status-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.08L2 22l5.12-1.34C8.58 21.48 10.24 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/>
+            </svg>
+            <svg v-else class="badge-status-icon" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <span>{{ (result.overall && result.overall.label) || (result.overall && result.overall.status === 'NEEDS_ADDITIONAL_CARE' ? 'ควรได้รับการดูแลเพิ่มเติม' : 'ปกติ') }}</span>
+          </div>
         </div>
       </div>
 
-      <!-- 3. Assessment Cards Grid (3 Instruments) -->
-      <div class="cards-grid">
-        <!-- Card 1: Burnout -->
-        <div class="card assessment-card">
+      <!-- 2. Assessment Cards Section (Box 2: Burnout เต็มความกว้าง + ความเครียด & ซึมเศร้า 2 คอลัมน์) -->
+      <div class="assessment-section">
+        <!-- Card 1: Burnout (Full Width) -->
+        <div class="card assessment-card burnout-card">
           <div class="card-title-row">
             <h3>1. ภาวะหมดไฟในการทำงาน (Burnout)</h3>
             <span class="badge" :class="getLevelBadgeClass(result.burnout.level)">
@@ -47,77 +58,80 @@
             </span>
           </div>
           <p class="card-instruction">
-            ประเมินแยกตาม 3 มิติหลัก:
+            ประเมินแยกตาม 3 มิติหลัก
           </p>
           <div class="dimension-list">
             <div class="dimension-row">
               <span class="dim-name">ความอ่อนล้าทางอารมณ์ (EE):</span>
-              <span class="dim-score">{{ result.burnout.dimensions.EE.score }} คะแนน</span>
-              <span class="dim-level" :class="getLevelBadgeClass(result.burnout.dimensions.EE.level)">
-                {{ formatLevelThai(result.burnout.dimensions.EE.level) }}
-              </span>
+              <div class="dim-row-right">
+                <span class="dim-score">{{ result.burnout.dimensions.EE.score }} คะแนน</span>
+                <span class="dim-level" :class="getLevelBadgeClass(result.burnout.dimensions.EE.level)">
+                  {{ formatLevelThai(result.burnout.dimensions.EE.level) }}
+                </span>
+              </div>
             </div>
             <div class="dimension-row">
               <span class="dim-name">การลดความเป็นบุคคล (DP):</span>
-              <span class="dim-score">{{ result.burnout.dimensions.DP.score }} คะแนน</span>
-              <span class="dim-level" :class="getLevelBadgeClass(result.burnout.dimensions.DP.level)">
-                {{ formatLevelThai(result.burnout.dimensions.DP.level) }}
-              </span>
+              <div class="dim-row-right">
+                <span class="dim-score">{{ result.burnout.dimensions.DP.score }} คะแนน</span>
+                <span class="dim-level" :class="getLevelBadgeClass(result.burnout.dimensions.DP.level)">
+                  {{ formatLevelThai(result.burnout.dimensions.DP.level) }}
+                </span>
+              </div>
             </div>
             <div class="dimension-row">
               <span class="dim-name">ความสำเร็จส่วนบุคคล (PA):</span>
-              <span class="dim-score">{{ result.burnout.dimensions.PA.score }} คะแนน</span>
-              <span class="dim-level" :class="getLevelBadgeClass(result.burnout.dimensions.PA.level)">
-                {{ formatLevelThai(result.burnout.dimensions.PA.level) }}
-              </span>
+              <div class="dim-row-right">
+                <span class="dim-score">{{ result.burnout.dimensions.PA.score }} คะแนน</span>
+                <span class="dim-level" :class="getLevelBadgeClass(result.burnout.dimensions.PA.level)">
+                  {{ formatLevelThai(result.burnout.dimensions.PA.level) }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Card 2: Stress -->
-        <div class="card assessment-card">
-          <div class="card-title-row">
-            <h3>2. ความเครียด</h3>
-            <span class="badge" :class="getStressBadgeClass(result.stress.level)">
-              {{ result.stress.label }}
-            </span>
+        <!-- 2 Columns Grid for ST-20 and 9Q -->
+        <div class="secondary-cards-grid">
+          <!-- Card 2: Stress -->
+          <div class="card assessment-card">
+            <div class="card-title-row">
+              <h3>2. ความเครียด (ST-20)</h3>
+              <span class="badge" :class="getStressBadgeClass(result.stress.level)">
+                {{ result.stress.label }}
+              </span>
+            </div>
+            <div class="score-display">
+              <span class="score-large">{{ result.stress.totalScore }}</span>
+              <span class="score-max">/ 60 คะแนน</span>
+            </div>
+            <p class="card-note">
+              เกณฑ์: 0-5 ต่ำกว่าเกณฑ์ปกติ, 6-17 ปกติ, 18-25 สูงกว่าปกติเล็กน้อย, 26-29 สูงกว่าปกติปานกลาง, 30-60 สูงกว่าปกติมาก
+            </p>
           </div>
-          <div class="score-display">
-            <span class="score-large">{{ result.stress.totalScore }}</span>
-            <span class="score-max">/ 60 คะแนน</span>
-          </div>
-          <p class="card-note">
-            เกณฑ์: 0-5 ต่ำกว่าเกณฑ์ปกติ, 6-17 ปกติ, 18-25 สูงกว่าปกติเล็กน้อย, 26-29 สูงกว่าปกติปานกลาง, 30-60 สูงกว่าปกติมาก
-          </p>
-        </div>
 
-        <!-- Card 3: 9Q -->
-        <div class="card assessment-card">
-          <div class="card-title-row">
-            <h3>3. อารมณ์เศร้า</h3>
-            <span class="badge" :class="get9QBadgeClass(result.q9.level)">
-              {{ result.q9.label }}
-            </span>
+          <!-- Card 3: 9Q -->
+          <div class="card assessment-card">
+            <div class="card-title-row">
+              <h3>3. โรคซึมเศร้า (9Q)</h3>
+              <span class="badge" :class="get9QBadgeClass(result.q9.level)">
+                {{ result.q9.label }}
+              </span>
+            </div>
+            <div class="score-display">
+              <span class="score-large">{{ result.q9.totalScore }}</span>
+              <span class="score-max">/ 27 คะแนน</span>
+            </div>
+            <p class="card-note">
+              เกณฑ์: 0-6 ไม่มีอาการหรือมีน้อยมาก, 7-12 น้อย, 13-18 ปานกลาง, ≥19 รุนแรง
+            </p>
           </div>
-          <div class="score-display">
-            <span class="score-large">{{ result.q9.totalScore }}</span>
-            <span class="score-max">/ 27 คะแนน</span>
-          </div>
-          <p class="card-note">
-            เกณฑ์: 0-6 ไม่มีอาการหรือมีน้อยมาก, 7-12 น้อย, 13-18 ปานกลาง, ≥19 รุนแรง
-          </p>
         </div>
       </div>
 
-      <!-- 4. Feedback Section on Result Screen -->
+      <!-- 3. Feedback Section on Result Screen -->
       <div class="result-feedback-card">
-        <div class="result-feedback-header">
-          <div class="result-feedback-icon">💬</div>
-          <div>
-            <h3 class="result-feedback-title">คำแนะนำและข้อเสนอแนะหากต้องการปรับปรุง</h3>
-            <p class="result-feedback-sub">“เรายินดีรับฟังทุกข้อเสนอแนะ เพื่อนำไปปรับปรุงและพัฒนาให้ดียิ่งขึ้น”</p>
-          </div>
-        </div>
+        <h3 class="result-feedback-title">คำแนะนำและข้อเสนอแนะหากต้องการปรับปรุง (ไม่บังคับ)</h3>
         <div class="result-feedback-body">
           <div v-if="feedback && feedback.trim()">
             <div class="feedback-submitted-box">
@@ -129,14 +143,11 @@
             </div>
           </div>
           <div v-else>
-            <p class="feedback-form-prompt">
-              หากท่านมีข้อเสนอแนะเพิ่มเติมเกี่ยวกับการใช้งานระบบ หรือข้อแนะนำเพื่อสุขภาวะที่ดีในองค์กร สามารถพิมพ์ส่งได้ที่นี่:
-            </p>
             <div class="feedback-form-row">
               <input
                 v-model="newFeedback"
                 type="text"
-                placeholder="พิมพ์ข้อความสั้นๆ หรือข้อเสนอแนะ (ไม่บังคับตอบ)..."
+                placeholder="เช่น ข้อเสนอแนะเกี่ยวกับการทำงาน หรือการดูแลสุขภาพใจในองค์กร"
                 class="result-feedback-input"
                 :disabled="submittingFeedback"
                 @keyup.enter="submitFeedback"
@@ -158,7 +169,7 @@
         </div>
       </div>
 
-      <!-- 5. Privacy & Completion Footer -->
+      <!-- 4. Privacy & Completion Footer -->
       <div class="completion-footer">
         <p>🔒 ข้อมูลการประเมินของท่านได้รับการจัดเก็บอย่างปลอดภัยตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล (PDPA)</p>
       </div>
@@ -297,26 +308,14 @@ export default {
 .result-summary-container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-}
-
-.disclaimer-banner {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: #f1f5f9;
-  border-left: 4px solid #64748b;
-  padding: 0.75rem 1rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  color: #334155;
+  gap: 1.25rem;
 }
 
 .loading-state, .error-state {
   text-align: center;
   padding: 2.5rem 1rem;
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   border: 1px solid #e2e8f0;
 }
 
@@ -330,88 +329,29 @@ export default {
   cursor: pointer;
 }
 
-.alert-suicide {
-  background-color: #fef2f2;
-  border: 2px solid #ef4444;
-  border-radius: 8px;
-  padding: 1.25rem;
-  color: #991b1b;
-}
-
-.alert-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.alert-header h3 {
-  margin: 0;
-  font-size: 1.15rem;
-  color: #b91c1c;
-}
-
-.alert-body {
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin-bottom: 1rem;
-}
-
-.hotline-card {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.85rem;
-  background: white;
-  border: 1.5px solid #fca5a5;
-  border-radius: 12px;
-  padding: 1.15rem;
-}
-
-@media (min-width: 640px) {
-  .hotline-card {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.hotline-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  padding: 0.5rem;
-  background: #fff5f5;
-  border-radius: 8px;
-}
-
-.hotline-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #7f1d1d;
-}
-
-.hotline-number {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: #dc2626;
-  letter-spacing: 0.02em;
-}
-
-.hotline-desc {
-  font-size: 0.825rem;
-  color: #4b5563;
-}
-
+/* 1. Overall Status Card (Box 1) */
 .overall-card {
   background: white;
   border-radius: 16px;
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
   border: 1.5px solid #e2e8f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.25rem;
 }
 
 @media (min-width: 640px) {
   .overall-card {
-    padding: 2rem;
+    padding: 1.5rem 1.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .overall-card {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
@@ -423,57 +363,100 @@ export default {
   border-left: 6px solid #10b981;
 }
 
-.overall-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 0.4rem 1rem;
-  border-radius: 9999px;
-  font-size: 0.88rem;
+.overall-card-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.overall-title {
+  margin: 0;
+  font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 0.85rem;
-  border: 1px solid transparent;
-}
-
-.status-needs-care .overall-badge {
-  background-color: #fef3c7;
-  color: #92400e;
-  border-color: #fde68a;
-}
-
-.status-normal .overall-badge {
-  background-color: #d1fae5;
-  color: #065f46;
-  border-color: #a7f3d0;
-}
-
-.overall-card h2 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.35rem;
-}
-
-.overall-desc {
-  color: #475569;
-  line-height: 1.55;
-  margin-bottom: 0.75rem;
+  color: #0f172a;
 }
 
 .submission-timestamp {
-  font-size: 0.85rem;
-  color: #94a3b8;
+  font-size: 0.84rem;
+  color: #64748b;
+  margin-bottom: 0.2rem;
 }
 
-.cards-grid {
+.overall-disclaimer {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.disclaimer-info-icon {
+  width: 17px;
+  height: 17px;
+  color: #0284c7;
+  flex-shrink: 0;
+}
+
+.disclaimer-text {
+  color: #64748b;
+}
+
+.overall-card-right {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.overall-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 1.15rem;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-needs-care {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.badge-normal {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.badge-status-icon {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+}
+
+/* 2. Assessment Cards Section (Box 2) */
+.assessment-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.burnout-card {
+  width: 100%;
+}
+
+.secondary-cards-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 @media (min-width: 640px) {
-  .cards-grid {
+  .secondary-cards-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem;
   }
 }
 
@@ -481,7 +464,7 @@ export default {
   background: white;
   border: 1.5px solid #e2e8f0;
   border-radius: 16px;
-  padding: 1.5rem;
+  padding: 1.35rem 1.5rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
 }
 
@@ -489,7 +472,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.5rem;
   gap: 0.75rem;
   flex-wrap: wrap;
 }
@@ -497,49 +480,32 @@ export default {
 .card-title-row h3 {
   margin: 0;
   font-size: 1.05rem;
+  font-weight: 700;
   color: #0f172a;
-  flex: 1;
-  min-width: 180px;
 }
 
 .card-instruction {
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   color: #64748b;
   margin: 0 0 0.85rem 0;
-}
-
-.score-display {
-  margin-bottom: 0.65rem;
-}
-
-.score-large {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #0284c7;
-}
-
-.score-max {
-  font-size: 0.9rem;
-  color: #64748b;
-  margin-left: 0.25rem;
 }
 
 .dimension-list {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.55rem;
 }
 
 .dimension-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.55rem 0.85rem;
+  padding: 0.55rem 0.95rem;
   background-color: #f8fafc;
   border-radius: 10px;
   border: 1px solid #f1f5f9;
-  font-size: 0.9rem;
-  gap: 0.65rem;
+  font-size: 0.88rem;
+  gap: 0.75rem;
 }
 
 .dim-name {
@@ -547,47 +513,70 @@ export default {
   flex: 1;
 }
 
+.dim-row-right {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+
 .dim-score {
   font-weight: 600;
   color: #0f172a;
   white-space: nowrap;
-  margin-right: 0.5rem;
 }
 
-/* Sub-dimension Level Badges (Centered text & Rounded borders) */
 .dim-level {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 0.3rem 0.75rem;
+  padding: 0.25rem 0.85rem;
   border-radius: 9999px;
   font-size: 0.78rem;
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.4;
   white-space: nowrap;
   flex-shrink: 0;
   border: 1px solid transparent;
-  min-width: 80px;
+  min-width: 60px;
+}
+
+.score-display {
+  margin: 0.5rem 0 0.65rem 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.score-large {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #0284c7;
+}
+
+.score-max {
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 500;
 }
 
 .card-note {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: #64748b;
   margin-top: 0.65rem;
   margin-bottom: 0;
   line-height: 1.45;
 }
 
-/* Card Header Status Badge */
+/* Header Status Badges */
 .badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 0.35rem 0.85rem;
+  padding: 0.25rem 0.85rem;
   border-radius: 9999px;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 600;
   line-height: 1.4;
   white-space: nowrap;
@@ -613,139 +602,22 @@ export default {
   border-color: #fecaca;
 }
 
-.recommendations-card {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 1.25rem;
-}
-
-.recommendations-card h3 {
-  margin: 0 0 0.75rem 0;
-  font-size: 1.1rem;
-  color: #0f172a;
-}
-
-.recom-list {
-  margin: 0;
-  padding-left: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: #334155;
-  line-height: 1.5;
-}
-
-.support-contact-banner {
-  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-  border: 1px solid #bbf7d0;
-  border-radius: 16px;
-  padding: 1.25rem 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.25rem;
-  box-shadow: 0 2px 8px rgba(22, 101, 52, 0.05);
-}
-
-.support-contact-content {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.support-contact-icon {
-  font-size: 2rem;
-  flex-shrink: 0;
-}
-
-.support-contact-text h4 {
-  margin: 0 0 0.25rem 0;
-  font-size: 1rem;
-  color: #166534;
-  font-weight: 700;
-}
-
-.support-contact-text p {
-  margin: 0;
-  font-size: 0.85rem;
-  color: #15803d;
-  line-height: 1.45;
-}
-
-.btn-support-contact-hr {
-  background: #0284c7;
-  color: #ffffff;
-  border: none;
-  padding: 0.75rem 1.25rem;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  box-shadow: 0 4px 10px rgba(2, 132, 199, 0.25);
-  transition: all 0.15s ease;
-  flex-shrink: 0;
-}
-
-.btn-support-contact-hr:hover {
-  background: #0369a1;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(2, 132, 199, 0.35);
-}
-
-@media (max-width: 768px) {
-  .support-contact-banner {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .btn-support-contact-hr {
-    width: 100%;
-    text-align: center;
-  }
-}
-
+/* 3. Feedback Card */
 .result-feedback-card {
   background: #ffffff;
   border: 1.5px solid #e2e8f0;
   border-radius: 16px;
-  padding: 1.4rem 1.6rem;
-  margin-top: 1.25rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-  transition: all 0.2s ease;
+  padding: 1.35rem 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
 }
-.result-feedback-header {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  margin-bottom: 0.85rem;
-}
-.result-feedback-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  background: #f0f9ff;
-  border: 1px solid #bae6fd;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  color: #0284c7;
-  flex-shrink: 0;
-}
+
 .result-feedback-title {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  color: #0f172a;
-  margin: 0;
+  color: #1e293b;
+  margin: 0 0 0.85rem 0;
 }
-.result-feedback-sub {
-  font-size: 0.84rem;
-  color: #0284c7;
-  margin: 0.2rem 0 0 0;
-  font-weight: 500;
-}
+
 .feedback-submitted-box {
   background: #f0f9ff;
   border-left: 3.5px solid #0284c7;
@@ -755,6 +627,7 @@ export default {
   color: #0f172a;
   margin-bottom: 10px;
 }
+
 .feedback-submitted-label {
   font-size: 0.8rem;
   font-weight: 700;
@@ -762,11 +635,13 @@ export default {
   text-transform: uppercase;
   margin-bottom: 4px;
 }
+
 .feedback-submitted-quote {
   color: #0c4a6e;
   font-style: italic;
   line-height: 1.5;
 }
+
 .feedback-success-note {
   font-size: 0.82rem;
   color: #16a34a;
@@ -775,18 +650,13 @@ export default {
   align-items: center;
   gap: 6px;
 }
-.feedback-form-prompt {
-  font-size: 0.86rem;
-  color: #64748b;
-  margin-top: 0;
-  margin-bottom: 10px;
-  line-height: 1.5;
-}
+
 .feedback-form-row {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
 }
+
 .result-feedback-input {
   flex: 1;
   min-width: 240px;
@@ -797,10 +667,17 @@ export default {
   outline: none;
   font-family: inherit;
   transition: border-color 0.2s;
+  color: #1e293b;
 }
+
+.result-feedback-input::placeholder {
+  color: #94a3b8;
+}
+
 .result-feedback-input:focus {
   border-color: #0284c7;
 }
+
 .btn-submit-feedback {
   background: #0284c7;
   color: #ffffff;
@@ -812,10 +689,13 @@ export default {
   cursor: pointer;
   font-family: inherit;
   transition: all 0.15s ease;
+  white-space: nowrap;
 }
+
 .btn-submit-feedback:hover:not(:disabled) {
   background: #0369a1;
 }
+
 .btn-submit-feedback:disabled {
   opacity: 0.6;
   cursor: not-allowed;
