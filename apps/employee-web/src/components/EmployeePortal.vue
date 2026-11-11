@@ -16,7 +16,7 @@
             <span>📞</span>
             <span>ติดต่อฝ่ายบุคคล (HR)</span>
           </button>
-          <a href="http://localhost:3001" class="mh-btn-nav-admin" title="ไปยังหน้าสำหรับผู้ดูแลระบบ">
+          <a :href="adminPortalUrl" class="mh-btn-nav-admin" title="ไปยังหน้าสำหรับผู้ดูแลระบบ">
             <span>🛡️</span>
             <span>สำหรับผู้ดูแลระบบ (Admin Portal) ↗</span>
           </a>
@@ -129,6 +129,9 @@ export default {
         }
       }
       return import.meta.env.VITE_ENABLE_MOCK !== 'false' && import.meta.env.VITE_ENABLE_MOCK !== false;
+    },
+    adminPortalUrl() {
+      return import.meta.env.VITE_ADMIN_URL || (this.isMockEnabled ? 'http://localhost:3001' : '/admin');
     }
   }
 };
@@ -220,11 +223,13 @@ export default {
   padding: 0.5rem 1rem;
   border-radius: 9999px;
   cursor: pointer;
+  text-decoration: none;
   transition: all 0.15s ease;
 }
 .mh-btn-nav-admin:hover {
   background: #e2e8f0;
   color: #0f172a;
+  text-decoration: none;
 }
 
 /* Channel Banner */
