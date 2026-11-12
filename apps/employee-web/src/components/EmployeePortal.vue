@@ -131,7 +131,7 @@ export default {
       return import.meta.env.VITE_ENABLE_MOCK !== 'false' && import.meta.env.VITE_ENABLE_MOCK !== false;
     },
     adminPortalUrl() {
-      return import.meta.env.VITE_ADMIN_URL || (this.isMockEnabled ? 'http://localhost:3001' : '/admin');
+      return import.meta.env.VITE_ADMIN_URL || 'https://mental-health-admin.onrender.com/';
     }
   }
 };

@@ -86,7 +86,7 @@ export default {
   name: 'AdminPortalLanding',
   computed: {
     employeePortalUrl() {
-      return import.meta.env.VITE_EMPLOYEE_URL || 'http://localhost:3000';
+      return import.meta.env.VITE_EMPLOYEE_URL || 'https://employee-well-being-survey.onrender.com/';
     }
   }
 };

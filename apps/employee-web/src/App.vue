@@ -31,7 +31,7 @@
           </button>
           <a v-if="adminPortalUrl" :href="adminPortalUrl" class="btn-admin-header" title="ไปยังหน้าสำหรับผู้ดูแลระบบ">
             <span class="btn-admin-icon">🛡️</span>
-            <span class="btn-admin-text">สำหรับผู้ดูแลระบบ ↗</span>
+            <span class="btn-admin-text">สำหรับผู้ดูแลระบบ (Admin) ↗</span>
           </a>
         </div>
       </div>
@@ -196,7 +196,7 @@ export default {
       return import.meta.env.VITE_ENABLE_MOCK !== 'false' && import.meta.env.VITE_ENABLE_MOCK !== false;
     },
     adminPortalUrl() {
-      return import.meta.env.VITE_ADMIN_URL || (this.isMockEnabled ? 'http://localhost:3001' : '');
+      return import.meta.env.VITE_ADMIN_URL || 'https://mental-health-admin.onrender.com/';
     },
     isAuthenticatedScreen() {
       return ['notice', 'assessment', 'submitted'].includes(this.currentScreen);
