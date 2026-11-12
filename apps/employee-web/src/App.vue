@@ -29,10 +29,6 @@
             <span class="btn-contact-icon">📞</span>
             <span class="btn-contact-text">ติดต่อฝ่ายบุคคล (HR)</span>
           </button>
-          <a v-if="adminPortalUrl" :href="adminPortalUrl" class="btn-admin-header" title="ไปยังหน้าสำหรับผู้ดูแลระบบ">
-            <span class="btn-admin-icon">🛡️</span>
-            <span class="btn-admin-text">สำหรับผู้ดูแลระบบ (Admin) ↗</span>
-          </a>
         </div>
       </div>
     </header>
@@ -194,9 +190,6 @@ export default {
         }
       }
       return import.meta.env.VITE_ENABLE_MOCK !== 'false' && import.meta.env.VITE_ENABLE_MOCK !== false;
-    },
-    adminPortalUrl() {
-      return import.meta.env.VITE_ADMIN_URL || 'https://mental-health-admin.onrender.com/';
     },
     isAuthenticatedScreen() {
       return ['notice', 'assessment', 'submitted'].includes(this.currentScreen);
@@ -644,8 +637,7 @@ html, body {
     padding: 0.3rem 0.6rem;
   }
   .btn-switch-account-header,
-  .btn-contact-hr-header,
-  .btn-admin-header {
+  .btn-contact-hr-header {
     font-size: 0.75rem;
     padding: 0.35rem 0.65rem;
   }
@@ -799,33 +791,6 @@ html, body {
 }
 
 .btn-contact-icon {
-  font-size: 0.95rem;
-}
-
-.btn-admin-header {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  color: #1d4ed8;
-  padding: 0.4rem 0.85rem;
-  border-radius: 9999px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.btn-admin-header:hover {
-  background: #dbeafe;
-  border-color: #93c5fd;
-  color: #1e40af;
-  transform: translateY(-1px);
-}
-
-.btn-admin-icon {
   font-size: 0.95rem;
 }
 

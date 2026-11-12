@@ -163,13 +163,6 @@ export default {
         this.password = 'Admin@123456!';
       }
     },
-    goToPortal() {
-      if (window.location.port === '3001') {
-        window.location.href = 'http://' + window.location.hostname + ':3000';
-      } else {
-        window.location.href = '/';
-      }
-    },
     alertForgot() {
       alert('ระบบ ONE ID: กรุณาติดต่อทีม One Platform Support หรือส่งอีเมลไปยัง support@one.th เพื่อรีเซ็ตรหัสผ่าน');
     },
