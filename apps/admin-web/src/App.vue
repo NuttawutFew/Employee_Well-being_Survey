@@ -31,7 +31,7 @@
         <div class="brand">
           <div class="brand-title-wrap">
             <img src="/logo.jpeg" alt="INET Logo" class="admin-brand-logo" />
-            <h2>Well-being Survey Admin</h2>
+            <h2>Admin Well-being Survey</h2>
           </div>
           <button
             class="btn-close-sidebar"

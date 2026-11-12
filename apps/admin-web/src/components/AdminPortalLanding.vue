@@ -6,7 +6,7 @@
         <div class="mh-admin-brand">
           <img src="/logo.jpeg" alt="INET Logo" class="mh-admin-logo-img" />
           <div class="mh-admin-titles">
-            <span class="mh-admin-title-th">Mental Health Assessment</span>
+            <span class="mh-admin-title-th">Admin Well-being Survey</span>
             <span class="mh-admin-title-en">Admin Portal • ระบบบริหารจัดการสำหรับผู้ดูแลระบบ</span>
           </div>
         </div>
